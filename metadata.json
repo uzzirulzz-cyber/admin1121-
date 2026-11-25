@@ -1,0 +1,8 @@
+{
+  "name": "PlayBeat Admin Console",
+  "description": "Full-featured SaaS admin panel for PlayBeat Digital covering AdSense analytics across five domains, CRM with Meta WhatsApp Event Sharing, manual order fulfillment, product catalog management, and Cloudflare Worker integrations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

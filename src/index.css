@@ -1,0 +1,283 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #f8f9fe;
+    color: #344767;
+  }
+
+  .dark body {
+    background-color: #0b1437;
+    color: #f1f5f9;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@keyframes pb-pulse {
+  50% {
+    opacity: 0.6;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes pb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@layer components {
+  .argon-card {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 1rem;
+    box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.12);
+  }
+
+  .dark .argon-card {
+    background-color: #111c44;
+    border-color: #1e2952;
+    box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.35);
+  }
+
+  /* PlayBeat Digital Default Landing / Login Screen */
+  .pb-login-page {
+    position: relative;
+    min-height: 100vh;
+    color: #dbe5f5;
+    font-family: "Manrope", "Segoe UI", system-ui, sans-serif;
+    overflow-x: hidden;
+    background:
+      radial-gradient(900px 600px at 12% 20%, rgba(31, 107, 255, 0.28), transparent 60%),
+      radial-gradient(700px 500px at 90% 90%, rgba(56, 189, 248, 0.16), transparent 60%),
+      linear-gradient(160deg, #03060f 30%, #071230 100%);
+  }
+
+  .pb-login-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    background-image: radial-gradient(rgba(120, 170, 255, 0.35) 1px, transparent 1.4px);
+    background-size: 26px 26px;
+    -webkit-mask-image: radial-gradient(ellipse at 30% 40%, #000 0, transparent 65%);
+    mask-image: radial-gradient(ellipse at 30% 40%, #000 0, transparent 65%);
+  }
+
+  .pb-login-head {
+    font-family: "Chakra Petch", "Segoe UI", sans-serif;
+  }
+
+  .pb-logo-wrap {
+    position: relative;
+    width: min(400px, 70vw);
+    aspect-ratio: 1;
+  }
+
+  @media (max-width: 900px) {
+    .pb-logo-wrap {
+      width: min(220px, 56vw);
+    }
+  }
+
+  .pb-logo-wrap::before {
+    content: "";
+    position: absolute;
+    inset: -14%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(31, 107, 255, 0.55), transparent 66%);
+    filter: blur(26px);
+    animation: pb-pulse 5s ease-in-out infinite;
+  }
+
+  .pb-logo-img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 50%;
+    filter: drop-shadow(0 0 30px rgba(31, 107, 255, 0.5));
+  }
+
+  .pb-dial {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  .pb-dial-tick {
+    stroke: #6fb4ff;
+    stroke-width: 0.7;
+    stroke-linecap: round;
+    opacity: 0.55;
+  }
+
+  .pb-dial-major {
+    stroke: #c9e6ff;
+    stroke-width: 1.4;
+    opacity: 1;
+    filter: drop-shadow(0 0 2px #38bdf8);
+  }
+
+  .pb-dial-track {
+    fill: none;
+    stroke: rgba(90, 150, 255, 0.25);
+    stroke-width: 0.8;
+  }
+
+  .pb-dial-arc {
+    fill: none;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-dasharray: 150 384;
+    filter: drop-shadow(0 0 4px #38bdf8) drop-shadow(0 0 10px #1f6bff);
+    animation: pb-spin 9s linear infinite;
+  }
+
+  .pb-dial-arc2 {
+    fill: none;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-dasharray: 40 494;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 4px #38bdf8) drop-shadow(0 0 10px #1f6bff);
+    animation: pb-spin 14s linear infinite reverse;
+  }
+
+  .pb-sweep {
+    position: absolute;
+    inset: 5%;
+    z-index: 2;
+    border-radius: 50%;
+    pointer-events: none;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0 62%,
+      rgba(56, 189, 248, 0.05) 70%,
+      rgba(56, 189, 248, 0.75) 100%
+    );
+    -webkit-mask: radial-gradient(
+      closest-side,
+      transparent 82%,
+      #000 85%,
+      #000 95%,
+      transparent 97%
+    );
+    mask: radial-gradient(
+      closest-side,
+      transparent 82%,
+      #000 85%,
+      #000 95%,
+      transparent 97%
+    );
+    filter: drop-shadow(0 0 8px #38bdf8);
+    animation: pb-spin 6s linear infinite;
+  }
+
+  .pb-login-card {
+    position: relative;
+    background: rgba(10, 20, 48, 0.62);
+    border: 1px solid rgba(120, 160, 255, 0.18);
+    border-radius: 24px;
+    -webkit-backdrop-filter: blur(22px);
+    backdrop-filter: blur(22px);
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+      0 0 70px rgba(31, 107, 255, 0.12);
+  }
+
+  .pb-login-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    pointer-events: none;
+    background: linear-gradient(
+      140deg,
+      rgba(120, 180, 255, 0.7),
+      transparent 35%,
+      transparent 65%,
+      rgba(56, 189, 248, 0.5)
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  .pb-login-go {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #3b8bff, #1450d6 60%, #0b3aa8);
+    box-shadow:
+      0 10px 32px rgba(31, 107, 255, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .pb-login-go:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow:
+      0 14px 40px rgba(31, 107, 255, 0.65),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+
+  .pb-login-go:active:not(:disabled) {
+    transform: none;
+  }
+
+  .pb-login-go::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+  }
+
+  .pb-login-go:hover:not(:disabled)::after {
+    left: 130%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-logo-wrap::before,
+  .pb-dial-arc,
+  .pb-dial-arc2,
+  .pb-sweep,
+  .pb-login-go,
+  .pb-login-go::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
