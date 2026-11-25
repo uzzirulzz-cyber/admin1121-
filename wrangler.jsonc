@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "playbeat-admin",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "playbeat-admin-db",
+      "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+    }
+  ],
+  // Optional: full-size uploads via R2 (enable R2 in the Cloudflare Dashboard first):
+  // "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "playbeat-media" }],
+  "observability": {
+    "enabled": true
+  },
+  "routes": [
+    { "pattern": "manage.playbeat.digital", "custom_domain": true }
+  ]
+}
