@@ -67,3 +67,6 @@ server.log
 /.wrangler/
 /.open-next/
 public/uploads/
+
+# sandbox tool artifacts
+/tool-results/
