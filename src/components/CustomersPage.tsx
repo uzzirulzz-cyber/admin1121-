@@ -222,7 +222,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
   }
 
   const inputClass =
-    'px-3 py-2 text-sm bg-white dark:bg-[#0b1437] border border-[#dee2e6] dark:border-[#243266] rounded-lg text-[#344767] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#5e72e4]/30 focus:border-[#5e72e4]';
+    'px-3 py-2 text-sm bg-white dark:bg-[#161c24] border border-[#dee2e6] dark:border-slate-700/70 rounded-lg text-[#344767] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#f78109]/30 focus:border-[#f78109]';
 
   return (
     <div className="space-y-6">
@@ -238,7 +238,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
         <button
           type="button"
           onClick={() => setShowCreate((v) => !v)}
-          className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-[#5e72e4] hover:bg-[#4e62d4] rounded-lg shadow-xs transition-colors whitespace-nowrap shrink-0 self-start sm:self-auto"
+          className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-[#161c24] bg-[#f78109] hover:bg-[#fda92d] rounded-lg shadow-xs transition-colors whitespace-nowrap shrink-0 self-start sm:self-auto"
         >
           <UserPlus className="w-3.5 h-3.5" />
           <span>{showCreate ? 'Close Form' : 'Open Account'}</span>
@@ -251,7 +251,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
           className={`flex items-center justify-between gap-4 px-4 py-3 text-xs font-medium rounded-xl border ${
             notice.type === 'error'
               ? 'bg-[#fff5f6] dark:bg-[#2a1220] border-[#f5365c]/40 text-[#c92a49] dark:text-[#ff7591]'
-              : 'bg-white dark:bg-[#111c44] border-[#5e72e4]/30 text-[#344767] dark:text-slate-100'
+              : 'bg-white dark:bg-[#212b36] border-[#f78109]/30 text-[#344767] dark:text-slate-100'
           }`}
         >
           <span>{notice.text}</span>
@@ -270,7 +270,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                 {issuedCode.email}
               </span>
             </p>
-            <p className="mt-0.5 font-mono text-sm font-bold text-[#5e72e4]">
+            <p className="mt-0.5 font-mono text-sm font-bold text-[#f78109] dark:text-[#fda92d]">
               {issuedCode.code}
             </p>
           </div>
@@ -282,7 +282,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                 setCopiedReset(true);
                 setTimeout(() => setCopiedReset(false), 1800);
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#344767] dark:text-slate-200 border border-[#dee2e6] dark:border-[#243266] rounded-lg hover:bg-[#f6f9fc] dark:hover:bg-[#182450] whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#344767] dark:text-slate-200 border border-[#dee2e6] dark:border-slate-700/70 rounded-lg hover:bg-[#f5f8fa] dark:hover:bg-[#1a202c] whitespace-nowrap"
             >
               {copiedReset ? (
                 <Check className="w-3.5 h-3.5 text-[#2dce89]" />
@@ -346,14 +346,14 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
               <button
                 type="button"
                 onClick={() => setShowCreate(false)}
-                className="px-3.5 py-2 text-xs font-semibold text-[#67748e] dark:text-slate-300 border border-[#dee2e6] dark:border-[#243266] rounded-lg"
+                className="px-3.5 py-2 text-xs font-semibold text-[#67748e] dark:text-slate-300 border border-[#dee2e6] dark:border-slate-700/70 rounded-lg"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={creatingCustomer}
-                className="px-4 py-2 text-xs font-semibold text-white bg-[#5e72e4] hover:bg-[#4e62d4] disabled:opacity-60 rounded-lg whitespace-nowrap"
+                className="px-4 py-2 text-xs font-semibold text-[#161c24] bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg whitespace-nowrap"
               >
                 {creatingCustomer ? 'Opening...' : 'Create Customer Account'}
               </button>
@@ -364,7 +364,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
 
       {/* Customer Accounts Table */}
       <section className="argon-card overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#e9ecef] dark:border-[#1e2952]">
+        <div className="px-6 py-4 border-b border-[#e9ecef] dark:border-slate-700/60">
           <h2 className="text-base font-bold text-[#344767] dark:text-white">
             Storefront Customer Accounts
           </h2>
@@ -375,7 +375,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-[#e9ecef] dark:border-[#1e2952] bg-[#f6f9fc] dark:bg-[#0e1738] text-[11px] font-bold uppercase tracking-wider text-[#8392ab]">
+              <tr className="border-b border-[#e9ecef] dark:border-slate-700/60 bg-[#f5f8fa] dark:bg-[#1a202c] text-[11px] font-bold uppercase tracking-wider text-[#8392ab]">
                 <th className="py-3 px-6">Customer & UID</th>
                 <th className="py-3 px-4">Provider / Member Since</th>
                 <th className="py-3 px-4 text-right">Orders & Spend</th>
@@ -397,7 +397,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                   return (
                     <tr
                       key={c.uid}
-                      className="hover:bg-[#f8f9fe] dark:hover:bg-[#182450]/40 transition-colors"
+                      className="hover:bg-[#f5f8fa] dark:hover:bg-[#1a202c]/40 transition-colors"
                     >
                       <td className="py-3.5 px-6">
                         {isEditing ? (
@@ -480,7 +480,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                             <button
                               type="button"
                               onClick={() => setEditingUid(null)}
-                              className="px-2.5 py-1.5 text-xs font-semibold text-[#67748e] border border-[#dee2e6] dark:border-[#243266] rounded-lg"
+                              className="px-2.5 py-1.5 text-xs font-semibold text-[#67748e] border border-[#dee2e6] dark:border-slate-700/70 rounded-lg"
                             >
                               Cancel
                             </button>
@@ -490,7 +490,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                             <button
                               type="button"
                               onClick={() => startEdit(c)}
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#5e72e4] border border-[#e9ecef] dark:border-[#243266] rounded-lg hover:bg-[#f6f9fc] dark:hover:bg-[#182450] whitespace-nowrap"
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#f78109] dark:text-[#fda92d] border border-[#e9ecef] dark:border-slate-700/70 rounded-lg hover:bg-[#f5f8fa] dark:hover:bg-[#1a202c] whitespace-nowrap"
                             >
                               <Edit3 className="w-3.5 h-3.5" />
                               <span>Edit</span>
@@ -498,7 +498,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                             <button
                               type="button"
                               onClick={() => handleIssueResetCode(c)}
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#344767] dark:text-slate-200 border border-[#e9ecef] dark:border-[#243266] rounded-lg hover:bg-[#f6f9fc] dark:hover:bg-[#182450] whitespace-nowrap"
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#344767] dark:text-slate-200 border border-[#e9ecef] dark:border-slate-700/70 rounded-lg hover:bg-[#f5f8fa] dark:hover:bg-[#1a202c] whitespace-nowrap"
                             >
                               <KeyRound className="w-3.5 h-3.5" />
                               <span>Reset</span>
@@ -507,7 +507,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                               type="button"
                               disabled={c.activeSessions === 0}
                               onClick={() => handleRevokeSessions(c.uid)}
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#67748e] border border-[#e9ecef] dark:border-[#243266] rounded-lg hover:bg-[#f6f9fc] dark:hover:bg-[#182450] disabled:opacity-40 whitespace-nowrap"
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#67748e] border border-[#e9ecef] dark:border-slate-700/70 rounded-lg hover:bg-[#f5f8fa] dark:hover:bg-[#1a202c] disabled:opacity-40 whitespace-nowrap"
                             >
                               <ShieldOff className="w-3.5 h-3.5" />
                               <span>Revoke</span>
@@ -525,7 +525,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                                 <button
                                   type="button"
                                   onClick={() => setConfirmDeleteUid(null)}
-                                  className="px-2 py-1.5 text-xs font-semibold text-[#67748e] border border-[#dee2e6] dark:border-[#243266] rounded-lg"
+                                  className="px-2 py-1.5 text-xs font-semibold text-[#67748e] border border-[#dee2e6] dark:border-slate-700/70 rounded-lg"
                                 >
                                   Cancel
                                 </button>
@@ -587,14 +587,14 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
           <button
             type="submit"
             disabled={savingEmail}
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-[#5e72e4] hover:bg-[#4e62d4] disabled:opacity-60 rounded-lg shadow-xs whitespace-nowrap shrink-0"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold text-[#161c24] bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg shadow-xs whitespace-nowrap shrink-0"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>{savingEmail ? 'Adding...' : 'Add Admin Email'}</span>
           </button>
         </form>
 
-        <div className="divide-y divide-[#e9ecef] dark:divide-[#1e2952] border-t border-[#e9ecef] dark:border-[#1e2952]">
+        <div className="divide-y divide-[#e9ecef] dark:divide-[#1e2952] border-t border-[#e9ecef] dark:border-slate-700/60">
           {allowlist.map((entry) => (
             <div
               key={entry.email}

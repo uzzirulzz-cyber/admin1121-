@@ -208,7 +208,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
         <button
           type="button"
           onClick={() => setModalOpen(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors whitespace-nowrap shrink-0 self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] rounded-lg transition-colors whitespace-nowrap shrink-0 self-start sm:self-auto"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>Add Lead</span>
@@ -221,7 +221,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
           className={`flex items-center justify-between gap-4 px-4 py-3 text-xs rounded-lg border ${
             notice.type === 'error'
               ? 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-900 text-red-700 dark:text-red-300'
-              : 'bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200'
+              : 'bg-zinc-100 dark:bg-[#212b36] border-zinc-200 dark:border-slate-700/60 text-zinc-800 dark:text-zinc-200'
           }`}
         >
           <span>{notice.text}</span>
@@ -238,13 +238,13 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
 
       {/* Filter & Search Bar */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-        <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg">
+        <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-zinc-100 dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
           <button
             type="button"
             onClick={() => setStageFilter('ALL')}
             className={`px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
               stageFilter === 'ALL'
-                ? 'bg-white dark:bg-zinc-800 text-zinc-950 dark:text-zinc-50 shadow-xs'
+                ? 'bg-white dark:bg-[#1a202c] text-zinc-950 dark:text-zinc-50 shadow-xs'
                 : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
             }`}
           >
@@ -257,7 +257,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
               onClick={() => setStageFilter(stage)}
               className={`px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
                 stageFilter === stage
-                  ? 'bg-white dark:bg-zinc-800 text-zinc-950 dark:text-zinc-50 shadow-xs'
+                  ? 'bg-white dark:bg-[#1a202c] text-zinc-950 dark:text-zinc-50 shadow-xs'
                   : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
               }`}
             >
@@ -273,17 +273,17 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search business, email, phone..."
-            className="w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-600/30 focus:border-blue-600"
+            className="w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-lg text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-600/30 focus:border-blue-600"
           />
         </div>
       </div>
 
       {/* Leads Table */}
-      <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
+      <section className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <tr className="border-b border-zinc-200 dark:border-slate-700/60 text-xs font-medium text-zinc-500 dark:text-zinc-400">
                 <th className="py-3 px-5">Lead</th>
                 <th className="py-3 px-4">Contact</th>
                 <th className="py-3 px-4">Stage (Meta Trigger)</th>
@@ -292,7 +292,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                 <th className="py-3 px-5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/80 text-sm">
+            <tbody className="divide-y divide-zinc-100 dark:divide-slate-700/50 text-sm">
               {loading ? (
                 <tr>
                   <td colSpan={6} className="py-10 text-center text-xs text-zinc-500">
@@ -311,7 +311,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                   return (
                     <tr
                       key={lead.leadId}
-                      className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors align-top"
+                      className="hover:bg-zinc-50 dark:hover:bg-[#1a202c]/40 transition-colors align-top"
                     >
                       <td className="py-3.5 px-5">
                         <p className="font-medium text-zinc-950 dark:text-zinc-50">
@@ -344,7 +344,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                           onChange={(e) =>
                             handleStageChange(lead.leadId, e.target.value as CrmStage)
                           }
-                          className="px-2.5 py-1.5 text-xs font-medium bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-md text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+                          className="px-2.5 py-1.5 text-xs font-medium bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-md text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-600/30"
                         >
                           {CRM_STAGES.map((s) => (
                             <option key={s} value={s}>
@@ -390,7 +390,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                                 ? 'Re-send conversion event to Meta WhatsApp Dataset'
                                 : 'Move to Qualified or Won to send Meta event'
                             }
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 rounded-md hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-40 whitespace-nowrap"
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-md hover:bg-zinc-50 dark:hover:bg-[#1a202c] disabled:opacity-40 whitespace-nowrap"
                           >
                             <Send className="w-3 h-3" />
                             <span>Meta</span>
@@ -400,7 +400,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                             disabled={busyId === lead.leadId}
                             onClick={() => handleResendTikTok(lead.leadId)}
                             title="Re-send lead event to TikTok Events API"
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 rounded-md hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-40 whitespace-nowrap"
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-md hover:bg-zinc-50 dark:hover:bg-[#1a202c] disabled:opacity-40 whitespace-nowrap"
                           >
                             <Send className="w-3 h-3" />
                             <span>TikTok</span>
@@ -410,7 +410,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                             disabled={busyId === lead.leadId}
                             onClick={() => handleDelete(lead.leadId)}
                             aria-label={`Delete ${lead.businessName}`}
-                            className="p-1.5 text-zinc-500 hover:text-red-600 dark:hover:text-red-400 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                            className="p-1.5 text-zinc-500 hover:text-red-600 dark:hover:text-red-400 rounded-md hover:bg-zinc-100 dark:hover:bg-[#1a202c]"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -428,8 +428,8 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
       {/* Add Lead Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/60">
-          <div className="w-full max-w-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
-            <div className="px-6 py-4 flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800">
+          <div className="w-full max-w-lg bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+            <div className="px-6 py-4 flex items-center justify-between border-b border-zinc-200 dark:border-slate-700/60">
               <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
                 Add CRM Lead
               </h2>
@@ -454,7 +454,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                     value={businessName}
                     onChange={(e) => setBusinessName(e.target.value)}
                     placeholder="e.g. Rawalpindi Gaming Hub"
-                    className="w-full px-3 py-2 text-sm bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+                    className="w-full px-3 py-2 text-sm bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
                   />
                 </div>
                 <div>
@@ -466,7 +466,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                     value={contactName}
                     onChange={(e) => setContactName(e.target.value)}
                     placeholder="Full name"
-                    className="w-full px-3 py-2 text-sm bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+                    className="w-full px-3 py-2 text-sm bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
                   />
                 </div>
                 <div>
@@ -479,7 +479,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                     step="0.01"
                     value={expectedValueUsd}
                     onChange={(e) => setExpectedValueUsd(e.target.value)}
-                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
                   />
                 </div>
                 <div>
@@ -491,7 +491,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="buyer@example.com"
-                    className="w-full px-3 py-2 text-sm bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+                    className="w-full px-3 py-2 text-sm bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
                   />
                 </div>
                 <div>
@@ -503,7 +503,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+923001234567"
-                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
                   />
                 </div>
                 <div>
@@ -513,7 +513,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                   <select
                     value={source}
                     onChange={(e) => setSource(e.target.value as CrmLead['source'])}
-                    className="w-full px-3 py-2 text-sm bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                    className="w-full px-3 py-2 text-sm bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   >
                     <option value="WhatsApp">WhatsApp</option>
                     <option value="Storefront">Storefront</option>
@@ -529,7 +529,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value as CrmStage)}
-                    className="w-full px-3 py-2 text-sm bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                    className="w-full px-3 py-2 text-sm bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   >
                     {CRM_STAGES.map((s) => (
                       <option key={s} value={s}>
@@ -547,7 +547,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                     value={ctwaClid}
                     onChange={(e) => setCtwaClid(e.target.value)}
                     placeholder="ctwa_clid from Click-to-WhatsApp ad"
-                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -559,7 +559,7 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Product interest, volume, follow-up timeline..."
-                    className="w-full px-3 py-2 text-sm bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                    className="w-full px-3 py-2 text-sm bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   />
                 </div>
               </div>
@@ -568,14 +568,14 @@ export function CrmPage({ onDataChanged, openCreateSignal }: CrmPageProps) {
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                  className="px-4 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 rounded-lg"
+                  className="px-4 py-2 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg"
                 >
                   {saving ? 'Saving...' : 'Create Lead'}
                 </button>

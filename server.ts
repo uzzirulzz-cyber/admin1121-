@@ -2019,10 +2019,16 @@ async function startServer() {
 
   // TikTok Status & Test Event
   app.get('/api/admin/tiktok/status', requireAdmin, (_req, res) => {
+    const pixelId = process.env.TIKTOK_PIXEL_ID?.trim() || 'DC3J0CBC77U6OQMIKJ80';
+    const crmEventSetId = process.env.TIKTOK_CRM_EVENT_SET_ID?.trim() || '7712192188952346645';
     res.json({
       ok: true,
-      pixelSaved: Boolean(process.env.TIKTOK_PIXEL_ID?.trim()),
+      pixelSaved: Boolean(pixelId),
+      pixelId,
       eventsTokenSaved: Boolean(process.env.TIKTOK_EVENTS_TOKEN?.trim()),
+      crmEventSetSaved: Boolean(crmEventSetId),
+      crmEventSetId,
+      crmTokenSaved: Boolean(process.env.TIKTOK_CRM_ACCESS_TOKEN?.trim()),
     });
   });
 

@@ -1,13 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   BarChart3,
+  ChevronDown,
   Globe,
   Handshake,
+  KeyRound,
   LayoutDashboard,
   LogOut,
+  Maximize2,
   Menu,
+  Minimize2,
   Moon,
   Package,
+  PanelLeftClose,
+  PanelLeftOpen,
   Plug,
   Share2,
   ShoppingBag,
@@ -42,40 +48,40 @@ export const ARGON_COVER_THEMES: Record<
     accentTextClass: string;
   }
 > = {
+  'argon-sunset': {
+    label: 'Starter Amber',
+    hex: '#f78109',
+    bannerClass: 'bg-[#f78109]',
+    scrimClass: 'bg-[#f78109]/70',
+    accentTextClass: 'text-[#f78109]',
+  },
   'argon-blue': {
-    label: 'Argon Indigo',
-    hex: '#5e72e4',
-    bannerClass: 'bg-[#5e72e4]',
-    scrimClass: 'bg-[#5e72e4]/70',
-    accentTextClass: 'text-[#5e72e4]',
+    label: 'Slate Cobalt',
+    hex: '#1890ff',
+    bannerClass: 'bg-[#1890ff]',
+    scrimClass: 'bg-[#1890ff]/70',
+    accentTextClass: 'text-[#1890ff]',
   },
   'argon-ocean': {
-    label: 'Ocean Blue',
-    hex: '#1171ef',
-    bannerClass: 'bg-[#1171ef]',
-    scrimClass: 'bg-[#1171ef]/70',
-    accentTextClass: 'text-[#1171ef]',
+    label: 'Deep Ocean',
+    hex: '#0c53b7',
+    bannerClass: 'bg-[#0c53b7]',
+    scrimClass: 'bg-[#0c53b7]/70',
+    accentTextClass: 'text-[#0c53b7]',
   },
   'argon-emerald': {
     label: 'Emerald',
-    hex: '#2dce89',
-    bannerClass: 'bg-[#2dce89]',
-    scrimClass: 'bg-[#2dce89]/70',
-    accentTextClass: 'text-[#2dce89]',
-  },
-  'argon-sunset': {
-    label: 'Sunset Coral',
-    hex: '#fb6340',
-    bannerClass: 'bg-[#fb6340]',
-    scrimClass: 'bg-[#fb6340]/70',
-    accentTextClass: 'text-[#fb6340]',
+    hex: '#229a16',
+    bannerClass: 'bg-[#229a16]',
+    scrimClass: 'bg-[#229a16]/70',
+    accentTextClass: 'text-[#229a16]',
   },
   'argon-slate': {
-    label: 'Deep Slate',
-    hex: '#172b4d',
-    bannerClass: 'bg-[#172b4d]',
-    scrimClass: 'bg-[#172b4d]/75',
-    accentTextClass: 'text-[#172b4d]',
+    label: 'Obsidian Slate',
+    hex: '#212b36',
+    bannerClass: 'bg-[#212b36]',
+    scrimClass: 'bg-[#212b36]/80',
+    accentTextClass: 'text-[#919eab]',
   },
 };
 
@@ -83,29 +89,28 @@ interface NavItem {
   id: NavSection;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
-  iconColor: string;
 }
 
 const OPERATIONS_NAV: NavItem[] = [
-  { id: 'overview', label: 'Dashboard', icon: LayoutDashboard, iconColor: 'text-[#5e72e4]' },
-  { id: 'adsense', label: 'AdSense Revenue', icon: BarChart3, iconColor: 'text-[#fb6340]' },
-  { id: 'channels', label: 'Social & Ad Accounts', icon: Share2, iconColor: 'text-[#11cdef]' },
-  { id: 'affiliate', label: 'Electronic First API', icon: Handshake, iconColor: 'text-[#2dce89]' },
-  { id: 'crm', label: 'CRM & WhatsApp', icon: Users, iconColor: 'text-[#f5365c]' },
-  { id: 'orders', label: 'Orders & Keys', icon: ShoppingBag, iconColor: 'text-[#5e72e4]' },
-  { id: 'catalog', label: 'Catalog & TV', icon: Package, iconColor: 'text-[#fb6340]' },
-  { id: 'domains', label: 'Domains', icon: Globe, iconColor: 'text-[#11cdef]' },
-  { id: 'integrations', label: 'Integrations & Worker', icon: Plug, iconColor: 'text-[#2dce89]' },
+  { id: 'overview', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'adsense', label: 'AdSense & GA4', icon: BarChart3 },
+  { id: 'channels', label: 'Social & Ad Accounts', icon: Share2 },
+  { id: 'affiliate', label: 'Electronic First API', icon: Handshake },
+  { id: 'crm', label: 'CRM & WhatsApp', icon: Users },
+  { id: 'orders', label: 'Orders & Keys', icon: ShoppingBag },
+  { id: 'catalog', label: 'Catalog & TV', icon: Package },
+  { id: 'domains', label: 'Domains', icon: Globe },
+  { id: 'integrations', label: 'Integrations & Worker', icon: Plug },
 ];
 
 const ACCOUNT_NAV: NavItem[] = [
-  { id: 'profile', label: 'User Profile', icon: UserCog, iconColor: 'text-[#5e72e4]' },
-  { id: 'customers', label: 'Customers & Access', icon: UserCheck, iconColor: 'text-[#f5365c]' },
+  { id: 'profile', label: 'My Profile', icon: UserCog },
+  { id: 'customers', label: 'Customers & Access', icon: UserCheck },
 ];
 
 const SECTION_LABELS: Record<NavSection, string> = {
   overview: 'Dashboard',
-  adsense: 'AdSense Revenue',
+  adsense: 'AdSense & GA4',
   channels: 'Social & Ad Accounts',
   affiliate: 'Electronic First API',
   crm: 'CRM & WhatsApp',
@@ -114,7 +119,7 @@ const SECTION_LABELS: Record<NavSection, string> = {
   customers: 'Customers & Access',
   domains: 'Domains',
   integrations: 'Integrations & Worker',
-  profile: 'User Profile',
+  profile: 'My Profile',
 };
 
 export function getInitials(name: string): string {
@@ -148,236 +153,378 @@ export function AdminShell({
   headerAction,
   children,
 }: AdminShellProps) {
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('pb_sidebar_open');
+      return saved === null ? true : saved === 'true';
+    } catch {
+      return true;
+    }
+  });
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement | null>(null);
 
   const displayName = userProfile?.displayName || 'PlayBeat Operator';
-  const displayEmail = userProfile?.email || 'playbeat.digital';
+  const displayEmail = userProfile?.email || 'business@playbeat.digital';
   const brandTitle = userProfile?.brandTitle || 'PlayBeat Admin';
   const avatarUrl = userProfile?.avatarUrl || '';
-  const coverThemeKey: ProfileCoverTheme =
-    userProfile?.coverTheme && ARGON_COVER_THEMES[userProfile.coverTheme]
-      ? userProfile.coverTheme
-      : 'argon-blue';
-  const coverTheme = ARGON_COVER_THEMES[coverThemeKey];
 
   useEffect(() => {
     setAvatarError(false);
   }, [avatarUrl]);
 
-  // Overview and User Profile feature floating Argon cards straddling the colored header band.
-  // Other operational pages sit cleanly below a compact Argon banner so their dark/light titles keep WCAG AA contrast.
-  const straddlesBanner = activeSection === 'overview' || activeSection === 'profile';
+  useEffect(() => {
+    try {
+      localStorage.setItem('pb_sidebar_open', String(sidebarOpen));
+    } catch {
+      // ignore storage errors
+    }
+  }, [sidebarOpen]);
 
-  const renderNavItem = (item: NavItem) => {
+  useEffect(() => {
+    function handleOutsideClick(event: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    }
+    function handleFullscreenChange() {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    }
+    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.().catch(() => {});
+    } else {
+      document.exitFullscreen?.().catch(() => {});
+    }
+  }
+
+  const renderNavItem = (item: NavItem, collapsed: boolean) => {
     const Icon = item.icon;
     const active = activeSection === item.id;
     return (
       <button
         key={item.id}
         type="button"
+        title={collapsed ? item.label : undefined}
         onClick={() => {
           onSelectSection(item.id);
           setMobileOpen(false);
         }}
-        className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-sm rounded-xl transition-colors whitespace-nowrap ${
+        className={`group w-full flex items-center gap-3 rounded-xl transition-colors duration-150 whitespace-nowrap ${
+          collapsed ? 'justify-center px-2 py-2.5' : 'px-3 py-2.5'
+        } ${
           active
-            ? 'bg-[#f6f9fc] dark:bg-[#1b2859] text-[#344767] dark:text-white font-semibold'
-            : 'text-[#67748e] dark:text-slate-300 font-medium hover:bg-[#f8f9fe] dark:hover:bg-[#182450] hover:text-[#344767] dark:hover:text-white'
+            ? 'bg-amber-500/12 text-[#fda92d] font-semibold ring-1 ring-amber-400/25'
+            : 'text-slate-300 font-medium hover:bg-white/[0.06] hover:text-amber-300'
         }`}
       >
-        <span
-          className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
+        <Icon
+          className={`w-[18px] h-[18px] shrink-0 transition-colors ${
             active
-              ? 'bg-white dark:bg-[#111c44] shadow-xs'
-              : 'bg-transparent'
+              ? 'text-[#fda92d] drop-shadow-[0_0_8px_rgba(247,129,9,0.45)]'
+              : 'text-slate-400 group-hover:text-amber-300'
           }`}
-        >
-          <Icon className={`w-4 h-4 shrink-0 ${item.iconColor}`} />
-        </span>
-        <span className="truncate">{item.label}</span>
+        />
+        {!collapsed && <span className="text-[13.5px] truncate">{item.label}</span>}
       </button>
     );
   };
 
-  const sidebarContent = (
-    <div className="flex flex-col h-full bg-white dark:bg-[#111c44] border border-[#e9ecef] dark:border-[#1e2952] lg:rounded-2xl shadow-[0_0_2rem_0_rgba(136,152,170,0.15)] dark:shadow-[0_0_2rem_0_rgba(0,0,0,0.4)] overflow-hidden">
-      {/* Argon Brand Header */}
-      <div className="h-16 px-5 flex items-center justify-between border-b border-[#e9ecef] dark:border-[#1e2952] shrink-0">
-        <button
-          type="button"
-          onClick={() => {
-            onSelectSection('overview');
-            setMobileOpen(false);
-          }}
-          className="flex items-center gap-2.5 min-w-0 text-left"
-        >
-          <span
-            className={`w-8 h-8 rounded-lg ${coverTheme.bannerClass} text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs`}
+  const renderDivider = (label: string, collapsed: boolean) => {
+    if (collapsed) {
+      return <div className="my-3 border-t border-slate-700/60" aria-hidden="true" />;
+    }
+    return (
+      <div className="flex items-center gap-2.5 px-2 pt-4 pb-1.5">
+        <span className="h-px flex-1 bg-slate-700/60" aria-hidden="true" />
+        <span className="text-[11px] font-semibold tracking-wide text-slate-400 whitespace-nowrap">
+          {label}
+        </span>
+        <span className="h-px flex-1 bg-slate-700/60" aria-hidden="true" />
+      </div>
+    );
+  };
+
+  const renderSidebarBody = (collapsed: boolean, isMobile = false) => (
+    <div className="flex flex-col h-full bg-[#1a202c] text-slate-200 border-r border-slate-700/50">
+      {/* Brand Header + Collapsible Toggler (SideNavbar.vue signature) */}
+      <div
+        className={`h-16 flex items-center border-b border-dashed border-slate-700/80 shrink-0 ${
+          collapsed ? 'justify-center px-2' : 'justify-between px-4'
+        }`}
+      >
+        {!collapsed && (
+          <button
+            type="button"
+            onClick={() => {
+              onSelectSection('overview');
+              setMobileOpen(false);
+            }}
+            className="flex items-center gap-2.5 min-w-0 text-left"
           >
-            PB
-          </span>
-          <span className="text-sm font-bold tracking-tight text-[#344767] dark:text-white truncate">
-            {brandTitle}
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setMobileOpen(false)}
-          aria-label="Close navigation menu"
-          className="lg:hidden p-1.5 text-[#67748e] hover:text-[#344767] dark:hover:text-white rounded-lg"
-        >
-          <X className="w-4 h-4" />
-        </button>
+            <span className="w-8 h-8 rounded-lg bg-[#f78109] text-[#161c24] font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
+              PB
+            </span>
+            <span className="text-sm font-bold tracking-tight text-white truncate">
+              {brandTitle}
+            </span>
+          </button>
+        )}
+
+        {isMobile ? (
+          <button
+            type="button"
+            onClick={() => setMobileOpen(false)}
+            aria-label="Close navigation menu"
+            className="p-2 text-slate-400 hover:text-[#fda92d] rounded-lg transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setSidebarOpen((open) => !open)}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            className="p-2 text-slate-400 hover:text-[#fda92d] hover:bg-white/[0.06] rounded-lg transition-colors shrink-0"
+          >
+            {collapsed ? (
+              <PanelLeftOpen className="w-5 h-5 text-[#fda92d]" />
+            ) : (
+              <PanelLeftClose className="w-5 h-5" />
+            )}
+          </button>
+        )}
       </div>
 
-      {/* Grouped Argon Navigation */}
-      <nav aria-label="Primary navigation" className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
-        <div className="space-y-1">
-          <p className="px-3.5 pb-1 text-[11px] font-bold uppercase tracking-wider text-[#8392ab] dark:text-slate-400">
-            Operations
-          </p>
-          {OPERATIONS_NAV.map(renderNavItem)}
-        </div>
+      {/* Navigation Links */}
+      <nav
+        aria-label="Primary navigation"
+        className="flex-1 overflow-y-auto custom-scrollbar px-2.5 py-3 space-y-1"
+      >
+        {renderDivider('Operations', collapsed)}
+        {OPERATIONS_NAV.map((item) => renderNavItem(item, collapsed))}
 
-        <div className="space-y-1 pt-2 border-t border-[#e9ecef] dark:border-[#1e2952]">
-          <p className="px-3.5 pb-1 text-[11px] font-bold uppercase tracking-wider text-[#8392ab] dark:text-slate-400">
-            Account Pages
-          </p>
-          {ACCOUNT_NAV.map(renderNavItem)}
-        </div>
+        {renderDivider('Account', collapsed)}
+        {ACCOUNT_NAV.map((item) => renderNavItem(item, collapsed))}
       </nav>
 
-      {/* Operator Footer */}
-      <div className="p-4 border-t border-[#e9ecef] dark:border-[#1e2952] space-y-3 shrink-0 bg-[#fafbfe] dark:bg-[#0e1738]">
-        <button
-          type="button"
-          onClick={() => {
-            onSelectSection('profile');
-            setMobileOpen(false);
-          }}
-          className="w-full flex items-center gap-3 p-1.5 -m-1.5 rounded-xl hover:bg-[#f6f9fc] dark:hover:bg-[#182450] transition-colors text-left"
-        >
-          {avatarUrl && !avatarError ? (
-            <img
-              src={avatarUrl}
-              alt={displayName}
-              referrerPolicy="no-referrer"
-              onError={() => setAvatarError(true)}
-              className="w-9 h-9 rounded-full object-cover border border-[#e9ecef] dark:border-[#1e2952] shrink-0"
-            />
-          ) : (
-            <div
-              className={`w-9 h-9 rounded-full ${coverTheme.bannerClass} text-white flex items-center justify-center text-xs font-bold shrink-0`}
-            >
-              {getInitials(displayName)}
-            </div>
-          )}
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold text-[#344767] dark:text-white truncate">
-              {displayName}
-            </p>
-            <p className="text-[11px] text-[#8392ab] dark:text-slate-400 truncate">
-              {displayEmail}
-            </p>
-          </div>
-        </button>
-
+      {/* Compact Sidebar Footer */}
+      <div className="p-3 border-t border-dashed border-slate-700/80 shrink-0">
         <button
           type="button"
           onClick={onSignOut}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-[#344767] dark:text-slate-200 bg-white dark:bg-[#111c44] border border-[#dee2e6] dark:border-[#1e2952] rounded-lg hover:bg-[#f6f9fc] dark:hover:bg-[#182450] transition-colors whitespace-nowrap"
+          title={collapsed ? 'Log out' : undefined}
+          className={`w-full flex items-center gap-2.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-[#fda92d] hover:bg-white/[0.06] border border-slate-700/70 transition-colors whitespace-nowrap ${
+            collapsed ? 'justify-center p-2.5' : 'justify-center px-3 py-2'
+          }`}
         >
-          <LogOut className="w-3.5 h-3.5 shrink-0" />
-          <span>Sign Out</span>
+          <LogOut className="w-4 h-4 shrink-0" />
+          {!collapsed && <span>Log out</span>}
         </button>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#f8f9fe] dark:bg-[#0b1437] text-[#344767] dark:text-slate-100 relative">
-      {/* Argon Signature Full-Width Top Header Band */}
-      <div
-        aria-hidden="true"
-        className={`absolute inset-x-0 top-0 pointer-events-none transition-colors duration-200 ${
-          coverTheme.bannerClass
-        } ${straddlesBanner ? 'h-64' : 'h-[76px]'}`}
-      />
+    <div className="min-h-screen bg-[#f5f8fa] dark:bg-[#161c24] text-[#212b36] dark:text-slate-100">
+      {/* Desktop Fixed Collapsible Sidebar (AdminLayout.vue) */}
+      <aside
+        className={`hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 z-40 transition-all duration-200 ${
+          sidebarOpen ? 'md:w-64' : 'md:w-16'
+        }`}
+      >
+        {renderSidebarBody(!sidebarOpen, false)}
+      </aside>
 
-      <div className="relative z-10 flex min-h-screen">
-        {/* Desktop Floating Argon Sidebar */}
-        <aside className="hidden lg:block w-[264px] shrink-0 p-4">
-          <div className="sticky top-4 h-[calc(100vh-2rem)]">{sidebarContent}</div>
-        </aside>
-
-        {/* Mobile Drawer */}
-        {mobileOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden flex">
-            <div
-              className="fixed inset-0 bg-[#0b1437]/60"
-              onClick={() => setMobileOpen(false)}
-              aria-hidden="true"
-            />
-            <aside className="relative z-10 w-68 max-w-[82vw] h-full">{sidebarContent}</aside>
-          </div>
-        )}
-
-        {/* Main Workspace */}
-        <div className="flex-1 min-w-0 flex flex-col">
-          {/* Argon Translucent Top Navbar over Colored Band */}
-          <header className="px-4 sm:px-6 lg:px-8 h-[76px] flex items-center justify-between gap-4 text-white shrink-0">
-            <div className="flex items-center gap-3 min-w-0">
-              <button
-                type="button"
-                onClick={() => setMobileOpen(true)}
-                aria-label="Open navigation menu"
-                className="lg:hidden p-2 -ml-2 text-white/90 hover:bg-white/15 rounded-lg"
-              >
-                <Menu className="w-5 h-5" />
-              </button>
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5 text-xs text-white/80">
-                  <span className="whitespace-nowrap">Pages</span>
-                  <span aria-hidden="true">/</span>
-                  <span className="truncate font-medium text-white">
-                    {SECTION_LABELS[activeSection]}
-                  </span>
-                </div>
-                <p className="text-base font-bold tracking-tight text-white truncate">
-                  {SECTION_LABELS[activeSection]}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 shrink-0">
-              <button
-                type="button"
-                onClick={() => onSelectSection('profile')}
-                className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-white bg-white/15 hover:bg-white/25 rounded-lg transition-colors whitespace-nowrap shrink-0"
-              >
-                <span className="truncate max-w-[140px]">{displayName}</span>
-              </button>
-              <button
-                type="button"
-                onClick={onToggleTheme}
-                aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-                className="inline-flex items-center justify-center w-9 h-9 text-white bg-white/15 hover:bg-white/25 rounded-lg transition-colors shrink-0"
-              >
-                {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-              </button>
-              {headerAction}
-            </div>
-          </header>
-
-          <main
-            className={`flex-1 px-4 sm:px-6 lg:px-8 pb-10 max-w-[1440px] w-full mx-auto ${
-              straddlesBanner ? 'pt-4' : 'pt-6'
-            }`}
-          >
-            {children}
-          </main>
+      {/* Mobile Slide-Over Sidebar */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 md:hidden flex">
+          <div
+            className="fixed inset-0 bg-[#161c24]/75 backdrop-blur-xs"
+            onClick={() => setMobileOpen(false)}
+            aria-hidden="true"
+          />
+          <aside className="relative z-10 w-72 max-w-[84vw] h-full">
+            {renderSidebarBody(false, true)}
+          </aside>
         </div>
+      )}
+
+      {/* Main Column with Dynamic Sidebar Offset */}
+      <div
+        className={`flex flex-col min-h-screen transition-all duration-200 ${
+          sidebarOpen ? 'md:pl-64' : 'md:pl-16'
+        }`}
+      >
+        {/* Sticky Top Navbar (TopNavbar.vue + UserDropDown.vue) */}
+        <header className="sticky top-0 z-30 h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 bg-white/95 dark:bg-[#1a202c]/95 backdrop-blur-sm border-b border-slate-200/80 dark:border-slate-700/50 shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
+          <div className="flex items-center gap-3 min-w-0">
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              aria-label="Open navigation menu"
+              className="md:hidden p-2 -ml-2 text-[#637381] dark:text-slate-300 hover:text-[#f78109] rounded-lg"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <div className="flex items-center gap-2 text-sm min-w-0">
+              <span className="hidden sm:inline text-[#919eab] whitespace-nowrap">Admin</span>
+              <span className="hidden sm:inline text-[#919eab]" aria-hidden="true">
+                /
+              </span>
+              <span className="font-semibold text-[#212b36] dark:text-white truncate">
+                {SECTION_LABELS[activeSection]}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+            {headerAction}
+
+            <button
+              type="button"
+              onClick={toggleFullscreen}
+              aria-label={isFullscreen ? 'Exit fullscreen' : 'Toggle fullscreen'}
+              title={isFullscreen ? 'Exit fullscreen' : 'Toggle fullscreen'}
+              className="hidden sm:inline-flex items-center justify-center w-9 h-9 text-[#637381] dark:text-[#919eab] hover:text-[#f78109] dark:hover:text-[#fda92d] hover:bg-slate-100 dark:hover:bg-[#212b36] rounded-lg transition-colors shrink-0"
+            >
+              {isFullscreen ? (
+                <Minimize2 className="w-4 h-4" />
+              ) : (
+                <Maximize2 className="w-4 h-4" />
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={onToggleTheme}
+              aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+              title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+              className="inline-flex items-center justify-center w-9 h-9 text-[#637381] dark:text-[#919eab] hover:text-[#f78109] dark:hover:text-[#fda92d] hover:bg-slate-100 dark:hover:bg-[#212b36] rounded-lg transition-colors shrink-0"
+            >
+              {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+
+            {/* Starter Kit User Dropdown */}
+            <div className="relative" ref={userMenuRef}>
+              <button
+                type="button"
+                onClick={() => setUserMenuOpen((o) => !o)}
+                aria-expanded={userMenuOpen}
+                aria-haspopup="menu"
+                className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-[#212b36] transition-colors shrink-0"
+              >
+                {avatarUrl && !avatarError ? (
+                  <img
+                    src={avatarUrl}
+                    alt={displayName}
+                    referrerPolicy="no-referrer"
+                    onError={() => setAvatarError(true)}
+                    className="w-8 h-8 rounded-md object-cover border border-slate-200 dark:border-slate-700"
+                  />
+                ) : (
+                  <span className="w-8 h-8 rounded-md bg-[#f78109] text-[#161c24] font-bold text-xs flex items-center justify-center">
+                    {getInitials(displayName)}
+                  </span>
+                )}
+                <span className="hidden lg:inline text-xs font-semibold text-[#212b36] dark:text-slate-100 max-w-[120px] truncate">
+                  {displayName}
+                </span>
+                <ChevronDown className="w-3.5 h-3.5 text-[#919eab] hidden sm:block" />
+              </button>
+
+              {userMenuOpen && (
+                <div
+                  role="menu"
+                  className="absolute right-0 mt-2 w-72 origin-top-right rounded-xl bg-white dark:bg-[#212b36] border border-slate-200 dark:border-slate-700/70 shadow-xl overflow-hidden z-50"
+                >
+                  <div className="flex items-center gap-3 px-4 py-3.5 border-b border-slate-200/80 dark:border-slate-700/60">
+                    {avatarUrl && !avatarError ? (
+                      <img
+                        src={avatarUrl}
+                        alt={displayName}
+                        referrerPolicy="no-referrer"
+                        onError={() => setAvatarError(true)}
+                        className="w-9 h-9 rounded-md object-cover shrink-0"
+                      />
+                    ) : (
+                      <span className="w-9 h-9 rounded-md bg-[#f78109] text-[#161c24] font-bold text-xs flex items-center justify-center shrink-0">
+                        {getInitials(displayName)}
+                      </span>
+                    )}
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-[#212b36] dark:text-white truncate">
+                        {displayName}
+                      </p>
+                      <p className="text-xs text-[#637381] dark:text-[#919eab] truncate">
+                        {displayEmail}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="py-1.5">
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        onSelectSection('profile');
+                      }}
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-[#333d48] dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#1a202c] hover:text-[#f78109] dark:hover:text-[#fda92d] transition-colors text-left"
+                    >
+                      <UserCog className="w-4 h-4 shrink-0" />
+                      <span>My Profile</span>
+                    </button>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        onSelectSection('profile');
+                      }}
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-[#333d48] dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#1a202c] hover:text-[#f78109] dark:hover:text-[#fda92d] transition-colors text-left"
+                    >
+                      <KeyRound className="w-4 h-4 shrink-0" />
+                      <span>Change Password</span>
+                    </button>
+                  </div>
+
+                  <div className="p-3 border-t border-slate-200/80 dark:border-slate-700/60">
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        onSignOut();
+                      }}
+                      className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-[#333d48] dark:text-slate-200 border border-slate-200 dark:border-slate-600/70 rounded-lg hover:bg-slate-100 dark:hover:bg-[#161c24] transition-colors"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span>Log out</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </header>
+
+        {/* Main Viewport */}
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-[1440px] w-full mx-auto">
+          {children}
+        </main>
       </div>
     </div>
   );

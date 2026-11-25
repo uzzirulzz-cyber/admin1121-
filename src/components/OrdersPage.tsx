@@ -205,7 +205,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
         <button
           type="button"
           onClick={() => setModalOpen(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors whitespace-nowrap shrink-0 self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] rounded-lg transition-colors whitespace-nowrap shrink-0 self-start sm:self-auto"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>Create Manual Order</span>
@@ -218,7 +218,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
           className={`flex items-center justify-between gap-4 px-4 py-3 text-xs rounded-lg border ${
             notice.type === 'error'
               ? 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-900 text-red-700 dark:text-red-300'
-              : 'bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200'
+              : 'bg-zinc-100 dark:bg-[#212b36] border-zinc-200 dark:border-slate-700/60 text-zinc-800 dark:text-zinc-200'
           }`}
         >
           <span>{notice.text}</span>
@@ -230,7 +230,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
 
       {/* Filter Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="inline-flex items-center p-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg self-start">
+        <div className="inline-flex items-center p-1 bg-zinc-100 dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-lg self-start">
           {(
             [
               { value: 'ALL', label: `All (${orders.length})` },
@@ -250,7 +250,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
               onClick={() => setStatusFilter(tab.value)}
               className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
                 statusFilter === tab.value
-                  ? 'bg-white dark:bg-zinc-800 text-zinc-950 dark:text-zinc-50 shadow-xs'
+                  ? 'bg-white dark:bg-[#1a202c] text-zinc-950 dark:text-zinc-50 shadow-xs'
                   : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
               }`}
             >
@@ -266,17 +266,17 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search order ID, email, ref..."
-            className="w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+            className="w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
           />
         </div>
       </div>
 
       {/* Orders Table */}
-      <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
+      <section className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <tr className="border-b border-zinc-200 dark:border-slate-700/60 text-xs font-medium text-zinc-500 dark:text-zinc-400">
                 <th className="py-3 px-5">Order & Ref</th>
                 <th className="py-3 px-4">Customer</th>
                 <th className="py-3 px-4">Items</th>
@@ -285,7 +285,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                 <th className="py-3 px-5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/80 text-sm">
+            <tbody className="divide-y divide-zinc-100 dark:divide-slate-700/50 text-sm">
               {loading ? (
                 <tr>
                   <td colSpan={6} className="py-10 text-center text-xs text-zinc-500">
@@ -301,7 +301,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
               ) : (
                 filtered.map((order) => (
                   <React.Fragment key={order.id}>
-                    <tr className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors align-top">
+                    <tr className="hover:bg-zinc-50 dark:hover:bg-[#1a202c]/40 transition-colors align-top">
                       <td className="py-3.5 px-5 whitespace-nowrap">
                         <p className="font-mono text-xs font-semibold text-zinc-950 dark:text-zinc-50">
                           {order.id}
@@ -349,7 +349,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                             onClick={() =>
                               setExpandedOrderId(expandedOrderId === order.id ? null : order.id)
                             }
-                            className="mt-1 inline-flex items-center gap-1 text-[11px] text-blue-600 dark:text-blue-400 hover:underline"
+                            className="mt-1 inline-flex items-center gap-1 text-[11px] text-[#f78109] dark:text-[#fda92d] hover:underline"
                           >
                             <KeyRound className="w-3 h-3" />
                             <span>
@@ -385,7 +385,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                             disabled={busyId === order.id}
                             onClick={() => handleDelete(order.id)}
                             aria-label={`Delete order ${order.id}`}
-                            className="p-1.5 text-zinc-500 hover:text-red-600 dark:hover:text-red-400 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                            className="p-1.5 text-zinc-500 hover:text-red-600 dark:hover:text-red-400 rounded-md hover:bg-zinc-100 dark:hover:bg-[#1a202c]"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -393,7 +393,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                       </td>
                     </tr>
                     {expandedOrderId === order.id && order.issuedKeys.length > 0 && (
-                      <tr className="bg-zinc-50/80 dark:bg-zinc-950/60">
+                      <tr className="bg-zinc-50/80 dark:bg-[#161c24]/60">
                         <td colSpan={6} className="px-6 py-4">
                           <p className="text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-2">
                             Issued License Keys · Meta CAPI:{' '}
@@ -405,7 +405,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                                 key={k}
                                 type="button"
                                 onClick={() => handleCopyKey(k)}
-                                className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-mono bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-md hover:border-blue-500"
+                                className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-mono bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-md hover:border-blue-500"
                               >
                                 <span>{k}</span>
                                 {copiedKey === k ? (
@@ -430,8 +430,8 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
       {/* Create Manual Order Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/60">
-          <div className="w-full max-w-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
-            <div className="px-6 py-4 flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800">
+          <div className="w-full max-w-xl bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+            <div className="px-6 py-4 flex items-center justify-between border-b border-zinc-200 dark:border-slate-700/60">
               <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
                 Create Manual Order
               </h2>
@@ -457,7 +457,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                     value={customerEmail}
                     onChange={(e) => setCustomerEmail(e.target.value)}
                     placeholder="customer@example.com"
-                    className="w-full px-3 py-2 text-sm bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                    className="w-full px-3 py-2 text-sm bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   />
                 </div>
                 <div>
@@ -469,7 +469,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                     value={customerPhone}
                     onChange={(e) => setCustomerPhone(e.target.value)}
                     placeholder="923001234567"
-                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   />
                 </div>
                 <div>
@@ -479,7 +479,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                   <select
                     value={channel}
                     onChange={(e) => setChannel(e.target.value as OrderRecord['channel'])}
-                    className="w-full px-3 py-2 text-sm bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                    className="w-full px-3 py-2 text-sm bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   >
                     <option value="WhatsApp">WhatsApp</option>
                     <option value="JazzCash / EasyPaisa">JazzCash / EasyPaisa</option>
@@ -497,12 +497,12 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                     value={paymentRef}
                     onChange={(e) => setPaymentRef(e.target.value)}
                     placeholder="Transaction ID / receipt"
-                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2 pt-2 border-t border-zinc-200 dark:border-zinc-800">
+              <div className="space-y-2 pt-2 border-t border-zinc-200 dark:border-slate-700/60">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
                     Order Line Items
@@ -514,7 +514,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                         setSelectedLines((prev) => [...prev, { sku: catalog[0].sku, qty: 1 }]);
                       }
                     }}
-                    className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline"
+                    className="text-xs font-medium text-[#f78109] dark:text-[#fda92d] hover:underline"
                   >
                     + Add SKU
                   </button>
@@ -531,7 +531,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                           ),
                         )
                       }
-                      className="flex-1 min-w-0 px-3 py-2 text-xs bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                      className="flex-1 min-w-0 px-3 py-2 text-xs bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                     >
                       {catalog.map((p) => (
                         <option key={p.sku} value={p.sku}>
@@ -551,7 +551,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                           ),
                         )
                       }
-                      className="w-16 px-2.5 py-2 text-xs font-mono text-center bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                      className="w-16 px-2.5 py-2 text-xs font-mono text-center bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                     />
                     {selectedLines.length > 1 && (
                       <button
@@ -569,7 +569,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                 ))}
               </div>
 
-              <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+              <div className="pt-3 border-t border-zinc-200 dark:border-slate-700/60 flex items-center justify-between">
                 <div className="text-xs font-mono tabular-nums">
                   <span className="text-zinc-500">Order Total: </span>
                   <span className="font-semibold text-zinc-950 dark:text-zinc-50">
@@ -584,14 +584,14 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                   <button
                     type="button"
                     onClick={() => setModalOpen(false)}
-                    className="px-4 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 rounded-lg"
+                    className="px-4 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-slate-700/70 rounded-lg"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={saving}
-                    className="px-4 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 rounded-lg"
+                    className="px-4 py-2 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg"
                   >
                     {saving ? 'Creating...' : 'Create Order'}
                   </button>

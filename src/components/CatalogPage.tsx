@@ -351,7 +351,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
             <button
               type="button"
               onClick={() => setImportOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800 whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c] whitespace-nowrap"
             >
               <Upload className="w-3.5 h-3.5" />
               <span>Import JSON</span>
@@ -359,7 +359,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
             <button
               type="button"
               onClick={handleExportCsv}
-              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800 whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c] whitespace-nowrap"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Export CSV</span>
@@ -367,7 +367,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
             <button
               type="button"
               onClick={openNewModal}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] rounded-lg whitespace-nowrap"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Product</span>
@@ -377,7 +377,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
       </div>
 
       {/* Primary Catalog Sub-Tabs */}
-      <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg">
+      <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-zinc-100 dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
         {(
           [
             { id: 'products', label: `Products (${totalCount})` },
@@ -392,7 +392,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
             onClick={() => setActiveTab(tab.id)}
             className={`px-3.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
               activeTab === tab.id
-                ? 'bg-white dark:bg-zinc-800 text-zinc-950 dark:text-zinc-50 shadow-xs'
+                ? 'bg-white dark:bg-[#1a202c] text-zinc-950 dark:text-zinc-50 shadow-xs'
                 : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
             }`}
           >
@@ -407,7 +407,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
           className={`flex items-center justify-between gap-4 px-4 py-3 text-xs rounded-lg border ${
             notice.type === 'error'
               ? 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-900 text-red-700 dark:text-red-300'
-              : 'bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200'
+              : 'bg-zinc-100 dark:bg-[#212b36] border-zinc-200 dark:border-slate-700/60 text-zinc-800 dark:text-zinc-200'
           }`}
         >
           <span>{notice.text}</span>
@@ -421,7 +421,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
       {activeTab === 'products' && (
         <>
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-            <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg">
+            <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-zinc-100 dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat}
@@ -429,7 +429,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                   onClick={() => setCategory(cat)}
                   className={`px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
                     category === cat
-                      ? 'bg-white dark:bg-zinc-800 text-zinc-950 dark:text-zinc-50 shadow-xs'
+                      ? 'bg-white dark:bg-[#1a202c] text-zinc-950 dark:text-zinc-50 shadow-xs'
                       : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
                   }`}
                 >
@@ -443,7 +443,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                 aria-label="Filter by stock status"
                 value={stock}
                 onChange={(e) => setStock(e.target.value)}
-                className="px-3 py-2 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-800 dark:text-zinc-200"
+                className="px-3 py-2 text-xs bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-lg text-zinc-800 dark:text-zinc-200"
               >
                 <option value="ALL">All Stock</option>
                 <option value="IN_STOCK">In Stock</option>
@@ -458,17 +458,17 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search SKU or product..."
-                  className="w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+                  className="w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
                 />
               </div>
             </div>
           </div>
 
-          <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
+          <section className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                  <tr className="border-b border-zinc-200 dark:border-slate-700/60 text-xs font-medium text-zinc-500 dark:text-zinc-400">
                     <th className="py-3 px-5">Product & SKU</th>
                     <th className="py-3 px-4">Platform / Source</th>
                     <th className="py-3 px-4 text-right">USD</th>
@@ -478,7 +478,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                     <th className="py-3 px-5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/80 text-sm">
+                <tbody className="divide-y divide-zinc-100 dark:divide-slate-700/50 text-sm">
                   {loading ? (
                     <tr>
                       <td colSpan={7} className="py-10 text-center text-xs text-zinc-500">
@@ -495,7 +495,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                     products.map((product) => (
                       <tr
                         key={product.id}
-                        className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors"
+                        className="hover:bg-zinc-50 dark:hover:bg-[#1a202c]/40 transition-colors"
                       >
                         <td className="py-3 px-5">
                           <p className="font-medium text-zinc-950 dark:text-zinc-50">
@@ -538,7 +538,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                             onClick={() => handleQuickToggleActive(product)}
                             className={`font-medium hover:underline ${
                               product.active
-                                ? 'text-blue-600 dark:text-blue-400'
+                                ? 'text-[#f78109] dark:text-[#fda92d]'
                                 : 'text-zinc-400 dark:text-zinc-500'
                             }`}
                           >
@@ -551,7 +551,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                               type="button"
                               onClick={() => openEditModal(product)}
                               aria-label={`Edit ${product.name}`}
-                              className="p-1.5 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                              className="p-1.5 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 rounded-md hover:bg-zinc-100 dark:hover:bg-[#1a202c]"
                             >
                               <Pencil className="w-3.5 h-3.5" />
                             </button>
@@ -559,7 +559,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                               type="button"
                               onClick={() => handleDeleteProduct(product)}
                               aria-label={`Delete ${product.name}`}
-                              className="p-1.5 text-zinc-500 hover:text-red-600 dark:hover:text-red-400 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                              className="p-1.5 text-zinc-500 hover:text-red-600 dark:hover:text-red-400 rounded-md hover:bg-zinc-100 dark:hover:bg-[#1a202c]"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -580,7 +580,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
         <div className="space-y-4">
           <form
             onSubmit={handleCreateService}
-            className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-5 gap-3"
+            className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-5 gap-3"
           >
             <input
               type="text"
@@ -588,7 +588,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
               value={srvCode}
               onChange={(e) => setSrvCode(e.target.value)}
               placeholder="Code (e.g. SRV-STEAM)"
-              className="px-3 py-2 text-xs font-mono bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+              className="px-3 py-2 text-xs font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
             />
             <input
               type="text"
@@ -596,7 +596,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
               value={srvName}
               onChange={(e) => setSrvName(e.target.value)}
               placeholder="Service name"
-              className="sm:col-span-2 px-3 py-2 text-xs bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+              className="sm:col-span-2 px-3 py-2 text-xs bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
             />
             <input
               type="number"
@@ -605,21 +605,21 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
               value={srvPrice}
               onChange={(e) => setSrvPrice(e.target.value)}
               placeholder="USD"
-              className="px-3 py-2 text-xs font-mono bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+              className="px-3 py-2 text-xs font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
             />
             <button
               type="submit"
-              className="px-4 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg whitespace-nowrap"
+              className="px-4 py-2 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] rounded-lg whitespace-nowrap"
             >
               Add Service
             </button>
           </form>
 
-          <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
+          <section className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                  <tr className="border-b border-zinc-200 dark:border-slate-700/60 text-xs font-medium text-zinc-500 dark:text-zinc-400">
                     <th className="py-3 px-5">Code</th>
                     <th className="py-3 px-4">Service Name</th>
                     <th className="py-3 px-4">Turnaround</th>
@@ -628,9 +628,9 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                     <th className="py-3 px-5 text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/80 text-sm">
+                <tbody className="divide-y divide-zinc-100 dark:divide-slate-700/50 text-sm">
                   {services.map((s) => (
-                    <tr key={s.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40">
+                    <tr key={s.id} className="hover:bg-zinc-50 dark:hover:bg-[#1a202c]/40">
                       <td className="py-3 px-5 font-mono text-xs font-medium">{s.code}</td>
                       <td className="py-3 px-4 text-zinc-900 dark:text-zinc-100">{s.name}</td>
                       <td className="py-3 px-4 text-xs text-zinc-500">{s.turnaround}</td>
@@ -664,7 +664,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
         <div className="space-y-4">
           <form
             onSubmit={handleCreateChannel}
-            className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-5 gap-3"
+            className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-5 gap-3"
           >
             <input
               type="text"
@@ -672,12 +672,12 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
               value={chName}
               onChange={(e) => setChName(e.target.value)}
               placeholder="Channel name"
-              className="px-3 py-2 text-xs bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+              className="px-3 py-2 text-xs bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
             />
             <select
               value={chCategory}
               onChange={(e) => setChCategory(e.target.value as TvChannel['category'])}
-              className="px-3 py-2 text-xs bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+              className="px-3 py-2 text-xs bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
             >
               <option value="Sports">Sports</option>
               <option value="News">News</option>
@@ -687,7 +687,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
             <select
               value={chRegion}
               onChange={(e) => setChRegion(e.target.value as TvChannel['region'])}
-              className="px-3 py-2 text-xs bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+              className="px-3 py-2 text-xs bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
             >
               <option value="USA / NA">USA / NA</option>
               <option value="South Asia">South Asia</option>
@@ -699,21 +699,21 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
               value={chDomain}
               onChange={(e) => setChDomain(e.target.value)}
               placeholder="Domain (e.g. playbeat.live)"
-              className="px-3 py-2 text-xs font-mono bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+              className="px-3 py-2 text-xs font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
             />
             <button
               type="submit"
-              className="px-4 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg whitespace-nowrap"
+              className="px-4 py-2 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] rounded-lg whitespace-nowrap"
             >
               Add Channel
             </button>
           </form>
 
-          <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
+          <section className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                  <tr className="border-b border-zinc-200 dark:border-slate-700/60 text-xs font-medium text-zinc-500 dark:text-zinc-400">
                     <th className="py-3 px-5">Channel</th>
                     <th className="py-3 px-4">Category / Region</th>
                     <th className="py-3 px-4">Target Domain</th>
@@ -721,9 +721,9 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                     <th className="py-3 px-5 text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/80 text-sm">
+                <tbody className="divide-y divide-zinc-100 dark:divide-slate-700/50 text-sm">
                   {channels.map((ch) => (
-                    <tr key={ch.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40">
+                    <tr key={ch.id} className="hover:bg-zinc-50 dark:hover:bg-[#1a202c]/40">
                       <td className="py-3 px-5 font-medium text-zinc-950 dark:text-zinc-50">
                         {ch.name}
                       </td>
@@ -776,7 +776,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
         <div className="space-y-4">
           <form
             onSubmit={handleCreatePlan}
-            className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-6 gap-3"
+            className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-6 gap-3"
           >
             <input
               type="text"
@@ -784,7 +784,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
               value={planSku}
               onChange={(e) => setPlanSku(e.target.value)}
               placeholder="SKU (PB-TV-ALL)"
-              className="px-3 py-2 text-xs font-mono bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+              className="px-3 py-2 text-xs font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
             />
             <input
               type="text"
@@ -792,7 +792,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
               value={planName}
               onChange={(e) => setPlanName(e.target.value)}
               placeholder="Plan name"
-              className="sm:col-span-2 px-3 py-2 text-xs bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+              className="sm:col-span-2 px-3 py-2 text-xs bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
             />
             <input
               type="number"
@@ -801,7 +801,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
               value={planMonths}
               onChange={(e) => setPlanMonths(e.target.value)}
               placeholder="Months"
-              className="px-3 py-2 text-xs font-mono bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+              className="px-3 py-2 text-xs font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
             />
             <input
               type="number"
@@ -810,21 +810,21 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
               value={planPrice}
               onChange={(e) => setPlanPrice(e.target.value)}
               placeholder="USD"
-              className="px-3 py-2 text-xs font-mono bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+              className="px-3 py-2 text-xs font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
             />
             <button
               type="submit"
-              className="px-4 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg whitespace-nowrap"
+              className="px-4 py-2 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] rounded-lg whitespace-nowrap"
             >
               Add Plan
             </button>
           </form>
 
-          <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
+          <section className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                  <tr className="border-b border-zinc-200 dark:border-slate-700/60 text-xs font-medium text-zinc-500 dark:text-zinc-400">
                     <th className="py-3 px-5">Plan & SKU</th>
                     <th className="py-3 px-4">Duration</th>
                     <th className="py-3 px-4">Included Domains</th>
@@ -833,9 +833,9 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                     <th className="py-3 px-5 text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/80 text-sm">
+                <tbody className="divide-y divide-zinc-100 dark:divide-slate-700/50 text-sm">
                   {plans.map((p) => (
-                    <tr key={p.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40">
+                    <tr key={p.id} className="hover:bg-zinc-50 dark:hover:bg-[#1a202c]/40">
                       <td className="py-3 px-5">
                         <p className="font-medium text-zinc-950 dark:text-zinc-50">{p.name}</p>
                         <p className="text-xs font-mono text-zinc-500">{p.sku}</p>
@@ -874,8 +874,8 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
       {/* Bulk JSON Inventory Import Modal */}
       {importOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/60">
-          <div className="w-full max-w-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
-            <div className="px-6 py-4 flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800">
+          <div className="w-full max-w-xl bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+            <div className="px-6 py-4 flex items-center justify-between border-b border-zinc-200 dark:border-slate-700/60">
               <div>
                 <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
                   Import Inventory JSON (playbeat-inventory / KV Snapshot)
@@ -898,20 +898,20 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                 rows={10}
                 value={importJsonText}
                 onChange={(e) => setImportJsonText(e.target.value)}
-                className="w-full p-3 text-xs font-mono bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+                className="w-full p-3 text-xs font-mono bg-zinc-50 dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
               />
               <div className="flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setImportOpen(false)}
-                  className="px-4 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 rounded-lg"
+                  className="px-4 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-slate-700/70 rounded-lg"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={importing}
-                  className="px-4 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 rounded-lg"
+                  className="px-4 py-2 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg"
                 >
                   {importing ? 'Importing...' : 'Upsert Inventory'}
                 </button>
@@ -924,8 +924,8 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
       {/* Add/Edit Product Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/60">
-          <div className="w-full max-w-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
-            <div className="px-6 py-4 flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800">
+          <div className="w-full max-w-lg bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+            <div className="px-6 py-4 flex items-center justify-between border-b border-zinc-200 dark:border-slate-700/60">
               <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
                 {editing ? `Edit ${editing.sku}` : 'Add Catalog Product'}
               </h2>
@@ -951,7 +951,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                     value={sku}
                     onChange={(e) => setSku(e.target.value)}
                     placeholder="PB-STM-KEY01"
-                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg disabled:opacity-60"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg disabled:opacity-60"
                   />
                 </div>
                 <div>
@@ -965,7 +965,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                     step="0.01"
                     value={priceUsd}
                     onChange={(e) => setPriceUsd(e.target.value)}
-                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -978,7 +978,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Product title"
-                    className="w-full px-3 py-2 text-sm bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                    className="w-full px-3 py-2 text-sm bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   />
                 </div>
                 {!editing && (
@@ -992,7 +992,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                         onChange={(e) =>
                           setPlatform(e.target.value as CatalogProduct['platform'])
                         }
-                        className="w-full px-3 py-2 text-sm bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                        className="w-full px-3 py-2 text-sm bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                       >
                         <option value="PC / Steam">PC / Steam</option>
                         <option value="PlayStation">PlayStation</option>
@@ -1012,7 +1012,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                         onChange={(e) =>
                           setProdCategory(e.target.value as CatalogProduct['category'])
                         }
-                        className="w-full px-3 py-2 text-sm bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                        className="w-full px-3 py-2 text-sm bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                       >
                         <option value="Games">Games</option>
                         <option value="Gift Cards">Gift Cards</option>
@@ -1033,7 +1033,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                     max="95"
                     value={discountPct}
                     onChange={(e) => setDiscountPct(e.target.value)}
-                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   />
                 </div>
                 <div>
@@ -1045,7 +1045,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                     onChange={(e) =>
                       setStockStatus(e.target.value as CatalogProduct['stockStatus'])
                     }
-                    className="w-full px-3 py-2 text-sm bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg"
+                    className="w-full px-3 py-2 text-sm bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   >
                     <option value="IN_STOCK">In Stock</option>
                     <option value="LOW_STOCK">Low Stock</option>
@@ -1059,7 +1059,7 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                   type="checkbox"
                   checked={active}
                   onChange={(e) => setActive(e.target.checked)}
-                  className="rounded border-zinc-300 dark:border-zinc-700"
+                  className="rounded border-zinc-300 dark:border-slate-700/70"
                 />
                 <span>Visible on live storefront</span>
               </label>
@@ -1068,14 +1068,14 @@ export function CatalogPage({ onDataChanged, openCreateSignal }: CatalogPageProp
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 rounded-lg"
+                  className="px-4 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-slate-700/70 rounded-lg"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 rounded-lg"
+                  className="px-4 py-2 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg"
                 >
                   {saving ? 'Saving...' : editing ? 'Save Changes' : 'Add Product'}
                 </button>
