@@ -409,7 +409,11 @@ export interface MetaAnalyticsStatus {
 export interface TikTokStatus {
   ok: boolean;
   pixelSaved: boolean;
+  pixelId?: string;
   eventsTokenSaved: boolean;
+  crmEventSetSaved?: boolean;
+  crmEventSetId?: string;
+  crmTokenSaved?: boolean;
 }
 
 export interface DomainRecord {

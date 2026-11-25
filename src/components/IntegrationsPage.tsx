@@ -85,12 +85,12 @@ export function IntegrationsPage() {
     }
   }
 
-  async function handleTestTikTok() {
-    setTestingChannel('tiktok');
+  async function handleTestTikTok(channel: 'web' | 'crm' = 'web') {
+    setTestingChannel(`tiktok_${channel}`);
     setTestNotice(null);
     try {
-      const res = await api.tiktokTestEvent();
-      setTestNotice(`TikTok: ${res.detail}`);
+      const res = await api.tiktokTestEvent(channel);
+      setTestNotice(`TikTok (${channel.toUpperCase()}): ${res.detail}`);
       const updated = await api.metaAnalytics();
       setMeta(updated);
     } catch (err) {
@@ -338,13 +338,25 @@ export function IntegrationsPage() {
             <div className="py-2 flex justify-between gap-2">
               <dt className="font-mono text-zinc-500">TIKTOK_PIXEL_ID</dt>
               <dd className="text-emerald-700 dark:text-emerald-400 font-mono font-medium">
-                {TIKTOK_PIXEL_ID}
+                {tiktok?.pixelId || TIKTOK_PIXEL_ID}
               </dd>
             </div>
             <div className="py-2 flex justify-between">
               <dt className="font-mono text-zinc-500">TIKTOK_EVENTS_TOKEN</dt>
               <dd className={tiktok?.eventsTokenSaved ? 'text-emerald-700 dark:text-emerald-400 font-medium' : 'text-zinc-500'}>
                 {tiktok?.eventsTokenSaved ? 'Saved' : 'Browser Pixel Active'}
+              </dd>
+            </div>
+            <div className="py-2 flex justify-between gap-2">
+              <dt className="font-mono text-zinc-500">TIKTOK_CRM_EVENT_SET</dt>
+              <dd className="text-emerald-700 dark:text-emerald-400 font-mono font-medium">
+                {tiktok?.crmEventSetId || '7712192188952346645'}
+              </dd>
+            </div>
+            <div className="py-2 flex justify-between">
+              <dt className="font-mono text-zinc-500">TIKTOK_CRM_TOKEN</dt>
+              <dd className={tiktok?.crmTokenSaved ? 'text-emerald-700 dark:text-emerald-400 font-medium' : 'text-amber-700 dark:text-amber-400'}>
+                {tiktok?.crmTokenSaved ? 'Saved' : 'Pending'}
               </dd>
             </div>
             <div className="py-2 flex justify-between">
@@ -392,15 +404,26 @@ export function IntegrationsPage() {
               )}
             </div>
 
-            <button
-              type="button"
-              disabled={testingChannel !== null}
-              onClick={handleTestTikTok}
-              className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-50 rounded-lg whitespace-nowrap"
-            >
-              <Play className="w-3 h-3" />
-              <span>Test Server TikTok Events API</span>
-            </button>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                disabled={testingChannel !== null}
+                onClick={() => handleTestTikTok('web')}
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-50 rounded-lg whitespace-nowrap"
+              >
+                <Play className="w-3 h-3" />
+                <span>Test Web Events API</span>
+              </button>
+              <button
+                type="button"
+                disabled={testingChannel !== null}
+                onClick={() => handleTestTikTok('crm')}
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 rounded-lg whitespace-nowrap"
+              >
+                <Play className="w-3 h-3" />
+                <span>Test CRM Events API</span>
+              </button>
+            </div>
 
             <div className="flex items-center justify-between pt-1">
               <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">

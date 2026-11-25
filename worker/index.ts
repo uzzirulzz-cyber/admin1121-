@@ -52,6 +52,8 @@ interface Env {
   TIKTOK_CLIENT_SECRET?: string;
   TIKTOK_PIXEL_ID?: string;
   TIKTOK_EVENTS_TOKEN?: string;
+  TIKTOK_CRM_EVENT_SET_ID?: string;
+  TIKTOK_CRM_ACCESS_TOKEN?: string;
   ELECTRONIC_FIRST_API_KEY?: string;
   ELECTRONIC_FIRST_AFFILIATE_REF?: string;
   R2_ACCESS_KEY_ID?: string;
@@ -1580,6 +1582,124 @@ async function dispatchTikTokEventsApi(
   }
 }
 
+async function dispatchTikTokCrmEvent(
+  env: Env,
+  opts: {
+    event: string;
+    eventId: string;
+    leadId: string;
+    email?: string;
+    phone?: string;
+  },
+) {
+  const ttCfg = await readJsonKv<any>(env, 'pb:tiktok:config:v1', {});
+  const token = String(
+    env.TIKTOK_CRM_ACCESS_TOKEN || ttCfg?.crmAccessToken || env.TIKTOK_EVENTS_TOKEN || '',
+  ).trim();
+  const crmEventSetId = String(
+    env.TIKTOK_CRM_EVENT_SET_ID || ttCfg?.crmEventSetId || '7712192188952346645',
+  ).trim();
+
+  if (!token || !crmEventSetId) {
+    const detail = 'Configure TIKTOK_CRM_ACCESS_TOKEN secret and TIKTOK_CRM_EVENT_SET_ID to dispatch TikTok CRM events.';
+    await appendMetaLog(env, {
+      channel: 'tiktok_events',
+      eventName: `CRM:${opts.event}`,
+      eventId: opts.eventId,
+      entityRef: opts.leadId,
+      status: 'not_configured',
+      detail,
+    });
+    return { ok: false, status: 'not_configured' as const, detail };
+  }
+
+  const user: Record<string, string> = {};
+  if (opts.phone) {
+    const digits = String(opts.phone).replace(/[^\d+]/g, '');
+    const normalizedPhone = digits.startsWith('+') ? digits : digits ? `+${digits}` : '';
+    if (normalizedPhone) user.phone = await sha256Hex(normalizedPhone);
+  }
+  if (opts.email) {
+    const cleanEmail = String(opts.email).trim().toLowerCase();
+    if (cleanEmail) user.email = await sha256Hex(cleanEmail);
+  }
+
+  const payload = {
+    event_source: 'crm',
+    event_source_id: crmEventSetId,
+    data: [
+      {
+        event: opts.event,
+        event_time: Math.floor(Date.now() / 1000),
+        event_id: opts.eventId,
+        lead: {
+          lead_id: String(opts.leadId),
+        },
+        user,
+      },
+    ],
+  };
+
+  try {
+    const r = await fetch('https://business-api.tiktok.com/open_api/v1.3/event/track/', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'Access-Token': token,
+      },
+      body: JSON.stringify(payload),
+    });
+    const resBody = await r.json().catch(() => ({}));
+    const accepted = r.ok && (resBody?.code === 0 || resBody?.code === undefined);
+    const detail = accepted
+      ? `Dispatched CRM ${opts.event} to TikTok CRM Event Set ${crmEventSetId} (request_id: ${resBody?.request_id || 'ok'}).`
+      : `TikTok CRM API HTTP ${r.status} (code ${resBody?.code ?? 'n/a'}): ${resBody?.message || JSON.stringify(resBody).slice(0, 160)}`;
+    await appendMetaLog(env, {
+      channel: 'tiktok_events',
+      eventName: `CRM:${opts.event}`,
+      eventId: opts.eventId,
+      entityRef: opts.leadId,
+      status: accepted ? 'sent' : 'failed',
+      httpStatus: r.status,
+      detail,
+    });
+    return {
+      ok: accepted,
+      status: accepted ? ('sent' as const) : ('failed' as const),
+      detail,
+      tiktokCode: resBody?.code,
+    };
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : 'TikTok CRM Events API network error';
+    await appendMetaLog(env, {
+      channel: 'tiktok_events',
+      eventName: `CRM:${opts.event}`,
+      eventId: opts.eventId,
+      entityRef: opts.leadId,
+      status: 'failed',
+      detail,
+    });
+    return { ok: false, status: 'failed' as const, detail };
+  }
+}
+
+function mapLeadStageToTikTokCrmEvent(status: string): string {
+  switch (status) {
+    case 'Won':
+      return 'Converted';
+    case 'Qualified':
+      return 'Qualified';
+    case 'Replied':
+      return 'Contacted';
+    case 'Contacted':
+      return 'Contacted';
+    case 'Lost':
+      return 'Disqualified';
+    default:
+      return 'Lead';
+  }
+}
+
 // ---------- Main Worker Fetch Handler ----------
 
 export default {
@@ -2585,7 +2705,7 @@ export default {
         if (!b.businessName) return json({ ok: false, error: 'businessName required' }, 400);
         const leads = await readJsonKv<any[]>(env, 'pb:crm:leads:v1', []);
         const now = new Date().toISOString();
-        const lead = {
+        const lead: any = {
           leadId: b.leadId || `PB-L-${String(leads.length + 1).padStart(4, '0')}`,
           businessName: String(b.businessName).trim(),
           contactName: String(b.contactName || '').trim(),
@@ -2600,6 +2720,16 @@ export default {
           createdAt: now,
           updatedAt: now,
         };
+        if (lead.email || lead.phone) {
+          const ttInit = await dispatchTikTokCrmEvent(env, {
+            event: mapLeadStageToTikTokCrmEvent(lead.status),
+            eventId: `tt-crm-create-${lead.leadId}-${Date.now()}`,
+            leadId: String(lead.leadId),
+            email: lead.email,
+            phone: lead.phone,
+          });
+          lead.tiktokSyncStatus = ttInit.status;
+        }
         leads.unshift(lead);
         await writeJsonKv(env, 'pb:crm:leads:v1', leads);
         return json({ ok: true, lead }, 201);
@@ -2629,23 +2759,12 @@ export default {
         const idx = leads.findIndex((l) => l.leadId === id);
         if (idx < 0) return json({ ok: false, error: 'Lead not found' }, 404);
         const lead = leads[idx];
-        const ttEventName = lead.status === 'Won' ? 'Purchase' : 'CompleteRegistration';
-        const tiktokDispatch = await dispatchTikTokEventsApi(env, {
-          event: ttEventName,
+        const tiktokDispatch = await dispatchTikTokCrmEvent(env, {
+          event: mapLeadStageToTikTokCrmEvent(String(lead.status || 'Qualified')),
           eventId: `tt-crm-${lead.leadId}-${Date.now()}`,
-          entityRef: String(lead.leadId),
+          leadId: String(lead.leadId),
           email: lead.email,
           phone: lead.phone,
-          externalId: String(lead.leadId),
-          value: Number(lead.expectedValueUsd) || 0,
-          currency: 'USD',
-          contents: [
-            {
-              content_id: String(lead.leadId),
-              content_type: 'product',
-              content_name: String(lead.businessName || 'PlayBeat CRM Lead'),
-            },
-          ],
         });
         leads[idx] = { ...lead, tiktokSyncStatus: tiktokDispatch.status };
         await writeJsonKv(env, 'pb:crm:leads:v1', leads);
@@ -2667,14 +2786,24 @@ export default {
           const changed = patch.status && patch.status !== leads[idx].status;
           leads[idx] = { ...leads[idx], ...patch, updatedAt: new Date().toISOString() };
           let metaDispatch = null;
+          let tiktokDispatch = null;
           if (changed) {
             metaDispatch = await dispatchMetaCrmStage(env, leads[idx]);
             leads[idx].metaSyncStatus = metaDispatch.status;
             leads[idx].metaLastSyncAt = new Date().toISOString();
             leads[idx].metaLastMessage = metaDispatch.message;
+
+            tiktokDispatch = await dispatchTikTokCrmEvent(env, {
+              event: mapLeadStageToTikTokCrmEvent(String(leads[idx].status)),
+              eventId: `tt-crm-stage-${leads[idx].leadId}-${Date.now()}`,
+              leadId: String(leads[idx].leadId),
+              email: leads[idx].email,
+              phone: leads[idx].phone,
+            });
+            leads[idx].tiktokSyncStatus = tiktokDispatch.status;
           }
           await writeJsonKv(env, 'pb:crm:leads:v1', leads);
-          return json({ ok: true, lead: leads[idx], metaDispatch });
+          return json({ ok: true, lead: leads[idx], metaDispatch, tiktokDispatch });
         }
         if (method === 'DELETE') {
           await writeJsonKv(env, 'pb:crm:leads:v1', leads.filter((l) => l.leadId !== id));
@@ -3128,14 +3257,37 @@ export default {
 
       if (p === '/api/admin/tiktok/status' && method === 'GET') {
         const c = await readJsonKv<any>(env, 'pb:tiktok:config:v1', {});
+        const pixelId = String(env.TIKTOK_PIXEL_ID || c?.pixelId || 'DC3J0CBC77U6OQMIKJ80');
+        const crmEventSetId = String(env.TIKTOK_CRM_EVENT_SET_ID || c?.crmEventSetId || '7712192188952346645');
         return json({
           ok: true,
-          pixelSaved: !!(env.TIKTOK_PIXEL_ID || c?.pixelId),
+          pixelSaved: !!pixelId,
+          pixelId,
           eventsTokenSaved: !!(env.TIKTOK_EVENTS_TOKEN || c?.eventsToken || c?.accessToken),
+          crmEventSetSaved: !!crmEventSetId,
+          crmEventSetId,
+          crmTokenSaved: !!(env.TIKTOK_CRM_ACCESS_TOKEN || c?.crmAccessToken),
         });
       }
 
       if (p === '/api/admin/tiktok/test-event' && method === 'POST') {
+        const body = await request.json().catch(() => ({}));
+        const mode = body?.channel === 'crm' ? 'crm' : 'web';
+        if (mode === 'crm') {
+          const res = await dispatchTikTokCrmEvent(env, {
+            event: 'Qualified',
+            eventId: `tt-crm-test-${Date.now()}`,
+            leadId: `PB-TEST-${Date.now()}`,
+            email: 'business@playbeat.digital',
+            phone: '+923000000000',
+          });
+          return json({
+            ok: res.ok,
+            status: res.status,
+            channel: 'crm',
+            detail: res.detail,
+          });
+        }
         const res = await dispatchTikTokEventsApi(env, {
           event: 'ViewContent',
           eventId: `tt-test-${Date.now()}`,
@@ -3156,6 +3308,7 @@ export default {
         return json({
           ok: res.ok,
           status: res.status,
+          channel: 'web',
           detail: res.detail,
         });
       }

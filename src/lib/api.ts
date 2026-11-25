@@ -577,9 +577,10 @@ export const api = {
 
   tiktokStatus: () => requestJson<TikTokStatus>('/api/admin/tiktok/status'),
 
-  tiktokTestEvent: () =>
-    requestJson<{ ok: boolean; status: string; detail: string }>('/api/admin/tiktok/test-event', {
+  tiktokTestEvent: (channel: 'web' | 'crm' = 'web') =>
+    requestJson<{ ok: boolean; status: string; channel?: string; detail: string }>('/api/admin/tiktok/test-event', {
       method: 'POST',
+      body: JSON.stringify({ channel }),
     }),
 
   domains: () =>
