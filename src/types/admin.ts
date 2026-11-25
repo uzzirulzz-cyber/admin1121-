@@ -310,6 +310,78 @@ export interface AdSenseStatus {
   note: string;
 }
 
+export interface GoogleServiceAccountSummary {
+  id: string;
+  label: string;
+  clientEmail: string;
+  projectId: string;
+  privateKeyId: string;
+  source: 'secret' | 'kv';
+  active: boolean;
+  adsenseAccountId: string;
+  ga4PropertyId: string;
+  searchConsoleSite: string;
+  addedAt: string;
+  lastVerifiedAt?: string;
+}
+
+export interface GoogleServiceProbeItem {
+  service: 'adsense' | 'ga4' | 'search_console';
+  name: string;
+  apiEnabled: boolean;
+  accessGranted: boolean;
+  httpStatus: number;
+  discoveredItems: Array<{ id: string; name: string }>;
+  detail: string;
+  actionUrl?: string;
+}
+
+export interface GoogleServiceProbeResponse {
+  ok: boolean;
+  accountId: string;
+  clientEmail: string;
+  projectId: string;
+  checkedAt: string;
+  checks: GoogleServiceProbeItem[];
+}
+
+export interface GoogleTrafficDailyRow {
+  date: string;
+  activeUsers: number;
+  sessions: number;
+  pageViews: number;
+  bounceRate: number;
+}
+
+export interface GoogleTrafficReportResponse {
+  ok: boolean;
+  range: string;
+  propertyId: string;
+  serviceAccountEmail?: string;
+  daily?: GoogleTrafficDailyRow[];
+  topPages?: Array<{ path: string; views: number; users: number }>;
+  channels?: Array<{ channel: string; sessions: number; users: number }>;
+  totals?: {
+    activeUsers: number;
+    sessions: number;
+    pageViews: number;
+    avgBounceRate: number;
+    avgSessionDurationSec: number;
+  };
+  searchConsole?: {
+    ok: boolean;
+    siteUrl?: string;
+    clicks?: number;
+    impressions?: number;
+    ctr?: number;
+    position?: number;
+    message?: string;
+  };
+  discoveredProperties?: Array<{ id: string; name: string }>;
+  error?: string;
+  message?: string;
+}
+
 export interface MetaEventDispatchLog {
   id: string;
   timestamp: string;

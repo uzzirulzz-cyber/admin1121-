@@ -723,15 +723,43 @@ async function fetchStorefront(env: Env, path: string, init?: RequestInit): Prom
 interface ServiceAccountInfo {
   client_email: string;
   private_key: string;
+  private_key_id?: string;
   project_id?: string;
   token_uri?: string;
 }
 
-function parseServiceAccount(env: Env): ServiceAccountInfo | null {
-  const raw = env.GOOGLE_SERVICE_ACCOUNT_JSON?.trim();
-  if (!raw) return null;
+interface StoredServiceAccountRecord {
+  id: string;
+  label: string;
+  source: 'secret' | 'kv';
+  clientEmail: string;
+  projectId: string;
+  privateKeyId: string;
+  adsenseAccountId: string;
+  ga4PropertyId: string;
+  searchConsoleSite: string;
+  addedAt: string;
+  lastVerifiedAt?: string;
+  sa?: ServiceAccountInfo;
+}
+
+interface GoogleSaRegistryBlob {
+  activeId: string | null;
+  envMeta?: {
+    label?: string;
+    adsenseAccountId?: string;
+    ga4PropertyId?: string;
+    searchConsoleSite?: string;
+    lastVerifiedAt?: string;
+  };
+  customAccounts: StoredServiceAccountRecord[];
+}
+
+function parseServiceAccountJson(raw: string | undefined): ServiceAccountInfo | null {
+  const trimmed = raw?.trim();
+  if (!trimmed) return null;
   try {
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(trimmed);
     if (parsed?.client_email && parsed?.private_key && String(parsed.private_key).includes('PRIVATE KEY')) {
       return parsed as ServiceAccountInfo;
     }
@@ -739,6 +767,66 @@ function parseServiceAccount(env: Env): ServiceAccountInfo | null {
     // ignore malformed json
   }
   return null;
+}
+
+function parseServiceAccount(env: Env): ServiceAccountInfo | null {
+  return parseServiceAccountJson(env.GOOGLE_SERVICE_ACCOUNT_JSON);
+}
+
+async function loadGoogleSaRegistry(env: Env): Promise<{
+  activeId: string | null;
+  records: StoredServiceAccountRecord[];
+  rawBlob: GoogleSaRegistryBlob;
+}> {
+  const blob = await readJsonKv<GoogleSaRegistryBlob>(env, 'pb:google:sa-registry:v1', {
+    activeId: null,
+    customAccounts: [],
+  });
+  const records: StoredServiceAccountRecord[] = [];
+  const envSa = parseServiceAccount(env);
+  if (envSa) {
+    records.push({
+      id: 'sa_env_primary',
+      label: blob.envMeta?.label || 'PlayBeat Primary GCP Service Account',
+      source: 'secret',
+      clientEmail: envSa.client_email,
+      projectId: envSa.project_id || '',
+      privateKeyId: envSa.private_key_id || '',
+      adsenseAccountId: blob.envMeta?.adsenseAccountId || env.ADSENSE_ACCOUNT || 'accounts/pub-9777611286139666',
+      ga4PropertyId: blob.envMeta?.ga4PropertyId || '',
+      searchConsoleSite: blob.envMeta?.searchConsoleSite || 'https://playbeat.digital/',
+      addedAt: '2026-11-25T00:00:00.000Z',
+      lastVerifiedAt: blob.envMeta?.lastVerifiedAt,
+      sa: envSa,
+    });
+  }
+  for (const acc of Array.isArray(blob.customAccounts) ? blob.customAccounts : []) {
+    if (acc && acc.id && acc.clientEmail && acc.sa?.private_key) {
+      records.push(acc);
+    }
+  }
+  const activeId =
+    blob.activeId && records.some((r) => r.id === blob.activeId)
+      ? blob.activeId
+      : records[0]?.id || null;
+  return { activeId, records, rawBlob: blob };
+}
+
+function toPublicSaSummary(r: StoredServiceAccountRecord, activeId: string | null) {
+  return {
+    id: r.id,
+    label: r.label,
+    clientEmail: r.clientEmail,
+    projectId: r.projectId,
+    privateKeyId: r.privateKeyId,
+    source: r.source,
+    active: r.id === activeId,
+    adsenseAccountId: r.adsenseAccountId,
+    ga4PropertyId: r.ga4PropertyId,
+    searchConsoleSite: r.searchConsoleSite,
+    addedAt: r.addedAt,
+    lastVerifiedAt: r.lastVerifiedAt,
+  };
 }
 
 function base64UrlEncodeBytes(bytes: Uint8Array): string {
@@ -762,12 +850,10 @@ function pemToPkcs8Bytes(pem: string): Uint8Array {
   return bytes;
 }
 
-async function mintGoogleServiceAccountToken(
-  env: Env,
+async function mintTokenFromServiceAccount(
+  sa: ServiceAccountInfo,
   scope: string,
 ): Promise<{ ok: true; accessToken: string; email: string; projectId: string } | { ok: false; error: string }> {
-  const sa = parseServiceAccount(env);
-  if (!sa) return { ok: false, error: 'GOOGLE_SERVICE_ACCOUNT_JSON secret is not configured.' };
   try {
     const now = Math.floor(Date.now() / 1000);
     const tokenUri = sa.token_uri || 'https://oauth2.googleapis.com/token';
@@ -815,6 +901,354 @@ async function mintGoogleServiceAccountToken(
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : 'Service account JWT signing failed' };
   }
+}
+
+async function mintGoogleServiceAccountToken(
+  env: Env,
+  scope: string,
+  specificRecord?: StoredServiceAccountRecord,
+): Promise<{ ok: true; accessToken: string; email: string; projectId: string } | { ok: false; error: string }> {
+  if (specificRecord?.sa) {
+    return mintTokenFromServiceAccount(specificRecord.sa, scope);
+  }
+  const { activeId, records } = await loadGoogleSaRegistry(env);
+  const chosen = records.find((r) => r.id === activeId) || records[0];
+  if (!chosen?.sa) return { ok: false, error: 'GOOGLE_SERVICE_ACCOUNT_JSON secret is not configured.' };
+  return mintTokenFromServiceAccount(chosen.sa, scope);
+}
+
+async function probeServiceAccountApis(record: StoredServiceAccountRecord) {
+  const sa = record.sa!;
+  const checks: any[] = [];
+
+  // 1. Google AdSense Management API v2
+  const adsTok = await mintTokenFromServiceAccount(sa, 'https://www.googleapis.com/auth/adsense.readonly');
+  if (!adsTok.ok) {
+    checks.push({
+      service: 'adsense',
+      name: 'Google AdSense Management API v2',
+      apiEnabled: false,
+      accessGranted: false,
+      httpStatus: 401,
+      discoveredItems: [],
+      detail: adsTok.error,
+      actionUrl: 'https://www.google.com/adsense',
+    });
+  } else {
+    const r = await fetch('https://adsense.googleapis.com/v2/accounts', {
+      headers: { authorization: `Bearer ${adsTok.accessToken}` },
+    });
+    const body = await r.json().catch(() => ({}));
+    const accounts = Array.isArray(body.accounts) ? body.accounts : [];
+    const discovered = accounts.map((a: any) => ({ id: String(a.name || ''), name: String(a.displayName || a.name || '') }));
+    const apiEnabled = r.ok || (r.status === 403 && !String(body?.error?.message || '').includes('has not been used'));
+    checks.push({
+      service: 'adsense',
+      name: 'Google AdSense Management API v2',
+      apiEnabled,
+      accessGranted: r.ok && discovered.length > 0,
+      httpStatus: r.status,
+      discoveredItems: discovered,
+      detail:
+        r.ok && discovered.length > 0
+          ? `Connected to ${discovered.length} AdSense account(s): ${discovered.map((d: any) => d.id).join(', ')}.`
+          : r.ok
+            ? `AdSense Management API v2 is ENABLED on ${sa.project_id}, but ${sa.client_email} has not been added as a user in Google AdSense yet.`
+            : body?.error?.message || `HTTP ${r.status}`,
+      actionUrl: 'https://www.google.com/adsense',
+    });
+  }
+
+  // 2. Google Analytics 4 (Admin + Data API)
+  const gaTok = await mintTokenFromServiceAccount(sa, 'https://www.googleapis.com/auth/analytics.readonly');
+  if (!gaTok.ok) {
+    checks.push({
+      service: 'ga4',
+      name: 'Google Analytics 4 (Traffic & Data API)',
+      apiEnabled: false,
+      accessGranted: false,
+      httpStatus: 401,
+      discoveredItems: [],
+      detail: gaTok.error,
+      actionUrl: 'https://analytics.google.com',
+    });
+  } else {
+    const r = await fetch('https://analyticsadmin.googleapis.com/v1beta/accountSummaries', {
+      headers: { authorization: `Bearer ${gaTok.accessToken}` },
+    });
+    const body = await r.json().catch(() => ({}));
+    const summaries = Array.isArray(body.accountSummaries) ? body.accountSummaries : [];
+    const discovered: Array<{ id: string; name: string }> = [];
+    for (const s of summaries) {
+      for (const p of Array.isArray(s.propertySummaries) ? s.propertySummaries : []) {
+        discovered.push({ id: String(p.property || ''), name: String(p.displayName || p.property || '') });
+      }
+    }
+    const apiEnabled = r.ok || (r.status === 403 && !String(body?.error?.message || '').includes('has not been used'));
+    checks.push({
+      service: 'ga4',
+      name: 'Google Analytics 4 (Traffic & Data API)',
+      apiEnabled,
+      accessGranted: r.ok && discovered.length > 0,
+      httpStatus: r.status,
+      discoveredItems: discovered,
+      detail:
+        r.ok && discovered.length > 0
+          ? `Discovered ${discovered.length} GA4 propert${discovered.length === 1 ? 'y' : 'ies'}: ${discovered.map((d) => `${d.name} (${d.id})`).join(', ')}.`
+          : r.ok
+            ? `GA4 Admin & Data APIs are ENABLED on ${sa.project_id}, but ${sa.client_email} needs Viewer role in GA4 → Admin → Property Access Management.`
+            : body?.error?.message || `HTTP ${r.status}`,
+      actionUrl: 'https://analytics.google.com',
+    });
+  }
+
+  // 3. Google Search Console API
+  const scTok = await mintTokenFromServiceAccount(sa, 'https://www.googleapis.com/auth/webmasters.readonly');
+  if (!scTok.ok) {
+    checks.push({
+      service: 'search_console',
+      name: 'Google Search Console (Organic Traffic)',
+      apiEnabled: false,
+      accessGranted: false,
+      httpStatus: 401,
+      discoveredItems: [],
+      detail: scTok.error,
+      actionUrl: 'https://search.google.com/search-console',
+    });
+  } else {
+    const r = await fetch('https://www.googleapis.com/webmasters/v3/sites', {
+      headers: { authorization: `Bearer ${scTok.accessToken}` },
+    });
+    const body = await r.json().catch(() => ({}));
+    const sites = Array.isArray(body.siteEntry) ? body.siteEntry : [];
+    const discovered = sites.map((s: any) => ({ id: String(s.siteUrl || ''), name: `${s.siteUrl} (${s.permissionLevel})` }));
+    const errMsg = String(body?.error?.message || '');
+    const apiDisabled = r.status === 403 && errMsg.includes('has not been used');
+    checks.push({
+      service: 'search_console',
+      name: 'Google Search Console (Organic Traffic)',
+      apiEnabled: !apiDisabled && (r.ok || r.status !== 403),
+      accessGranted: r.ok && discovered.length > 0,
+      httpStatus: r.status,
+      discoveredItems: discovered,
+      detail:
+        r.ok && discovered.length > 0
+          ? `Connected to ${discovered.length} Search Console site(s).`
+          : apiDisabled
+            ? `Search Console API is disabled on GCP project ${sa.project_id}. Enable it in Google Cloud Console, then add ${sa.client_email} in Search Console Users & Permissions.`
+            : r.ok
+              ? `Search Console API is enabled, add ${sa.client_email} as a Restricted/Full user in Search Console Settings.`
+              : errMsg || `HTTP ${r.status}`,
+      actionUrl: apiDisabled
+        ? `https://console.developers.google.com/apis/api/searchconsole.googleapis.com/overview?project=${encodeURIComponent(sa.project_id || '')}`
+        : 'https://search.google.com/search-console',
+    });
+  }
+
+  return checks;
+}
+
+async function fetchGa4TrafficReport(
+  sa: ServiceAccountInfo,
+  configuredPropertyId: string,
+  range: string,
+  searchConsoleSite: string,
+) {
+  const gaTok = await mintTokenFromServiceAccount(sa, 'https://www.googleapis.com/auth/analytics.readonly');
+  if (!gaTok.ok) {
+    return { ok: false, range, propertyId: configuredPropertyId, error: 'GA4_TOKEN_ERROR', message: gaTok.error };
+  }
+
+  let propertyId = configuredPropertyId.trim();
+  if (propertyId && !propertyId.startsWith('properties/')) {
+    propertyId = `properties/${propertyId}`;
+  }
+
+  // Discover properties automatically if none set
+  let discoveredProperties: Array<{ id: string; name: string }> = [];
+  try {
+    const sumRes = await fetch('https://analyticsadmin.googleapis.com/v1beta/accountSummaries', {
+      headers: { authorization: `Bearer ${gaTok.accessToken}` },
+    });
+    if (sumRes.ok) {
+      const sumBody = await sumRes.json().catch(() => ({}));
+      for (const s of Array.isArray(sumBody.accountSummaries) ? sumBody.accountSummaries : []) {
+        for (const p of Array.isArray(s.propertySummaries) ? s.propertySummaries : []) {
+          discoveredProperties.push({ id: String(p.property || ''), name: String(p.displayName || p.property || '') });
+        }
+      }
+      if (!propertyId && discoveredProperties.length > 0) {
+        propertyId = discoveredProperties[0].id;
+      }
+    }
+  } catch {
+    // ignore discovery error
+  }
+
+  if (!propertyId) {
+    return {
+      ok: false,
+      range,
+      propertyId: '',
+      serviceAccountEmail: sa.client_email,
+      discoveredProperties,
+      error: 'GA4_PROPERTY_REQUIRED',
+      message: `GA4 API is active for ${sa.client_email}, but no GA4 property is visible yet. Add ${sa.client_email} as a Viewer in Google Analytics (Admin → Property Access Management) and enter your GA4 Property ID in the Google Service Accounts tab.`,
+    };
+  }
+
+  const startDate =
+    range === 'today'
+      ? 'today'
+      : range === 'yesterday'
+        ? 'yesterday'
+        : range === '28d'
+          ? '28daysAgo'
+          : range === 'mtd'
+            ? `${new Date().toISOString().slice(0, 8)}01`
+            : '7daysAgo';
+  const endDate = range === 'yesterday' ? 'yesterday' : 'today';
+
+  const runReport = async (body: Record<string, unknown>) => {
+    const r = await fetch(`https://analyticsdata.googleapis.com/v1beta/${propertyId}:runReport`, {
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${gaTok.accessToken}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    return { ok: r.ok, status: r.status, body: await r.json().catch(() => ({})) };
+  };
+
+  const [dailyRes, pagesRes, chanRes] = await Promise.all([
+    runReport({
+      dateRanges: [{ startDate, endDate }],
+      dimensions: [{ name: 'date' }],
+      metrics: [
+        { name: 'activeUsers' },
+        { name: 'sessions' },
+        { name: 'screenPageViews' },
+        { name: 'bounceRate' },
+        { name: 'averageSessionDuration' },
+      ],
+      orderBys: [{ dimension: { dimensionName: 'date' } }],
+    }),
+    runReport({
+      dateRanges: [{ startDate, endDate }],
+      dimensions: [{ name: 'pagePath' }],
+      metrics: [{ name: 'screenPageViews' }, { name: 'activeUsers' }],
+      limit: 10,
+    }),
+    runReport({
+      dateRanges: [{ startDate, endDate }],
+      dimensions: [{ name: 'sessionDefaultChannelGroup' }],
+      metrics: [{ name: 'sessions' }, { name: 'activeUsers' }],
+      limit: 8,
+    }),
+  ]);
+
+  if (!dailyRes.ok) {
+    return {
+      ok: false,
+      range,
+      propertyId,
+      serviceAccountEmail: sa.client_email,
+      discoveredProperties,
+      error: dailyRes.body?.error?.status || `GA4_HTTP_${dailyRes.status}`,
+      message: `${dailyRes.body?.error?.message || 'GA4 Data API request failed'} (Grant Viewer access to ${sa.client_email} on ${propertyId}.)`,
+    };
+  }
+
+  let totalUsers = 0;
+  let totalSessions = 0;
+  let totalViews = 0;
+  let bounceSum = 0;
+  let durSum = 0;
+
+  const dailyRows = Array.isArray(dailyRes.body.rows) ? dailyRes.body.rows : [];
+  const daily = dailyRows.map((row: any) => {
+    const rawDate = String(row.dimensionValues?.[0]?.value || '');
+    const fmtDate = rawDate.length === 8 ? `${rawDate.slice(0, 4)}-${rawDate.slice(4, 6)}-${rawDate.slice(6, 8)}` : rawDate;
+    const activeUsers = Number(row.metricValues?.[0]?.value || 0);
+    const sessions = Number(row.metricValues?.[1]?.value || 0);
+    const pageViews = Number(row.metricValues?.[2]?.value || 0);
+    const bounceRate = Number((Number(row.metricValues?.[3]?.value || 0) * 100).toFixed(1));
+    const avgDur = Number(row.metricValues?.[4]?.value || 0);
+    totalUsers += activeUsers;
+    totalSessions += sessions;
+    totalViews += pageViews;
+    bounceSum += bounceRate;
+    durSum += avgDur;
+    return { date: fmtDate, activeUsers, sessions, pageViews, bounceRate };
+  });
+
+  const topPages = (Array.isArray(pagesRes.body?.rows) ? pagesRes.body.rows : []).map((row: any) => ({
+    path: String(row.dimensionValues?.[0]?.value || '/'),
+    views: Number(row.metricValues?.[0]?.value || 0),
+    users: Number(row.metricValues?.[1]?.value || 0),
+  }));
+
+  const channels = (Array.isArray(chanRes.body?.rows) ? chanRes.body.rows : []).map((row: any) => ({
+    channel: String(row.dimensionValues?.[0]?.value || 'Direct'),
+    sessions: Number(row.metricValues?.[0]?.value || 0),
+    users: Number(row.metricValues?.[1]?.value || 0),
+  }));
+
+  // Optional Search Console summary
+  let searchConsole: any = { ok: false, siteUrl: searchConsoleSite, message: 'Search Console API not enabled yet.' };
+  if (searchConsoleSite) {
+    const scTok = await mintTokenFromServiceAccount(sa, 'https://www.googleapis.com/auth/webmasters.readonly');
+    if (scTok.ok) {
+      const end = new Date().toISOString().slice(0, 10);
+      const start = new Date(Date.now() - (range === '28d' ? 28 : 7) * 86400000).toISOString().slice(0, 10);
+      const scRes = await fetch(
+        `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(searchConsoleSite)}/searchAnalytics/query`,
+        {
+          method: 'POST',
+          headers: { authorization: `Bearer ${scTok.accessToken}`, 'content-type': 'application/json' },
+          body: JSON.stringify({ startDate: start, endDate: end, rowLimit: 1 }),
+        },
+      );
+      const scBody = await scRes.json().catch(() => ({}));
+      if (scRes.ok) {
+        const row = scBody.rows?.[0] || {};
+        searchConsole = {
+          ok: true,
+          siteUrl: searchConsoleSite,
+          clicks: Number(row.clicks || 0),
+          impressions: Number(row.impressions || 0),
+          ctr: Number(((row.ctr || 0) * 100).toFixed(2)),
+          position: Number((row.position || 0).toFixed(1)),
+        };
+      } else {
+        searchConsole = {
+          ok: false,
+          siteUrl: searchConsoleSite,
+          message: scBody?.error?.message || `Search Console HTTP ${scRes.status}`,
+        };
+      }
+    }
+  }
+
+  return {
+    ok: true,
+    range,
+    propertyId,
+    serviceAccountEmail: sa.client_email,
+    discoveredProperties,
+    daily,
+    topPages,
+    channels,
+    totals: {
+      activeUsers: totalUsers,
+      sessions: totalSessions,
+      pageViews: totalViews,
+      avgBounceRate: daily.length ? Number((bounceSum / daily.length).toFixed(1)) : 0,
+      avgSessionDurationSec: daily.length ? Math.round(durSum / daily.length) : 0,
+    },
+    searchConsole,
+  };
 }
 
 async function fetchAdSenseReportWithToken(accessToken: string, account: string, range: string, byDomain: boolean) {
@@ -2243,9 +2677,174 @@ export default {
         return json({ ok: true });
       }
 
+      // ---- Google Service Accounts Registry & Live GA4/Search Traffic ----
+      if (p === '/api/admin/google/service-accounts' && method === 'GET') {
+        const { activeId, records } = await loadGoogleSaRegistry(env);
+        return json({
+          ok: true,
+          activeId,
+          accounts: records.map((r) => toPublicSaSummary(r, activeId)),
+        });
+      }
+
+      if (p === '/api/admin/google/service-accounts' && method === 'POST') {
+        const b = await request.json().catch(() => ({}));
+        const rawJson = typeof b.serviceAccountJson === 'string' ? b.serviceAccountJson : JSON.stringify(b.serviceAccountJson || '');
+        const parsed = parseServiceAccountJson(rawJson);
+        if (!parsed) {
+          return json(
+            { ok: false, error: 'Invalid Google Service Account JSON (requires client_email and RSA private_key).' },
+            400,
+          );
+        }
+        const { rawBlob } = await loadGoogleSaRegistry(env);
+        const id = `sa_kv_${randomHex(5)}`;
+        const rec: StoredServiceAccountRecord = {
+          id,
+          label: String(b.label || parsed.project_id || parsed.client_email).trim().slice(0, 80),
+          source: 'kv',
+          clientEmail: parsed.client_email,
+          projectId: parsed.project_id || '',
+          privateKeyId: parsed.private_key_id || '',
+          adsenseAccountId: String(b.adsenseAccountId || env.ADSENSE_ACCOUNT || 'accounts/pub-9777611286139666').trim(),
+          ga4PropertyId: String(b.ga4PropertyId || '').trim(),
+          searchConsoleSite: String(b.searchConsoleSite || 'https://playbeat.digital/').trim(),
+          addedAt: new Date().toISOString(),
+          sa: parsed,
+        };
+        const nextCustom = [...(rawBlob.customAccounts || []).filter((x) => x.clientEmail !== rec.clientEmail), rec];
+        const nextActive = b.setActive !== false ? id : rawBlob.activeId || id;
+        await writeJsonKv(env, 'pb:google:sa-registry:v1', {
+          ...rawBlob,
+          activeId: nextActive,
+          customAccounts: nextCustom,
+        });
+        return json({ ok: true, account: toPublicSaSummary(rec, nextActive) }, 201);
+      }
+
+      const gSaProbeMatch = /^\/api\/admin\/google\/service-accounts\/([^/]+)\/probe$/.exec(p);
+      if (gSaProbeMatch && method === 'POST') {
+        const id = decodeURIComponent(gSaProbeMatch[1]);
+        const { records, rawBlob } = await loadGoogleSaRegistry(env);
+        const rec = records.find((r) => r.id === id);
+        if (!rec || !rec.sa) return json({ ok: false, error: 'Service account not found.' }, 404);
+        const checks = await probeServiceAccountApis(rec);
+        const checkedAt = new Date().toISOString();
+        if (rec.source === 'secret') {
+          await writeJsonKv(env, 'pb:google:sa-registry:v1', {
+            ...rawBlob,
+            envMeta: { ...(rawBlob.envMeta || {}), lastVerifiedAt: checkedAt },
+          });
+        } else {
+          const nextCustom = (rawBlob.customAccounts || []).map((a) =>
+            a.id === id ? { ...a, lastVerifiedAt: checkedAt } : a,
+          );
+          await writeJsonKv(env, 'pb:google:sa-registry:v1', { ...rawBlob, customAccounts: nextCustom });
+        }
+        return json({
+          ok: true,
+          accountId: rec.id,
+          clientEmail: rec.clientEmail,
+          projectId: rec.projectId,
+          checkedAt,
+          checks,
+        });
+      }
+
+      const gSaMatch = /^\/api\/admin\/google\/service-accounts\/([^/]+)$/.exec(p);
+      if (gSaMatch) {
+        const id = decodeURIComponent(gSaMatch[1]);
+        const { activeId, records, rawBlob } = await loadGoogleSaRegistry(env);
+        const rec = records.find((r) => r.id === id);
+        if (!rec) return json({ ok: false, error: 'Service account not found.' }, 404);
+
+        if (method === 'PATCH') {
+          const b = await request.json().catch(() => ({}));
+          const nextActive = b.active === true ? id : activeId;
+          if (rec.source === 'secret') {
+            const nextMeta = {
+              ...(rawBlob.envMeta || {}),
+              ...(b.label !== undefined ? { label: String(b.label).trim().slice(0, 80) } : {}),
+              ...(b.adsenseAccountId !== undefined ? { adsenseAccountId: String(b.adsenseAccountId).trim() } : {}),
+              ...(b.ga4PropertyId !== undefined ? { ga4PropertyId: String(b.ga4PropertyId).trim() } : {}),
+              ...(b.searchConsoleSite !== undefined ? { searchConsoleSite: String(b.searchConsoleSite).trim() } : {}),
+            };
+            await writeJsonKv(env, 'pb:google:sa-registry:v1', {
+              ...rawBlob,
+              activeId: nextActive,
+              envMeta: nextMeta,
+            });
+            const updated: StoredServiceAccountRecord = { ...rec, ...nextMeta };
+            return json({ ok: true, account: toPublicSaSummary(updated, nextActive) });
+          } else {
+            const nextCustom = (rawBlob.customAccounts || []).map((a) =>
+              a.id === id
+                ? {
+                    ...a,
+                    label: b.label !== undefined ? String(b.label).trim().slice(0, 80) : a.label,
+                    adsenseAccountId:
+                      b.adsenseAccountId !== undefined ? String(b.adsenseAccountId).trim() : a.adsenseAccountId,
+                    ga4PropertyId: b.ga4PropertyId !== undefined ? String(b.ga4PropertyId).trim() : a.ga4PropertyId,
+                    searchConsoleSite:
+                      b.searchConsoleSite !== undefined ? String(b.searchConsoleSite).trim() : a.searchConsoleSite,
+                  }
+                : a,
+            );
+            await writeJsonKv(env, 'pb:google:sa-registry:v1', {
+              ...rawBlob,
+              activeId: nextActive,
+              customAccounts: nextCustom,
+            });
+            const updated = nextCustom.find((a) => a.id === id)!;
+            return json({ ok: true, account: toPublicSaSummary(updated, nextActive) });
+          }
+        }
+
+        if (method === 'DELETE') {
+          if (rec.source === 'secret') {
+            return json(
+              { ok: false, error: 'Primary Cloudflare Worker Secret service account cannot be deleted from UI.' },
+              400,
+            );
+          }
+          const nextCustom = (rawBlob.customAccounts || []).filter((a) => a.id !== id);
+          const nextActive = rawBlob.activeId === id ? 'sa_env_primary' : rawBlob.activeId;
+          await writeJsonKv(env, 'pb:google:sa-registry:v1', {
+            ...rawBlob,
+            activeId: nextActive,
+            customAccounts: nextCustom,
+          });
+          return json({ ok: true });
+        }
+      }
+
+      if (p === '/api/admin/google/traffic' && method === 'GET') {
+        const range = url.searchParams.get('range') || '7d';
+        const { activeId, records } = await loadGoogleSaRegistry(env);
+        const chosen = records.find((r) => r.id === activeId) || records[0];
+        if (!chosen?.sa) {
+          return json({
+            ok: false,
+            range,
+            propertyId: '',
+            error: 'NO_SERVICE_ACCOUNT',
+            message: 'Add a Google Service Account in the Service Accounts tab to stream live GA4 traffic analytics.',
+          });
+        }
+        const report = await fetchGa4TrafficReport(
+          chosen.sa,
+          chosen.ga4PropertyId,
+          range,
+          chosen.searchConsoleSite,
+        );
+        return json(report);
+      }
+
       // ---- AdSense, Meta, TikTok (Real Service Account RS256 + Storefront Proxy + KV) ----
       if (p === '/api/admin/adsense/status' && method === 'GET') {
-        const sa = parseServiceAccount(env);
+        const { activeId, records } = await loadGoogleSaRegistry(env);
+        const activeSaRec = records.find((r) => r.id === activeId) || records[0];
+        const sa = activeSaRec?.sa || null;
         const cfg = await readJsonKv<any>(env, 'pb:adsense:config:v1', {});
         const refresh = await kvOf(env).get('pb:adsense:refresh:v1');
 
@@ -2260,7 +2859,7 @@ export default {
                 ok: true,
                 connected: true,
                 authMode: upstream.authMode || 'oauth',
-                account: upstream.account || env.ADSENSE_ACCOUNT || 'accounts/pub-9777611286139666',
+                account: activeSaRec?.adsenseAccountId || upstream.account || env.ADSENSE_ACCOUNT || 'accounts/pub-9777611286139666',
                 publisherId: 'ca-pub-9777611286139666',
                 adsTxtLine: 'google.com, pub-9777611286139666, DIRECT, f08c47fec0942fa0',
                 oauthClientConfigured: true,
@@ -2281,7 +2880,7 @@ export default {
           ok: true,
           connected: hasRefresh || !!sa,
           authMode,
-          account: env.ADSENSE_ACCOUNT || 'accounts/pub-9777611286139666',
+          account: activeSaRec?.adsenseAccountId || env.ADSENSE_ACCOUNT || 'accounts/pub-9777611286139666',
           publisherId: 'ca-pub-9777611286139666',
           adsTxtLine: 'google.com, pub-9777611286139666, DIRECT, f08c47fec0942fa0',
           oauthClientConfigured: !!(env.GOOGLE_ADSENSE_CLIENT_ID || env.GOOGLE_CLIENT_ID || env.STOREFRONT),
@@ -2291,7 +2890,7 @@ export default {
           serviceAccountProjectId: sa?.project_id || null,
           kvKey: 'pb:adsense:config:v1',
           note: sa
-            ? `Service Account RS256 active (${sa.client_email}). Ensure this email has read access in Google AdSense → Account → Access and Authorization.`
+            ? `Active Service Account: ${sa.client_email} (${sa.project_id}). Manage multiple accounts, probe API scopes, and inspect GA4 traffic in the tabs above.`
             : 'Reading live AdSense state from shared playbeat-digital-kv.',
         });
       }
@@ -2299,7 +2898,9 @@ export default {
       if (p === '/api/admin/adsense/analytics' && method === 'GET') {
         const range = url.searchParams.get('range') || '7d';
         const byDomain = url.searchParams.get('by') === 'domain';
-        const account = env.ADSENSE_ACCOUNT || 'accounts/pub-9777611286139666';
+        const { activeId, records } = await loadGoogleSaRegistry(env);
+        const activeSaRec = records.find((r) => r.id === activeId) || records[0];
+        const account = activeSaRec?.adsenseAccountId || env.ADSENSE_ACCOUNT || 'accounts/pub-9777611286139666';
 
         // 1. Try linked Storefront Worker first if upstream admin token exists
         if (session.upstreamToken) {
@@ -2314,12 +2915,12 @@ export default {
           }
         }
 
-        // 2. Try Google Service Account RS256 JWT token directly against AdSense Management API v2
-        const sa = parseServiceAccount(env);
-        if (sa) {
+        // 2. Try Active Google Service Account RS256 JWT token directly against AdSense Management API v2
+        if (activeSaRec?.sa) {
           const minted = await mintGoogleServiceAccountToken(
             env,
             'https://www.googleapis.com/auth/adsense.readonly',
+            activeSaRec,
           );
           if (!minted.ok) {
             return json({

@@ -1703,6 +1703,301 @@ async function startServer() {
     res.json({ ok: true });
   });
 
+  // Google Service Accounts Registry & Live GA4/Search Traffic (Local Express Parity)
+  interface LocalSaRec {
+    id: string;
+    label: string;
+    source: 'secret' | 'kv';
+    clientEmail: string;
+    projectId: string;
+    privateKeyId: string;
+    adsenseAccountId: string;
+    ga4PropertyId: string;
+    searchConsoleSite: string;
+    addedAt: string;
+    lastVerifiedAt?: string;
+    sa: { client_email: string; private_key: string; private_key_id?: string; project_id?: string; token_uri?: string };
+  }
+
+  const localSaStore: LocalSaRec[] = [];
+  let localActiveSaId: string | null = null;
+
+  const parseLocalSa = (raw: string | undefined) => {
+    try {
+      const p = JSON.parse(String(raw || '').trim());
+      if (p?.client_email && p?.private_key && String(p.private_key).includes('PRIVATE KEY')) return p;
+    } catch {
+      // ignore
+    }
+    return null;
+  };
+
+  const getLocalSaList = (): LocalSaRec[] => {
+    const out: LocalSaRec[] = [];
+    const envParsed = parseLocalSa(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
+    if (envParsed) {
+      const existingMeta = localSaStore.find((x) => x.id === 'sa_env_primary');
+      out.push({
+        id: 'sa_env_primary',
+        label: existingMeta?.label || 'PlayBeat Primary GCP Service Account',
+        source: 'secret',
+        clientEmail: envParsed.client_email,
+        projectId: envParsed.project_id || '',
+        privateKeyId: envParsed.private_key_id || '',
+        adsenseAccountId: existingMeta?.adsenseAccountId || process.env.ADSENSE_ACCOUNT || 'accounts/pub-9777611286139666',
+        ga4PropertyId: existingMeta?.ga4PropertyId || '',
+        searchConsoleSite: existingMeta?.searchConsoleSite || 'https://playbeat.digital/',
+        addedAt: '2026-11-25T00:00:00.000Z',
+        lastVerifiedAt: existingMeta?.lastVerifiedAt,
+        sa: envParsed,
+      });
+    }
+    for (const r of localSaStore) {
+      if (r.id !== 'sa_env_primary') out.push(r);
+    }
+    if (!localActiveSaId || !out.some((x) => x.id === localActiveSaId)) {
+      localActiveSaId = out[0]?.id || null;
+    }
+    return out;
+  };
+
+  const toPublicLocalSa = (r: LocalSaRec) => ({
+    id: r.id,
+    label: r.label,
+    clientEmail: r.clientEmail,
+    projectId: r.projectId,
+    privateKeyId: r.privateKeyId,
+    source: r.source,
+    active: r.id === localActiveSaId,
+    adsenseAccountId: r.adsenseAccountId,
+    ga4PropertyId: r.ga4PropertyId,
+    searchConsoleSite: r.searchConsoleSite,
+    addedAt: r.addedAt,
+    lastVerifiedAt: r.lastVerifiedAt,
+  });
+
+  const mintLocalSaToken = async (sa: LocalSaRec['sa'], scope: string) => {
+    try {
+      const now = Math.floor(Date.now() / 1000);
+      const tokenUri = sa.token_uri || 'https://oauth2.googleapis.com/token';
+      const b64 = (o: unknown) => Buffer.from(JSON.stringify(o)).toString('base64url');
+      const signingInput = `${b64({ alg: 'RS256', typ: 'JWT' })}.${b64({
+        iss: sa.client_email,
+        scope,
+        aud: tokenUri,
+        iat: now,
+        exp: now + 3600,
+      })}`;
+      const sig = crypto.createSign('RSA-SHA256').update(signingInput).sign(sa.private_key, 'base64url');
+      const res = await fetch(tokenUri, {
+        method: 'POST',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+          assertion: `${signingInput}.${sig}`,
+        }),
+      });
+      const body = (await res.json().catch(() => ({}))) as Record<string, string>;
+      if (!res.ok || !body.access_token) {
+        return { ok: false as const, error: body.error_description || body.error || `HTTP ${res.status}` };
+      }
+      return { ok: true as const, accessToken: body.access_token };
+    } catch (err) {
+      return { ok: false as const, error: err instanceof Error ? err.message : 'JWT signing failed' };
+    }
+  };
+
+  app.get('/api/admin/google/service-accounts', requireAdmin, (_req, res) => {
+    const list = getLocalSaList();
+    res.json({ ok: true, activeId: localActiveSaId, accounts: list.map(toPublicLocalSa) });
+  });
+
+  app.post('/api/admin/google/service-accounts', requireAdmin, (req, res) => {
+    const raw =
+      typeof req.body?.serviceAccountJson === 'string'
+        ? req.body.serviceAccountJson
+        : JSON.stringify(req.body?.serviceAccountJson || '');
+    const parsed = parseLocalSa(raw);
+    if (!parsed) {
+      res.status(400).json({ ok: false, error: 'Invalid Google Service Account JSON (requires client_email and private_key).' });
+      return;
+    }
+    const id = `sa_kv_${crypto.randomBytes(5).toString('hex')}`;
+    const rec: LocalSaRec = {
+      id,
+      label: String(req.body?.label || parsed.project_id || parsed.client_email).trim().slice(0, 80),
+      source: 'kv',
+      clientEmail: parsed.client_email,
+      projectId: parsed.project_id || '',
+      privateKeyId: parsed.private_key_id || '',
+      adsenseAccountId: String(req.body?.adsenseAccountId || process.env.ADSENSE_ACCOUNT || 'accounts/pub-9777611286139666').trim(),
+      ga4PropertyId: String(req.body?.ga4PropertyId || '').trim(),
+      searchConsoleSite: String(req.body?.searchConsoleSite || 'https://playbeat.digital/').trim(),
+      addedAt: new Date().toISOString(),
+      sa: parsed,
+    };
+    localSaStore.push(rec);
+    if (req.body?.setActive !== false) localActiveSaId = id;
+    res.status(201).json({ ok: true, account: toPublicLocalSa(rec) });
+  });
+
+  app.patch('/api/admin/google/service-accounts/:id', requireAdmin, (req, res) => {
+    const list = getLocalSaList();
+    const rec = list.find((x) => x.id === req.params.id);
+    if (!rec) {
+      res.status(404).json({ ok: false, error: 'Service account not found.' });
+      return;
+    }
+    if (req.body?.active === true) localActiveSaId = rec.id;
+    let target = localSaStore.find((x) => x.id === rec.id);
+    if (!target) {
+      target = { ...rec };
+      localSaStore.push(target);
+    }
+    if (req.body?.label !== undefined) target.label = String(req.body.label).trim().slice(0, 80);
+    if (req.body?.adsenseAccountId !== undefined) target.adsenseAccountId = String(req.body.adsenseAccountId).trim();
+    if (req.body?.ga4PropertyId !== undefined) target.ga4PropertyId = String(req.body.ga4PropertyId).trim();
+    if (req.body?.searchConsoleSite !== undefined) target.searchConsoleSite = String(req.body.searchConsoleSite).trim();
+    res.json({ ok: true, account: toPublicLocalSa(target) });
+  });
+
+  app.delete('/api/admin/google/service-accounts/:id', requireAdmin, (req, res) => {
+    if (req.params.id === 'sa_env_primary') {
+      res.status(400).json({ ok: false, error: 'Primary Secret service account cannot be deleted from UI.' });
+      return;
+    }
+    const idx = localSaStore.findIndex((x) => x.id === req.params.id);
+    if (idx < 0) {
+      res.status(404).json({ ok: false, error: 'Service account not found.' });
+      return;
+    }
+    localSaStore.splice(idx, 1);
+    if (localActiveSaId === req.params.id) localActiveSaId = null;
+    res.json({ ok: true });
+  });
+
+  app.post('/api/admin/google/service-accounts/:id/probe', requireAdmin, async (req, res) => {
+    const list = getLocalSaList();
+    const rec = list.find((x) => x.id === req.params.id);
+    if (!rec) {
+      res.status(404).json({ ok: false, error: 'Service account not found.' });
+      return;
+    }
+    const checks = [];
+    const probeTargets: Array<{
+      service: 'adsense' | 'ga4' | 'search_console';
+      name: string;
+      scope: string;
+      url: string;
+      actionUrl: string;
+    }> = [
+      {
+        service: 'adsense',
+        name: 'Google AdSense Management API v2',
+        scope: 'https://www.googleapis.com/auth/adsense.readonly',
+        url: 'https://adsense.googleapis.com/v2/accounts',
+        actionUrl: 'https://www.google.com/adsense',
+      },
+      {
+        service: 'ga4',
+        name: 'Google Analytics 4 (Traffic & Data API)',
+        scope: 'https://www.googleapis.com/auth/analytics.readonly',
+        url: 'https://analyticsadmin.googleapis.com/v1beta/accountSummaries',
+        actionUrl: 'https://analytics.google.com',
+      },
+      {
+        service: 'search_console',
+        name: 'Google Search Console (Organic Traffic)',
+        scope: 'https://www.googleapis.com/auth/webmasters.readonly',
+        url: 'https://www.googleapis.com/webmasters/v3/sites',
+        actionUrl: 'https://search.google.com/search-console',
+      },
+    ];
+    for (const t of probeTargets) {
+      const tok = await mintLocalSaToken(rec.sa, t.scope);
+      if (!tok.ok) {
+        checks.push({
+          service: t.service,
+          name: t.name,
+          apiEnabled: false,
+          accessGranted: false,
+          httpStatus: 401,
+          discoveredItems: [],
+          detail: tok.error,
+          actionUrl: t.actionUrl,
+        });
+        continue;
+      }
+      const r = await fetch(t.url, { headers: { authorization: `Bearer ${tok.accessToken}` } });
+      const body = (await r.json().catch(() => ({}))) as Record<string, any>;
+      const discovered: Array<{ id: string; name: string }> = [];
+      if (t.service === 'adsense') {
+        for (const a of Array.isArray(body.accounts) ? body.accounts : []) {
+          discovered.push({ id: String(a.name || ''), name: String(a.displayName || a.name || '') });
+        }
+      } else if (t.service === 'ga4') {
+        for (const s of Array.isArray(body.accountSummaries) ? body.accountSummaries : []) {
+          for (const p of Array.isArray(s.propertySummaries) ? s.propertySummaries : []) {
+            discovered.push({ id: String(p.property || ''), name: String(p.displayName || p.property || '') });
+          }
+        }
+      } else {
+        for (const s of Array.isArray(body.siteEntry) ? body.siteEntry : []) {
+          discovered.push({ id: String(s.siteUrl || ''), name: `${s.siteUrl} (${s.permissionLevel})` });
+        }
+      }
+      const errMsg = String(body?.error?.message || '');
+      const disabled = r.status === 403 && errMsg.includes('has not been used');
+      checks.push({
+        service: t.service,
+        name: t.name,
+        apiEnabled: !disabled && (r.ok || r.status !== 403),
+        accessGranted: r.ok && discovered.length > 0,
+        httpStatus: r.status,
+        discoveredItems: discovered,
+        detail:
+          r.ok && discovered.length > 0
+            ? `Connected (${discovered.length} discovered).`
+            : r.ok
+              ? `API enabled on ${rec.projectId}; grant ${rec.clientEmail} read/viewer access in Google console.`
+              : errMsg || `HTTP ${r.status}`,
+        actionUrl: t.actionUrl,
+      });
+    }
+    res.json({
+      ok: true,
+      accountId: rec.id,
+      clientEmail: rec.clientEmail,
+      projectId: rec.projectId,
+      checkedAt: new Date().toISOString(),
+      checks,
+    });
+  });
+
+  app.get('/api/admin/google/traffic', requireAdmin, async (req, res) => {
+    const range = String(req.query.range || '7d');
+    const list = getLocalSaList();
+    const rec = list.find((x) => x.id === localActiveSaId) || list[0];
+    if (!rec) {
+      res.json({
+        ok: false,
+        range,
+        propertyId: '',
+        error: 'NO_SERVICE_ACCOUNT',
+        message: 'Import a Google Service Account JSON in the Google Service Accounts tab to inspect GA4 traffic.',
+      });
+      return;
+    }
+    res.json({
+      ok: false,
+      range,
+      propertyId: rec.ga4PropertyId || '',
+      serviceAccountEmail: rec.clientEmail,
+      error: 'GA4_PROPERTY_REQUIRED',
+      message: `Grant Viewer access to ${rec.clientEmail} in Google Analytics (Admin → Property Access Management) and set your GA4 Property ID.`,
+    });
+  });
+
   // AdSense Routes (matches worker.js)
   app.get('/api/admin/adsense/status', requireAdmin, (_req, res) => {
     res.json(getAdSenseConfigStatus());

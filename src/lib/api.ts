@@ -15,6 +15,9 @@ import type {
   DomainRecord,
   ElectronicFirstApiResult,
   ElectronicFirstStatus,
+  GoogleServiceAccountSummary,
+  GoogleServiceProbeResponse,
+  GoogleTrafficReportResponse,
   MetaAnalyticsStatus,
   OrderRecord,
   ProfileCoverTheme,
@@ -274,6 +277,57 @@ export const api = {
       `/api/admin/adsense/analytics?range=${encodeURIComponent(range)}${
         by === 'domain' ? '&by=domain' : ''
       }`,
+    ),
+
+  // Google Service Accounts, GA4 Traffic & Search Console Management
+  googleServiceAccounts: () =>
+    requestJson<{ ok: boolean; accounts: GoogleServiceAccountSummary[]; activeId: string | null }>(
+      '/api/admin/google/service-accounts',
+    ),
+
+  addGoogleServiceAccount: (payload: {
+    label: string;
+    serviceAccountJson: string;
+    adsenseAccountId?: string;
+    ga4PropertyId?: string;
+    searchConsoleSite?: string;
+    setActive?: boolean;
+  }) =>
+    requestJson<{ ok: boolean; account: GoogleServiceAccountSummary }>(
+      '/api/admin/google/service-accounts',
+      { method: 'POST', body: JSON.stringify(payload) },
+    ),
+
+  updateGoogleServiceAccount: (
+    id: string,
+    payload: {
+      label?: string;
+      adsenseAccountId?: string;
+      ga4PropertyId?: string;
+      searchConsoleSite?: string;
+      active?: boolean;
+    },
+  ) =>
+    requestJson<{ ok: boolean; account: GoogleServiceAccountSummary }>(
+      `/api/admin/google/service-accounts/${encodeURIComponent(id)}`,
+      { method: 'PATCH', body: JSON.stringify(payload) },
+    ),
+
+  deleteGoogleServiceAccount: (id: string) =>
+    requestJson<{ ok: boolean }>(
+      `/api/admin/google/service-accounts/${encodeURIComponent(id)}`,
+      { method: 'DELETE' },
+    ),
+
+  probeGoogleServiceAccount: (id: string) =>
+    requestJson<GoogleServiceProbeResponse>(
+      `/api/admin/google/service-accounts/${encodeURIComponent(id)}/probe`,
+      { method: 'POST' },
+    ),
+
+  googleTrafficAnalytics: (range: AdSenseRange = '7d') =>
+    requestJson<GoogleTrafficReportResponse>(
+      `/api/admin/google/traffic?range=${encodeURIComponent(range)}`,
     ),
 
   crmLeads: () =>
