@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Check, CheckCircle2, Copy, KeyRound, Plus, Search, Trash2, X } from 'lucide-react';
 import type { CatalogProduct, OrderRecord, OrderStatus } from '../types/admin';
 import { api } from '../lib/api';
+import { trackTikTokEvent } from '../lib/tiktokPixel';
 
 interface OrdersPageProps {
   onDataChanged: () => void;
@@ -79,6 +80,23 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
         items: selectedLines,
       });
       setOrders((prev) => [res.order, ...prev]);
+      void trackTikTokEvent(
+        'PlaceAnOrder',
+        {
+          contents: (res.order.items || []).map((item) => ({
+            content_id: item.sku,
+            content_type: 'product',
+            content_name: item.name,
+          })),
+          value: res.order.totalUsd,
+          currency: 'USD',
+        },
+        {
+          email: res.order.customerEmail,
+          phone: res.order.customerPhone,
+          externalId: res.order.customerUid || res.order.id,
+        },
+      );
       setModalOpen(false);
       setCustomerEmail('');
       setCustomerPhone('');
@@ -104,6 +122,23 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
     try {
       const res = await api.fulfillOrder(orderId);
       setOrders((prev) => prev.map((o) => (o.id === orderId ? res.order : o)));
+      void trackTikTokEvent(
+        'Purchase',
+        {
+          contents: (res.order.items || []).map((item) => ({
+            content_id: item.sku,
+            content_type: 'product',
+            content_name: item.name,
+          })),
+          value: res.order.totalUsd,
+          currency: 'USD',
+        },
+        {
+          email: res.order.customerEmail,
+          phone: res.order.customerPhone,
+          externalId: res.order.customerUid || res.order.id,
+        },
+      );
       setExpandedOrderId(orderId);
       setNotice({
         type: 'info',

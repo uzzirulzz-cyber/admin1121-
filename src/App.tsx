@@ -7,6 +7,7 @@ import type {
   UserProfile,
 } from './types/admin';
 import { api, setAuthToken, setUnauthorizedHandler } from './lib/api';
+import { identifyTikTokUser, trackTikTokPageView } from './lib/tiktokPixel';
 import { LoginView } from './components/LoginView';
 import { ARGON_COVER_THEMES, AdminShell, type NavSection } from './components/AdminShell';
 import { OverviewPage } from './components/OverviewPage';
@@ -55,6 +56,11 @@ export default function App() {
     try {
       const res = await api.accountProfile();
       setUserProfile(res.profile);
+      void identifyTikTokUser({
+        email: res.profile.email,
+        phone: res.profile.phone,
+        externalId: res.profile.uid,
+      });
     } catch {
       // Handled by unauthorized handler if 401
     }
@@ -91,6 +97,10 @@ export default function App() {
       }
     }
   }, [userRole, loadProfile, loadSummary]);
+
+  useEffect(() => {
+    trackTikTokPageView();
+  }, [activeSection]);
 
   async function handleSignOut() {
     try {

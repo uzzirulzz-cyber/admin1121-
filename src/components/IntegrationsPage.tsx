@@ -2,6 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Check, Copy, Play, RefreshCw } from 'lucide-react';
 import type { AdSenseStatus, MetaAnalyticsStatus, TikTokStatus } from '../types/admin';
 import { api } from '../lib/api';
+import {
+  TIKTOK_PIXEL_ID,
+  TIKTOK_STOREFRONT_EVENTS_SNIPPET,
+  trackTikTokEvent,
+  type TikTokEventName,
+} from '../lib/tiktokPixel';
 
 const WORKER_ROUTES = [
   { method: 'GET', path: '/api/health', source: 'worker.js', kv: 'None (Public)' },
@@ -38,6 +44,9 @@ export function IntegrationsPage() {
   const [testingChannel, setTestingChannel] = useState<string | null>(null);
   const [testNotice, setTestNotice] = useState<string | null>(null);
   const [copiedSnippet, setCopiedSnippet] = useState(false);
+  const [copiedTikTokSnippet, setCopiedTikTokSnippet] = useState(false);
+  const [selectedTtEvent, setSelectedTtEvent] = useState<TikTokEventName>('ViewContent');
+  const [ttPixelFeedback, setTtPixelFeedback] = useState<string | null>(null);
 
   async function loadAll() {
     setLoading(true);
@@ -95,6 +104,41 @@ export function IntegrationsPage() {
     navigator.clipboard?.writeText(PIXEL_SNIPPET);
     setCopiedSnippet(true);
     setTimeout(() => setCopiedSnippet(false), 1800);
+  }
+
+  function handleCopyTikTokSnippet() {
+    navigator.clipboard?.writeText(TIKTOK_STOREFRONT_EVENTS_SNIPPET);
+    setCopiedTikTokSnippet(true);
+    setTimeout(() => setCopiedTikTokSnippet(false), 1800);
+  }
+
+  async function handleFireBrowserTikTokEvent() {
+    setTtPixelFeedback(null);
+    const ok = await trackTikTokEvent(
+      selectedTtEvent,
+      {
+        contents: [
+          {
+            content_id: 'PB-TEST-001',
+            content_type: 'product',
+            content_name: 'PlayBeat Digital Storefront Item',
+          },
+        ],
+        value: 29.99,
+        currency: 'USD',
+        ...(selectedTtEvent === 'Search' ? { search_string: 'PlayBeat Steam Key' } : {}),
+      },
+      {
+        email: 'business@playbeat.digital',
+        phone: '+923000000000',
+        externalId: 'admin_operator',
+      },
+    );
+    setTtPixelFeedback(
+      ok
+        ? `Fired SHA-256 ttq.identify + ttq.track("${selectedTtEvent}") on Pixel ${TIKTOK_PIXEL_ID}.`
+        : 'TikTok Pixel script (ttq) is blocked by a browser extension or ad blocker.',
+    );
   }
 
   return (
@@ -291,16 +335,16 @@ export function IntegrationsPage() {
           </div>
 
           <dl className="divide-y divide-zinc-100 dark:divide-zinc-800/80 text-xs">
-            <div className="py-2 flex justify-between">
+            <div className="py-2 flex justify-between gap-2">
               <dt className="font-mono text-zinc-500">TIKTOK_PIXEL_ID</dt>
-              <dd className={tiktok?.pixelSaved ? 'text-emerald-700 dark:text-emerald-400 font-medium' : 'text-zinc-500'}>
-                {tiktok?.pixelSaved ? 'Saved' : 'Not Linked'}
+              <dd className="text-emerald-700 dark:text-emerald-400 font-mono font-medium">
+                {TIKTOK_PIXEL_ID}
               </dd>
             </div>
             <div className="py-2 flex justify-between">
               <dt className="font-mono text-zinc-500">TIKTOK_EVENTS_TOKEN</dt>
               <dd className={tiktok?.eventsTokenSaved ? 'text-emerald-700 dark:text-emerald-400 font-medium' : 'text-zinc-500'}>
-                {tiktok?.eventsTokenSaved ? 'Saved' : 'Not Linked'}
+                {tiktok?.eventsTokenSaved ? 'Saved' : 'Browser Pixel Active'}
               </dd>
             </div>
             <div className="py-2 flex justify-between">
@@ -312,6 +356,42 @@ export function IntegrationsPage() {
           </dl>
 
           <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800 space-y-3">
+            <div className="space-y-2">
+              <label className="block text-[11px] font-medium text-zinc-600 dark:text-zinc-400">
+                Fire Live Browser Pixel Event (SHA-256 Identify + Track)
+              </label>
+              <div className="flex gap-2">
+                <select
+                  value={selectedTtEvent}
+                  onChange={(e) => setSelectedTtEvent(e.target.value as TikTokEventName)}
+                  className="flex-1 px-2.5 py-1.5 text-xs rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100"
+                >
+                  <option value="ViewContent">ViewContent</option>
+                  <option value="AddToWishlist">AddToWishlist</option>
+                  <option value="Search">Search</option>
+                  <option value="AddPaymentInfo">AddPaymentInfo</option>
+                  <option value="AddToCart">AddToCart</option>
+                  <option value="InitiateCheckout">InitiateCheckout</option>
+                  <option value="PlaceAnOrder">PlaceAnOrder</option>
+                  <option value="CompleteRegistration">CompleteRegistration</option>
+                  <option value="Purchase">Purchase</option>
+                </select>
+                <button
+                  type="button"
+                  onClick={handleFireBrowserTikTokEvent}
+                  className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg whitespace-nowrap"
+                >
+                  <Play className="w-3 h-3" />
+                  <span>Fire</span>
+                </button>
+              </div>
+              {ttPixelFeedback && (
+                <p className="text-[11px] text-emerald-700 dark:text-emerald-400 leading-relaxed">
+                  {ttPixelFeedback}
+                </p>
+              )}
+            </div>
+
             <button
               type="button"
               disabled={testingChannel !== null}
@@ -319,12 +399,26 @@ export function IntegrationsPage() {
               className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-50 rounded-lg whitespace-nowrap"
             >
               <Play className="w-3 h-3" />
-              <span>Send TikTok Test Event</span>
+              <span>Test Server TikTok Events API</span>
             </button>
+
+            <div className="flex items-center justify-between pt-1">
+              <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                TikTok SHA-256 Events Helper
+              </span>
+              <button
+                type="button"
+                onClick={handleCopyTikTokSnippet}
+                className="inline-flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                {copiedTikTokSnippet ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                <span>{copiedTikTokSnippet ? 'Copied' : 'Copy TikTok snippet'}</span>
+              </button>
+            </div>
 
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                Storefront SPA Pixel Helper
+                Storefront Meta Pixel Helper
               </span>
               <button
                 type="button"
@@ -332,12 +426,9 @@ export function IntegrationsPage() {
                 className="inline-flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 hover:underline"
               >
                 {copiedSnippet ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                <span>{copiedSnippet ? 'Copied' : 'Copy snippet'}</span>
+                <span>{copiedSnippet ? 'Copied' : 'Copy Meta snippet'}</span>
               </button>
             </div>
-            <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-              Inject alongside <span className="font-mono">fbq(&apos;init&apos;, &lt;dataset_id&gt;)</span> for deduplicated <span className="font-mono">eventID</span> tracking from <span className="font-mono">meta-capi-patch.js</span>.
-            </p>
           </div>
         </section>
       </div>

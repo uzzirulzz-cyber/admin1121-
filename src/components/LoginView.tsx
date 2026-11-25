@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import type { AccountRole, AuthStatusResponse } from '../types/admin';
 import { api, setAuthToken } from '../lib/api';
+import { trackTikTokEvent } from '../lib/tiktokPixel';
 
 interface LoginViewProps {
   authStatus: AuthStatusResponse;
@@ -153,6 +154,25 @@ export function LoginView({
         phone: regPhone.trim() || undefined,
         password: regPassword,
       });
+      void trackTikTokEvent(
+        'CompleteRegistration',
+        {
+          contents: [
+            {
+              content_id: 'playbeat_account',
+              content_type: 'product',
+              content_name: 'PlayBeat Account Registration',
+            },
+          ],
+          value: 0,
+          currency: 'USD',
+        },
+        {
+          email: regEmail.trim(),
+          phone: regPhone.trim() || undefined,
+          externalId: regEmail.trim().toLowerCase(),
+        },
+      );
       setAuthToken(res.token);
       onAuthenticated(res.role || 'customer');
     } catch (err) {

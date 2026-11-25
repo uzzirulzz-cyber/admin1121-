@@ -255,14 +255,14 @@ const CHANNEL_DEFAULTS: Record<string, any> = {
     platform: 'tiktok',
     name: 'TikTok Business & Events',
     category: 'TikTok',
-    accountId: '',
+    accountId: 'DC3J0CBC77U6OQMIKJ80',
     accountIdLabel: 'TikTok Pixel / Advertiser ID',
-    accountIdPlaceholder: 'Advertiser or Pixel ID',
+    accountIdPlaceholder: 'DC3J0CBC77U6OQMIKJ80',
     secondaryId: '',
     secondaryIdLabel: 'Handle',
     secondaryIdPlaceholder: '@playbeatdigital',
     loginIdentifier: 'business@playbeat.digital',
-    notes: '',
+    notes: 'TikTok Pixel DC3J0CBC77U6OQMIKJ80 installed on Admin Console and shared pb:tiktok:config:v1 KV.',
     requiredEnvVars: ['TIKTOK_CLIENT_KEY', 'TIKTOK_CLIENT_SECRET'],
     callbackPath: '/auth/oauth/tiktok/callback',
     portalUrl: 'https://ads.tiktok.com',
@@ -1467,6 +1467,119 @@ async function dispatchMetaCrmStage(env: Env, lead: any, channel: 'whatsapp_crm'
   }
 }
 
+// ---------- TikTok Events API v1.3 Server-Side Dispatch ----------
+
+async function dispatchTikTokEventsApi(
+  env: Env,
+  opts: {
+    event: string;
+    eventId: string;
+    entityRef: string;
+    email?: string;
+    phone?: string;
+    externalId?: string;
+    value?: number;
+    currency?: string;
+    contents?: Array<{ content_id: string; content_type: string; content_name: string }>;
+    url?: string;
+  },
+) {
+  const ttCfg = await readJsonKv<any>(env, 'pb:tiktok:config:v1', {});
+  const token = String(env.TIKTOK_EVENTS_TOKEN || ttCfg?.eventsToken || ttCfg?.accessToken || '').trim();
+  const pixelId = String(env.TIKTOK_PIXEL_ID || ttCfg?.pixelId || 'DC3J0CBC77U6OQMIKJ80').trim();
+
+  if (!token || !pixelId) {
+    const detail = 'Configure TIKTOK_EVENTS_TOKEN secret and TIKTOK_PIXEL_ID to dispatch TikTok Events API.';
+    await appendMetaLog(env, {
+      channel: 'tiktok_events',
+      eventName: opts.event,
+      eventId: opts.eventId,
+      entityRef: opts.entityRef,
+      status: 'not_configured',
+      detail,
+    });
+    return { ok: false, status: 'not_configured' as const, detail };
+  }
+
+  const user: Record<string, string> = {};
+  if (opts.email) {
+    const cleanEmail = String(opts.email).trim().toLowerCase();
+    if (cleanEmail) user.email = await sha256Hex(cleanEmail);
+  }
+  if (opts.phone) {
+    const digits = String(opts.phone).replace(/[^\d+]/g, '');
+    const normalizedPhone = digits.startsWith('+') ? digits : digits ? `+${digits}` : '';
+    if (normalizedPhone) user.phone = await sha256Hex(normalizedPhone);
+  }
+  if (opts.externalId) {
+    const ext = String(opts.externalId).trim();
+    if (ext) user.external_id = await sha256Hex(ext);
+  }
+
+  const payload = {
+    event_source: 'web',
+    event_source_id: pixelId,
+    data: [
+      {
+        event: opts.event,
+        event_time: Math.floor(Date.now() / 1000),
+        event_id: opts.eventId,
+        user,
+        page: {
+          url: opts.url || env.STOREFRONT_URL || 'https://playbeat.digital',
+        },
+        properties: {
+          currency: opts.currency || 'USD',
+          value: Number(opts.value ?? 0),
+          ...(opts.contents && opts.contents.length > 0 ? { contents: opts.contents } : {}),
+        },
+      },
+    ],
+  };
+
+  try {
+    const r = await fetch('https://business-api.tiktok.com/open_api/v1.3/event/track/', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'Access-Token': token,
+      },
+      body: JSON.stringify(payload),
+    });
+    const resBody = await r.json().catch(() => ({}));
+    const accepted = r.ok && (resBody?.code === 0 || resBody?.code === undefined);
+    const detail = accepted
+      ? `Dispatched ${opts.event} to TikTok Events API (pixel ${pixelId}, request_id: ${resBody?.request_id || 'ok'}).`
+      : `TikTok Events API HTTP ${r.status} (code ${resBody?.code ?? 'n/a'}): ${resBody?.message || JSON.stringify(resBody).slice(0, 160)}`;
+    await appendMetaLog(env, {
+      channel: 'tiktok_events',
+      eventName: opts.event,
+      eventId: opts.eventId,
+      entityRef: opts.entityRef,
+      status: accepted ? 'sent' : 'failed',
+      httpStatus: r.status,
+      detail,
+    });
+    return {
+      ok: accepted,
+      status: accepted ? ('sent' as const) : ('failed' as const),
+      detail,
+      tiktokCode: resBody?.code,
+    };
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : 'TikTok Events API network error';
+    await appendMetaLog(env, {
+      channel: 'tiktok_events',
+      eventName: opts.event,
+      eventId: opts.eventId,
+      entityRef: opts.entityRef,
+      status: 'failed',
+      detail,
+    });
+    return { ok: false, status: 'failed' as const, detail };
+  }
+}
+
 // ---------- Main Worker Fetch Handler ----------
 
 export default {
@@ -2423,15 +2536,32 @@ export default {
           metaCapiStatus: env.META_ACCESS_TOKEN ? 'sent' : 'not_configured',
         };
         await saveOrdersRaw(env, orders, isObject, wrapper);
+        const adminOrder = toAdminOrder(orders[idx], usdToPkr);
+        const ttDispatch = await dispatchTikTokEventsApi(env, {
+          event: 'Purchase',
+          eventId: `tt-purchase-${adminOrder.id}`,
+          entityRef: adminOrder.id,
+          email: adminOrder.customerEmail,
+          phone: adminOrder.customerPhone,
+          externalId: adminOrder.customerUid || adminOrder.id,
+          value: adminOrder.totalUsd,
+          currency: 'USD',
+          contents: (adminOrder.items || []).map((it: any) => ({
+            content_id: String(it.sku || it.name || it.title),
+            content_type: 'product',
+            content_name: String(it.name || it.title || it.sku),
+          })),
+        });
         return json({
           ok: true,
-          order: toAdminOrder(orders[idx], usdToPkr),
+          order: adminOrder,
           metaCapi: {
             status: orders[idx].metaCapiStatus,
             detail: env.META_ACCESS_TOKEN
               ? 'Order fulfilled in shared playbeat-digital-kv.'
               : 'Order fulfilled in shared playbeat-digital-kv (META_ACCESS_TOKEN not set on admin worker).',
           },
+          tiktokEvents: ttDispatch,
         });
       }
 
@@ -2498,20 +2628,31 @@ export default {
         const leads = await readJsonKv<any[]>(env, 'pb:crm:leads:v1', []);
         const idx = leads.findIndex((l) => l.leadId === id);
         if (idx < 0) return json({ ok: false, error: 'Lead not found' }, 404);
-        const status = env.TIKTOK_EVENTS_TOKEN ? 'sent' : 'not_configured';
-        leads[idx] = { ...leads[idx], tiktokSyncStatus: status };
+        const lead = leads[idx];
+        const ttEventName = lead.status === 'Won' ? 'Purchase' : 'CompleteRegistration';
+        const tiktokDispatch = await dispatchTikTokEventsApi(env, {
+          event: ttEventName,
+          eventId: `tt-crm-${lead.leadId}-${Date.now()}`,
+          entityRef: String(lead.leadId),
+          email: lead.email,
+          phone: lead.phone,
+          externalId: String(lead.leadId),
+          value: Number(lead.expectedValueUsd) || 0,
+          currency: 'USD',
+          contents: [
+            {
+              content_id: String(lead.leadId),
+              content_type: 'product',
+              content_name: String(lead.businessName || 'PlayBeat CRM Lead'),
+            },
+          ],
+        });
+        leads[idx] = { ...lead, tiktokSyncStatus: tiktokDispatch.status };
         await writeJsonKv(env, 'pb:crm:leads:v1', leads);
         return json({
           ok: true,
           lead: leads[idx],
-          tiktokDispatch: {
-            ok: status === 'sent',
-            status,
-            detail:
-              status === 'sent'
-                ? 'Dispatched to TikTok Events API.'
-                : 'Configure TIKTOK_EVENTS_TOKEN to dispatch TikTok events.',
-          },
+          tiktokDispatch,
         });
       }
 
@@ -2995,21 +3136,27 @@ export default {
       }
 
       if (p === '/api/admin/tiktok/test-event' && method === 'POST') {
-        const c = await readJsonKv<any>(env, 'pb:tiktok:config:v1', {});
-        const ready = !!(env.TIKTOK_EVENTS_TOKEN || c?.eventsToken || c?.accessToken);
-        const detail = ready ? 'TikTok Events API token verified.' : 'Configure TIKTOK_EVENTS_TOKEN secret first.';
-        await appendMetaLog(env, {
-          channel: 'tiktok_events',
-          eventName: 'ViewContent',
+        const res = await dispatchTikTokEventsApi(env, {
+          event: 'ViewContent',
           eventId: `tt-test-${Date.now()}`,
           entityRef: 'test',
-          status: ready ? 'sent' : 'not_configured',
-          detail,
+          email: 'business@playbeat.digital',
+          phone: '+923000000000',
+          externalId: 'playbeat_admin_test',
+          value: 1,
+          currency: 'USD',
+          contents: [
+            {
+              content_id: 'PB-TEST-001',
+              content_type: 'product',
+              content_name: 'PlayBeat Digital Storefront Diagnostic',
+            },
+          ],
         });
         return json({
-          ok: ready,
-          status: ready ? 'sent' : 'not_configured',
-          detail,
+          ok: res.ok,
+          status: res.status,
+          detail: res.detail,
         });
       }
 
