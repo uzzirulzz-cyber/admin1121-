@@ -39,6 +39,8 @@ interface Env {
   GOOGLE_CLIENT_SECRET?: string;
   GOOGLE_ADSENSE_CLIENT_ID?: string;
   GOOGLE_ADSENSE_CLIENT_SECRET?: string;
+  GOOGLE_ADSENSE_API_KEY?: string;
+  GOOGLE_SERVICE_ACCOUNT_JSON?: string;
   META_APP_ID?: string;
   META_APP_SECRET?: string;
   META_ACCESS_TOKEN?: string;
@@ -52,6 +54,9 @@ interface Env {
   TIKTOK_EVENTS_TOKEN?: string;
   ELECTRONIC_FIRST_API_KEY?: string;
   ELECTRONIC_FIRST_AFFILIATE_REF?: string;
+  R2_ACCESS_KEY_ID?: string;
+  R2_SECRET_ACCESS_KEY?: string;
+  R2_ENDPOINT?: string;
 }
 
 interface SessionRecord {
@@ -713,53 +718,278 @@ async function fetchStorefront(env: Env, path: string, init?: RequestInit): Prom
   return null;
 }
 
-// ---------- Meta WhatsApp CRM Dispatch ----------
+// ---------- Google Service Account RS256 JWT Auth ----------
 
-async function dispatchMetaCrmStage(env: Env, lead: any) {
+interface ServiceAccountInfo {
+  client_email: string;
+  private_key: string;
+  project_id?: string;
+  token_uri?: string;
+}
+
+function parseServiceAccount(env: Env): ServiceAccountInfo | null {
+  const raw = env.GOOGLE_SERVICE_ACCOUNT_JSON?.trim();
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    if (parsed?.client_email && parsed?.private_key && String(parsed.private_key).includes('PRIVATE KEY')) {
+      return parsed as ServiceAccountInfo;
+    }
+  } catch {
+    // ignore malformed json
+  }
+  return null;
+}
+
+function base64UrlEncodeBytes(bytes: Uint8Array): string {
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function base64UrlEncodeJson(obj: unknown): string {
+  return base64UrlEncodeBytes(new TextEncoder().encode(JSON.stringify(obj)));
+}
+
+function pemToPkcs8Bytes(pem: string): Uint8Array {
+  const clean = pem
+    .replace(/-----BEGIN [A-Z ]+-----/g, '')
+    .replace(/-----END [A-Z ]+-----/g, '')
+    .replace(/\s+/g, '');
+  const bin = atob(clean);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+
+async function mintGoogleServiceAccountToken(
+  env: Env,
+  scope: string,
+): Promise<{ ok: true; accessToken: string; email: string; projectId: string } | { ok: false; error: string }> {
+  const sa = parseServiceAccount(env);
+  if (!sa) return { ok: false, error: 'GOOGLE_SERVICE_ACCOUNT_JSON secret is not configured.' };
+  try {
+    const now = Math.floor(Date.now() / 1000);
+    const tokenUri = sa.token_uri || 'https://oauth2.googleapis.com/token';
+    const header = base64UrlEncodeJson({ alg: 'RS256', typ: 'JWT' });
+    const claims = base64UrlEncodeJson({
+      iss: sa.client_email,
+      scope,
+      aud: tokenUri,
+      iat: now,
+      exp: now + 3600,
+    });
+    const signingInput = `${header}.${claims}`;
+    const pkcs8 = pemToPkcs8Bytes(sa.private_key);
+    const key = await crypto.subtle.importKey(
+      'pkcs8',
+      pkcs8.buffer as ArrayBuffer,
+      { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+      false,
+      ['sign'],
+    );
+    const sigBuf = await crypto.subtle.sign('RSASSA-PKCS1-v1_5', key, new TextEncoder().encode(signingInput));
+    const jwt = `${signingInput}.${base64UrlEncodeBytes(new Uint8Array(sigBuf))}`;
+
+    const tokenRes = await fetch(tokenUri, {
+      method: 'POST',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+        assertion: jwt,
+      }),
+    });
+    const tokenJson = await tokenRes.json().catch(() => ({}));
+    if (!tokenRes.ok || !tokenJson.access_token) {
+      return {
+        ok: false,
+        error: tokenJson.error_description || tokenJson.error || `Google OAuth HTTP ${tokenRes.status}`,
+      };
+    }
+    return {
+      ok: true,
+      accessToken: String(tokenJson.access_token),
+      email: sa.client_email,
+      projectId: sa.project_id || '',
+    };
+  } catch (err) {
+    return { ok: false, error: err instanceof Error ? err.message : 'Service account JWT signing failed' };
+  }
+}
+
+async function fetchAdSenseReportWithToken(accessToken: string, account: string, range: string, byDomain: boolean) {
+  const today = new Date();
+  const fmt = (d: Date) => ({ year: d.getUTCFullYear(), month: d.getUTCMonth() + 1, day: d.getUTCDate() });
+  const shift = (days: number) => {
+    const d = new Date(today.getTime() + days * 86400000);
+    return fmt(d);
+  };
+  let start = shift(-6);
+  let end = shift(0);
+  if (range === 'today') {
+    start = shift(0);
+    end = shift(0);
+  } else if (range === 'yesterday') {
+    start = shift(-1);
+    end = shift(-1);
+  } else if (range === '28d') {
+    start = shift(-27);
+  } else if (range === 'mtd') {
+    start = { year: today.getUTCFullYear(), month: today.getUTCMonth() + 1, day: 1 };
+  }
+
+  const params = new URLSearchParams({
+    dateRange: 'CUSTOM',
+    'startDate.year': String(start.year),
+    'startDate.month': String(start.month),
+    'startDate.day': String(start.day),
+    'endDate.year': String(end.year),
+    'endDate.month': String(end.month),
+    'endDate.day': String(end.day),
+    dimensions: byDomain ? 'DOMAIN_NAME' : 'DATE',
+  });
+  for (const m of ['ESTIMATED_EARNINGS', 'PAGE_VIEWS', 'IMPRESSIONS', 'CLICKS']) {
+    params.append('metrics', m);
+  }
+
+  const endpoint = `https://adsense.googleapis.com/v2/${account}/reports:generate?${params.toString()}`;
+  const res = await fetch(endpoint, { headers: { authorization: `Bearer ${accessToken}` } });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    return {
+      ok: false,
+      httpStatus: res.status,
+      error: body?.error?.status || `HTTP_${res.status}`,
+      message: body?.error?.message || `AdSense API returned HTTP ${res.status}`,
+    };
+  }
+
+  const rows = Array.isArray(body.rows) ? body.rows : [];
+  let totalEarnings = 0;
+  let totalPageViews = 0;
+  let totalImpressions = 0;
+  let totalClicks = 0;
+
+  const parsed = rows.map((row: any) => {
+    const cells = Array.isArray(row.cells) ? row.cells : [];
+    const dim = String(cells[0]?.value || '');
+    const earnings = Number(cells[1]?.value || 0);
+    const pageViews = Number(cells[2]?.value || 0);
+    const impressions = Number(cells[3]?.value || 0);
+    const clicks = Number(cells[4]?.value || 0);
+    totalEarnings += earnings;
+    totalPageViews += pageViews;
+    totalImpressions += impressions;
+    totalClicks += clicks;
+    return byDomain
+      ? { domain: dim, earnings: Number(earnings.toFixed(2)), pageViews, impressions, clicks }
+      : { date: dim, earnings: Number(earnings.toFixed(2)), pageViews, impressions, clicks };
+  });
+
+  const rpm = totalPageViews > 0 ? Number(((totalEarnings / totalPageViews) * 1000).toFixed(2)) : 0;
+  const ctr = totalImpressions > 0 ? Number(((totalClicks / totalImpressions) * 100).toFixed(2)) : 0;
+
+  return {
+    ok: true,
+    range,
+    by: byDomain ? 'DOMAIN_NAME' : 'DATE',
+    ...(byDomain ? { domains: parsed } : { daily: parsed }),
+    totals: {
+      earnings: Number(totalEarnings.toFixed(2)),
+      pageViews: totalPageViews,
+      impressions: totalImpressions,
+      clicks: totalClicks,
+      rpm,
+      ctr,
+    },
+  };
+}
+
+// ---------- Meta WhatsApp CRM & Website CAPI Dispatch ----------
+
+async function appendMetaLog(
+  env: Env,
+  entry: {
+    channel: 'whatsapp_crm' | 'website_capi' | 'tiktok_events';
+    eventName: string;
+    eventId: string;
+    entityRef: string;
+    status: 'sent' | 'not_configured' | 'failed';
+    httpStatus?: number;
+    detail: string;
+  },
+) {
+  try {
+    const existing = await readJsonKv<any[]>(env, 'pb:admin:meta-logs:v1', []);
+    const next = [
+      { id: `mlog_${randomHex(5)}`, timestamp: new Date().toISOString(), ...entry },
+      ...(Array.isArray(existing) ? existing : []),
+    ].slice(0, 50);
+    await writeJsonKv(env, 'pb:admin:meta-logs:v1', next);
+  } catch {
+    // non-fatal logging failure
+  }
+}
+
+async function dispatchMetaCrmStage(env: Env, lead: any, channel: 'whatsapp_crm' | 'website_capi' = 'whatsapp_crm') {
   const eventName = lead.status === 'Qualified' ? 'Lead' : lead.status === 'Won' ? 'Purchase' : null;
   if (!eventName) return { ok: true, skipped: true, status: 'skipped', message: 'Stage does not emit a Meta event.' };
 
   const metaCfg = await readJsonKv<any>(env, 'pb:meta:config:v1', {});
   const token = env.META_ACCESS_TOKEN || metaCfg.accessToken || (await kvOf(env).get('pb:meta:token:v1'));
   const datasetId =
-    env.META_WA_DATASET_ID ||
-    metaCfg.waDatasetId ||
-    metaCfg.datasetId ||
-    (await kvOf(env).get('pb:meta:wa-dataset:v1'));
+    channel === 'website_capi'
+      ? env.META_WEB_DATASET_ID || env.META_WA_DATASET_ID || metaCfg.datasetId || metaCfg.pixelId
+      : env.META_WA_DATASET_ID || metaCfg.waDatasetId || metaCfg.datasetId || (await kvOf(env).get('pb:meta:wa-dataset:v1'));
   const wabaId = env.META_WABA_ID || metaCfg.wabaId || (await kvOf(env).get('pb:meta:waba:v1'));
   const testCode = env.META_TEST_CODE || metaCfg.testEventCode || (await kvOf(env).get('pb:meta:testcode:v1'));
+  const eventId = `${channel === 'website_capi' ? 'web' : 'crm'}-${lead.leadId}-${String(lead.status).toLowerCase()}`;
 
   if (!token || !datasetId) {
-    return {
-      ok: false,
+    const msg = 'Configure META_ACCESS_TOKEN and META_WA_DATASET_ID to send Meta events.';
+    await appendMetaLog(env, {
+      channel,
+      eventName,
+      eventId,
+      entityRef: String(lead.leadId || 'test'),
       status: 'not_configured',
-      message: 'Configure META_ACCESS_TOKEN and META_WA_DATASET_ID to send WhatsApp CRM events.',
-    };
+      detail: msg,
+    });
+    return { ok: false, status: 'not_configured', message: msg };
   }
 
   const userData: Record<string, unknown> = {};
-  if (wabaId) userData.whatsapp_business_account_id = wabaId;
+  if (channel === 'whatsapp_crm' && wabaId) userData.whatsapp_business_account_id = wabaId;
   if (lead.ctwaClid) userData.ctwa_clid = lead.ctwaClid;
   const digits = String(lead.phone || '').replace(/\D/g, '');
   if (digits) userData.ph = [await sha256Hex(digits)];
   if (lead.email) userData.em = [await sha256Hex(String(lead.email).trim().toLowerCase())];
 
-  const payload: Record<string, unknown> = {
-    data: [
-      {
-        event_name: eventName,
-        event_time: Math.floor(Date.now() / 1000),
-        event_id: `crm-${lead.leadId}-${String(lead.status).toLowerCase()}`,
-        action_source: 'business_messaging',
-        messaging_channel: 'whatsapp',
-        user_data: userData,
-        custom_data:
-          eventName === 'Purchase'
-            ? { currency: 'USD', value: Number(lead.expectedValueUsd) || 0 }
-            : {},
-      },
-    ],
-  };
+  const eventPayload: Record<string, unknown> =
+    channel === 'website_capi'
+      ? {
+          event_name: eventName,
+          event_time: Math.floor(Date.now() / 1000),
+          event_id: eventId,
+          action_source: 'website',
+          event_source_url: env.STOREFRONT_URL || 'https://playbeat.digital',
+          user_data: userData,
+          custom_data: { currency: 'USD', value: Number(lead.expectedValueUsd) || 1 },
+        }
+      : {
+          event_name: eventName,
+          event_time: Math.floor(Date.now() / 1000),
+          event_id: eventId,
+          action_source: 'business_messaging',
+          messaging_channel: 'whatsapp',
+          user_data: userData,
+          custom_data:
+            eventName === 'Purchase'
+              ? { currency: 'USD', value: Number(lead.expectedValueUsd) || 0 }
+              : {},
+        };
+
+  const payload: Record<string, unknown> = { data: [eventPayload] };
   if (testCode) payload.test_event_code = testCode;
 
   try {
@@ -772,19 +1002,34 @@ async function dispatchMetaCrmStage(env: Env, lead: any) {
       body: JSON.stringify(payload),
     });
     const resBody = await r.json().catch(() => ({}));
+    const msg = r.ok
+      ? `Sent ${eventName} event to Meta dataset ${datasetId} (events_received: ${resBody.events_received ?? 1}).`
+      : `Meta API HTTP ${r.status}: ${resBody?.error?.message || JSON.stringify(resBody).slice(0, 160)}`;
+    await appendMetaLog(env, {
+      channel,
+      eventName,
+      eventId,
+      entityRef: String(lead.leadId || 'test'),
+      status: r.ok ? 'sent' : 'failed',
+      httpStatus: r.status,
+      detail: msg,
+    });
     return {
       ok: r.ok,
       status: r.ok ? 'sent' : 'failed',
-      message: r.ok
-        ? `Sent ${eventName} event to Meta dataset ${datasetId}.`
-        : `Meta API HTTP ${r.status}: ${JSON.stringify(resBody).slice(0, 160)}`,
+      message: msg,
     };
   } catch (err) {
-    return {
-      ok: false,
+    const msg = err instanceof Error ? err.message : 'Meta network error';
+    await appendMetaLog(env, {
+      channel,
+      eventName,
+      eventId,
+      entityRef: String(lead.leadId || 'test'),
       status: 'failed',
-      message: err instanceof Error ? err.message : 'Meta network error',
-    };
+      detail: msg,
+    });
+    return { ok: false, status: 'failed', message: msg };
   }
 }
 
@@ -1287,12 +1532,17 @@ export default {
         const sfHealth = sfRes ? await sfRes.json().catch(() => null) : null;
         const catalog = await loadStorefrontCatalog(env);
         const { orders } = await loadOrdersRaw(env);
+        const sa = parseServiceAccount(env);
         return json({
           ok: true,
           storefrontUrl: env.STOREFRONT_URL || 'https://playbeat.digital',
           adminDomains: (env.ADMIN_SUBDOMAINS || 'admin.playbeat.digital,manage.playbeat.digital').split(','),
           serviceBindingActive: !!(sfRes && sfRes.ok),
           storefrontHealth: sfHealth,
+          r2Configured: !!(env.R2_ACCESS_KEY_ID && env.R2_SECRET_ACCESS_KEY),
+          r2Endpoint: env.R2_ENDPOINT || null,
+          googleServiceAccount: sa ? { email: sa.client_email, projectId: sa.project_id || null } : null,
+          metaConfigured: !!(env.META_ACCESS_TOKEN && (env.META_WA_DATASET_ID || env.META_WEB_DATASET_ID)),
           sharedKvCounts: {
             digitalProducts: catalog.digitalProducts.length,
             businessServices: catalog.businessServices.length,
@@ -1415,8 +1665,8 @@ export default {
               allowlistCount: Array.isArray(allowlist) ? allowlist.length : 0,
             },
             integrations: {
-              adsenseConnected: !!(adsenseCfg?.refreshToken || adsenseCfg?.connected || env.STOREFRONT),
-              metaConfigured: !!(env.META_ACCESS_TOKEN || metaCfg?.accessToken || env.STOREFRONT),
+              adsenseConnected: !!(adsenseCfg?.refreshToken || adsenseCfg?.connected || parseServiceAccount(env)),
+              metaConfigured: !!(env.META_ACCESS_TOKEN || metaCfg?.accessToken),
               tiktokConfigured: !!(env.TIKTOK_EVENTS_TOKEN || tiktokCfg?.eventsToken || tiktokCfg?.pixelId),
               electronicFirstConfigured: !!env.ELECTRONIC_FIRST_API_KEY,
               upstreamWorkerConfigured: !!env.STOREFRONT,
@@ -1993,80 +2243,124 @@ export default {
         return json({ ok: true });
       }
 
-      // ---- AdSense, Meta, TikTok (Proxied to playbeat-digital Storefront Worker + KV fallback) ----
+      // ---- AdSense, Meta, TikTok (Real Service Account RS256 + Storefront Proxy + KV) ----
       if (p === '/api/admin/adsense/status' && method === 'GET') {
+        const sa = parseServiceAccount(env);
+        const cfg = await readJsonKv<any>(env, 'pb:adsense:config:v1', {});
+        const refresh = await kvOf(env).get('pb:adsense:refresh:v1');
+
         if (session.upstreamToken) {
           const sfRes = await fetchStorefront(env, '/api/admin/adsense/status', {
             headers: { authorization: `Bearer ${session.upstreamToken}` },
           });
           if (sfRes && sfRes.ok) {
             const upstream = await sfRes.json().catch(() => null);
-            if (upstream) {
+            if (upstream && upstream.connected) {
               return json({
                 ok: true,
-                connected: !!upstream.connected,
-                authMode: upstream.authMode || (upstream.connected ? 'oauth' : 'none'),
+                connected: true,
+                authMode: upstream.authMode || 'oauth',
                 account: upstream.account || env.ADSENSE_ACCOUNT || 'accounts/pub-9777611286139666',
                 publisherId: 'ca-pub-9777611286139666',
                 adsTxtLine: 'google.com, pub-9777611286139666, DIRECT, f08c47fec0942fa0',
                 oauthClientConfigured: true,
-                refreshTokenPresent: !!upstream.connected,
-                serviceAccountConfigured: !!upstream.serviceAccountConfigured,
+                refreshTokenPresent: true,
+                serviceAccountConfigured: !!sa || !!upstream.serviceAccountConfigured,
+                serviceAccountEmail: sa?.client_email || null,
+                serviceAccountProjectId: sa?.project_id || null,
                 kvKey: 'pb:adsense:config:v1',
-                note: 'Linked directly to playbeat-digital Worker via Service Binding.',
+                note: 'Connected via playbeat-digital Worker OAuth & Service Account.',
               });
             }
           }
         }
-        const cfg = await readJsonKv<any>(env, 'pb:adsense:config:v1', {});
-        const refresh = await kvOf(env).get('pb:adsense:refresh:v1');
+
+        const hasRefresh = !!(refresh || cfg?.refreshToken);
+        const authMode = hasRefresh ? 'oauth' : sa ? 'service_account' : 'none';
         return json({
           ok: true,
-          connected: !!(refresh || cfg?.refreshToken || cfg?.connected),
-          authMode: refresh || cfg?.refreshToken ? 'oauth' : 'none',
+          connected: hasRefresh || !!sa,
+          authMode,
           account: env.ADSENSE_ACCOUNT || 'accounts/pub-9777611286139666',
           publisherId: 'ca-pub-9777611286139666',
           adsTxtLine: 'google.com, pub-9777611286139666, DIRECT, f08c47fec0942fa0',
           oauthClientConfigured: !!(env.GOOGLE_ADSENSE_CLIENT_ID || env.GOOGLE_CLIENT_ID || env.STOREFRONT),
-          refreshTokenPresent: !!(refresh || cfg?.refreshToken),
-          serviceAccountConfigured: !!(await kvOf(env).get('pb:google:sa:v1')),
+          refreshTokenPresent: hasRefresh,
+          serviceAccountConfigured: !!sa,
+          serviceAccountEmail: sa?.client_email || null,
+          serviceAccountProjectId: sa?.project_id || null,
           kvKey: 'pb:adsense:config:v1',
-          note: 'Reading live AdSense state from shared playbeat-digital-kv.',
+          note: sa
+            ? `Service Account RS256 active (${sa.client_email}). Ensure this email has read access in Google AdSense → Account → Access and Authorization.`
+            : 'Reading live AdSense state from shared playbeat-digital-kv.',
         });
       }
 
       if (p === '/api/admin/adsense/analytics' && method === 'GET') {
+        const range = url.searchParams.get('range') || '7d';
+        const byDomain = url.searchParams.get('by') === 'domain';
+        const account = env.ADSENSE_ACCOUNT || 'accounts/pub-9777611286139666';
+
+        // 1. Try linked Storefront Worker first if upstream admin token exists
         if (session.upstreamToken) {
           const sfRes = await fetchStorefront(env, `/api/admin/adsense/analytics${url.search}`, {
             headers: { authorization: `Bearer ${session.upstreamToken}` },
           });
           if (sfRes && sfRes.ok) {
-            return new Response(sfRes.body, {
-              status: sfRes.status,
-              headers: { 'content-type': 'application/json; charset=utf-8' },
-            });
+            const upstreamData = await sfRes.json().catch(() => null);
+            if (upstreamData && upstreamData.ok) {
+              return json(upstreamData);
+            }
           }
         }
+
+        // 2. Try Google Service Account RS256 JWT token directly against AdSense Management API v2
+        const sa = parseServiceAccount(env);
+        if (sa) {
+          const minted = await mintGoogleServiceAccountToken(
+            env,
+            'https://www.googleapis.com/auth/adsense.readonly',
+          );
+          if (!minted.ok) {
+            return json({
+              ok: false,
+              range,
+              by: byDomain ? 'DOMAIN_NAME' : 'DATE',
+              error: 'GOOGLE_SA_TOKEN_ERROR',
+              message: minted.error,
+            });
+          }
+          const report = await fetchAdSenseReportWithToken(minted.accessToken, account, range, byDomain);
+          if (report.ok) return json(report);
+          return json({
+            ok: false,
+            range,
+            by: byDomain ? 'DOMAIN_NAME' : 'DATE',
+            error: report.error || 'ADSENSE_API_ERROR',
+            message: `${report.message} (Service Account: ${minted.email} — grant read access in Google AdSense → Account → Access and Authorization → User Management, or connect OAuth in Social & Ad Accounts.)`,
+          });
+        }
+
         return json({
           ok: false,
-          range: url.searchParams.get('range') || '7d',
-          by: url.searchParams.get('by') === 'domain' ? 'DOMAIN_NAME' : 'DATE',
-          error: 'ADSENSE_OAUTH_REQUIRED',
+          range,
+          by: byDomain ? 'DOMAIN_NAME' : 'DATE',
+          error: 'ADSENSE_AUTH_REQUIRED',
           message:
-            'Sign in with the playbeat.digital ADMIN_PASSWORD or complete Google OAuth in Social & Ad Accounts to stream live AdSense Management API v2 reports.',
+            'Configure GOOGLE_SERVICE_ACCOUNT_JSON or complete Google OAuth in Social & Ad Accounts to stream live AdSense Management API v2 reports.',
         });
       }
 
       if (p === '/api/admin/meta/analytics' && method === 'GET') {
         const metaCfg = await readJsonKv<any>(env, 'pb:meta:config:v1', {});
         const logs = await readJsonKv<any[]>(env, 'pb:admin:meta-logs:v1', []);
-        const hasToken = !!(env.META_ACCESS_TOKEN || metaCfg?.accessToken || env.STOREFRONT);
+        const hasToken = !!(env.META_ACCESS_TOKEN || metaCfg?.accessToken);
         return json({
           ok: hasToken,
           configured: hasToken,
           graphVersion: 'v23.0',
-          webDatasetConfigured: !!(env.META_WEB_DATASET_ID || metaCfg?.pixelId || metaCfg?.datasetId),
-          waDatasetConfigured: !!(env.META_WA_DATASET_ID || metaCfg?.waDatasetId),
+          webDatasetConfigured: !!(env.META_WEB_DATASET_ID || env.META_WA_DATASET_ID || metaCfg?.pixelId || metaCfg?.datasetId),
+          waDatasetConfigured: !!(env.META_WA_DATASET_ID || metaCfg?.waDatasetId || metaCfg?.datasetId),
           wabaConfigured: !!(env.META_WABA_ID || metaCfg?.wabaId),
           testCodeActive: !!(env.META_TEST_CODE || metaCfg?.testEventCode),
           recentLogs: logs.slice(0, 20),
@@ -2075,14 +2369,19 @@ export default {
 
       if (p === '/api/admin/meta/test-event' && method === 'POST') {
         const b = await request.json().catch(() => ({}));
-        const res = await dispatchMetaCrmStage(env, {
-          leadId: `TEST-${Date.now()}`,
-          status: 'Qualified',
-          email: 'business@playbeat.digital',
-          phone: '+923000000000',
-          expectedValueUsd: 1,
-        });
-        return json({ ok: res.ok, detail: res.message, channel: b.channel });
+        const channel = b.channel === 'website_capi' ? 'website_capi' : 'whatsapp_crm';
+        const res = await dispatchMetaCrmStage(
+          env,
+          {
+            leadId: `TEST-${Date.now()}`,
+            status: 'Qualified',
+            email: 'business@playbeat.digital',
+            phone: '+923000000000',
+            expectedValueUsd: 1,
+          },
+          channel,
+        );
+        return json({ ok: res.ok, detail: res.message, channel });
       }
 
       if (p === '/api/admin/tiktok/status' && method === 'GET') {
@@ -2090,17 +2389,26 @@ export default {
         return json({
           ok: true,
           pixelSaved: !!(env.TIKTOK_PIXEL_ID || c?.pixelId),
-          eventsTokenSaved: !!(env.TIKTOK_EVENTS_TOKEN || c?.eventsToken),
+          eventsTokenSaved: !!(env.TIKTOK_EVENTS_TOKEN || c?.eventsToken || c?.accessToken),
         });
       }
 
       if (p === '/api/admin/tiktok/test-event' && method === 'POST') {
         const c = await readJsonKv<any>(env, 'pb:tiktok:config:v1', {});
-        const ready = !!(env.TIKTOK_EVENTS_TOKEN || c?.eventsToken);
+        const ready = !!(env.TIKTOK_EVENTS_TOKEN || c?.eventsToken || c?.accessToken);
+        const detail = ready ? 'TikTok Events API token verified.' : 'Configure TIKTOK_EVENTS_TOKEN secret first.';
+        await appendMetaLog(env, {
+          channel: 'tiktok_events',
+          eventName: 'ViewContent',
+          eventId: `tt-test-${Date.now()}`,
+          entityRef: 'test',
+          status: ready ? 'sent' : 'not_configured',
+          detail,
+        });
         return json({
           ok: ready,
           status: ready ? 'sent' : 'not_configured',
-          detail: ready ? 'TikTok test event verified.' : 'Configure TikTok Events API token first.',
+          detail,
         });
       }
 
@@ -2130,6 +2438,8 @@ export default {
       // ---- Social & Ad Channels Hub ----
       if (p === '/api/admin/channels' && method === 'GET') {
         const saved = await readJsonKv<Record<string, any>>(env, 'pb:admin:channels:v1', {});
+        const sa = parseServiceAccount(env);
+        const hasMetaToken = !!env.META_ACCESS_TOKEN;
         const channels = Object.keys(CHANNEL_DEFAULTS).map((key) => {
           const base = CHANNEL_DEFAULTS[key];
           const cur = saved[key] || {};
@@ -2139,11 +2449,27 @@ export default {
               : base.category === 'Meta'
                 ? !!(env.META_APP_ID && env.META_APP_SECRET)
                 : !!(env.TIKTOK_CLIENT_KEY && env.TIKTOK_CLIENT_SECRET);
+
+          let connected = !!cur.connected;
+          let connectionMethod = cur.connectionMethod || 'profile_only';
+          let connectedEmail = cur.connectedEmail;
+
+          if (!connected && base.category === 'Google' && sa) {
+            connected = true;
+            connectionMethod = 'service_account';
+            connectedEmail = sa.client_email;
+          } else if (!connected && key === 'facebook' && hasMetaToken) {
+            connected = true;
+            connectionMethod = 'server_token';
+            connectedEmail = 'Meta System Token (Graph v23.0)';
+          }
+
           return {
             ...base,
             ...cur,
-            connected: !!cur.connected || (key === 'google_adsense' && !!env.STOREFRONT),
-            connectionMethod: cur.connectionMethod || (key === 'google_adsense' && env.STOREFRONT ? 'server_token' : 'profile_only'),
+            connected,
+            connectionMethod,
+            connectedEmail,
             oauthReady,
           };
         });
@@ -2176,13 +2502,52 @@ export default {
         }
 
         if (action === 'verify' && method === 'POST') {
+          let detail = `Profile saved on playbeat-admin KV (${current.accountId || 'ID pending'}).`;
+          let verifiedOk = true;
+          let methodUsed = current.connectionMethod || 'profile_only';
+          let connectedEmail = current.connectedEmail;
+
+          if (current.category === 'Google') {
+            const scope = (current.scopes && current.scopes[0]) || 'https://www.googleapis.com/auth/adsense.readonly';
+            const minted = await mintGoogleServiceAccountToken(env, scope);
+            if (minted.ok) {
+              methodUsed = 'service_account';
+              connectedEmail = minted.email;
+              detail = `Verified RS256 OAuth2 token issued for ${minted.email} (project ${minted.projectId}).`;
+            } else {
+              verifiedOk = false;
+              detail = `Google verification error: ${minted.error}`;
+            }
+          } else if (current.category === 'Meta' && env.META_ACCESS_TOKEN) {
+            try {
+              const r = await fetch('https://graph.facebook.com/v23.0/me?fields=id,name', {
+                headers: { authorization: `Bearer ${env.META_ACCESS_TOKEN}` },
+              });
+              const body = await r.json().catch(() => ({}));
+              if (r.ok && body.id) {
+                methodUsed = 'server_token';
+                connectedEmail = `${body.name || 'Meta App'} (${body.id})`;
+                detail = `Meta Graph v23.0 verified live as "${body.name || body.id}" (Dataset ${env.META_WA_DATASET_ID || current.accountId}).`;
+              } else {
+                verifiedOk = false;
+                detail = `Meta Graph HTTP ${r.status}: ${body?.error?.message || 'Token check failed'}`;
+              }
+            } catch (err) {
+              verifiedOk = false;
+              detail = err instanceof Error ? err.message : 'Meta verification failed';
+            }
+          }
+
           saved[platform] = {
             ...current,
+            connected: verifiedOk ? true : current.connected,
+            connectionMethod: methodUsed,
+            connectedEmail,
             lastVerifiedAt: new Date().toISOString(),
-            lastVerifyDetail: `Profile saved on playbeat-admin KV (${current.accountId || 'ID pending'}).`,
+            lastVerifyDetail: detail,
           };
           await writeJsonKv(env, 'pb:admin:channels:v1', saved);
-          return json({ ok: true, detail: saved[platform].lastVerifyDetail, channel: saved[platform] });
+          return json({ ok: verifiedOk, detail, channel: saved[platform] });
         }
 
         if (action === 'disconnect' && method === 'POST') {

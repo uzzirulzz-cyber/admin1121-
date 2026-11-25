@@ -26,7 +26,11 @@
     "STOREFRONT_URL": "https://playbeat.digital",
     "ADMIN_SUBDOMAINS": "admin.playbeat.digital,manage.playbeat.digital",
     "ADSENSE_ACCOUNT": "accounts/pub-9777611286139666",
-    "USD_TO_PKR": "278.5"
+    "USD_TO_PKR": "278.5",
+    "META_WA_DATASET_ID": "1971402550484565",
+    "META_WEB_DATASET_ID": "1971402550484565",
+    "ELECTRONIC_FIRST_AFFILIATE_REF": "ywzhmdg",
+    "R2_ENDPOINT": "https://334b708ffc14a0b4d48ebfa47634b423.r2.cloudflarestorage.com"
   },
   "routes": [
     { "pattern": "admin.playbeat.digital", "custom_domain": true },
