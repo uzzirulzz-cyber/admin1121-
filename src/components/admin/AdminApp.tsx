@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   AudioWaveform,
+  Disc3,
   LayoutDashboard,
   Loader2,
   LogOut,
@@ -23,6 +24,7 @@ import DashboardView from "@/components/admin/DashboardView";
 import ProductsView from "@/components/admin/ProductsView";
 import OrdersView from "@/components/admin/OrdersView";
 import { CustomersView, SettingsView, UsersView } from "@/components/admin/MiscViews";
+import SpotifyView from "@/components/admin/SpotifyView";
 
 interface AdminUser {
   id: string;
@@ -35,6 +37,7 @@ const NAV = [
   { key: "products", label: "Products", icon: Music2 },
   { key: "orders", label: "Orders", icon: ShoppingCart },
   { key: "customers", label: "Customers", icon: Users },
+  { key: "spotify", label: "Spotify import", icon: Disc3 },
   { key: "users", label: "Admin users", icon: UserCog },
   { key: "settings", label: "Settings", icon: Settings },
 ];
@@ -183,6 +186,7 @@ export default function AdminApp() {
           {view === "products" && <ProductsView />}
           {view === "orders" && <OrdersView />}
           {view === "customers" && <CustomersView />}
+          {view === "spotify" && <SpotifyView />}
           {view === "users" && <UsersView currentUserId={user.id} />}
           {view === "settings" && <SettingsView />}
         </main>

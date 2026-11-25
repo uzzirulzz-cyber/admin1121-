@@ -41,8 +41,26 @@ model Product {
   priceExclusiveCents Int      @default(14900)
   published           Boolean  @default(true)
   featured            Boolean  @default(false)
+  // manual | spotify
+  source              String   @default("manual")
+  spotifyId           String?  @unique
+  spotifyUri           String?
+  durationMs          Int?
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
+}
+
+model SpotifyAccount {
+  id            String   @id // Spotify user id
+  displayName   String?
+  email         String?
+  accessToken   String
+  refreshToken  String?
+  expiresAt     DateTime
+  scope         String?
+  importedCount Int      @default(0)
+  connectedAt   DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Order {
