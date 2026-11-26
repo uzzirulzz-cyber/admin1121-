@@ -240,14 +240,19 @@ export function LoginView({
   }
 
   const inputClass =
-    'w-full h-[52px] px-4 rounded-xl border border-[#78a0ff]/20 bg-[#030816]/65 text-white text-[15px] font-medium placeholder:text-[#5e6f93] transition-all focus:outline-none focus:border-[#38bdf8] focus:shadow-[0_0_0_4px_rgba(56,189,248,0.16),0_0_24px_rgba(31,107,255,0.25)]';
+    'pb-glass-input w-full h-[50px] px-4 rounded-[10px] text-white text-[15px] font-medium placeholder:text-[#7088ad]';
 
-  const labelClass = 'block text-[13.5px] font-semibold mb-2 text-[#dbe5f5]';
+  const labelClass =
+    'block text-[12.5px] font-semibold uppercase tracking-[0.06em] mb-2 text-[#c5d7f2]';
 
   return (
     <div className="pb-login-page">
-      <main className="relative z-10 min-h-screen max-w-[1240px] mx-auto px-4 sm:px-8 py-8 lg:py-10 grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] items-center gap-6 lg:gap-10">
-        {/* LEFT HERO: PlayBeat Digital Orbital Logo Dial + Headline */}
+      {/* Flowing optical water caustic pools beneath the glass plane */}
+      <div className="pb-water-caustic" aria-hidden="true" />
+      <div className="pb-water-caustic-2" aria-hidden="true" />
+
+      <main className="relative z-10 min-h-screen max-w-[1220px] mx-auto px-4 sm:px-8 py-8 lg:py-10 grid grid-cols-1 lg:grid-cols-[1.04fr_1fr] items-center gap-8 lg:gap-12">
+        {/* LEFT HERO: PlayBeat Digital Optical Glass Lens Emblem + Headline */}
         <section
           aria-label="PlayBeat Digital"
           className="flex flex-col items-center text-center gap-6"
@@ -261,8 +266,9 @@ export function LoginView({
             >
               <defs>
                 <linearGradient id="pb-dial-grad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stopColor="#1f6bff" />
-                  <stop offset="1" stopColor="#9be4ff" />
+                  <stop offset="0" stopColor="#2563eb" />
+                  <stop offset="0.55" stopColor="#38bdf8" />
+                  <stop offset="1" stopColor="#e0f2fe" />
                 </linearGradient>
               </defs>
               <circle className="pb-dial-track" r="85" />
@@ -288,470 +294,474 @@ export function LoginView({
             />
           </div>
 
-          <h2 className="pb-login-head text-[clamp(26px,3vw,38px)] leading-[1.15] font-semibold tracking-[0.01em] bg-gradient-to-b from-white to-[#a9bcdf] bg-clip-text text-transparent">
-            Run every beat from one console
-          </h2>
+          <div className="space-y-3 max-w-[44ch]">
+            <h2 className="pb-login-head text-[clamp(26px,3.1vw,38px)] leading-[1.12] font-semibold tracking-[0.015em] bg-gradient-to-b from-white via-[#e0f2fe] to-[#93c5fd] bg-clip-text text-transparent">
+              Run every beat from one console
+            </h2>
 
-          <p className="hidden sm:block max-w-[40ch] text-[#8fa0c0] text-sm sm:text-[15px] leading-relaxed">
-            Manage accounts, sessions and operations for PlayBeat Digital in one secure place.
-          </p>
+            <div
+              className="mx-auto w-24 h-px bg-gradient-to-r from-transparent via-[#7dd3fc]/60 to-transparent"
+              aria-hidden="true"
+            />
+
+            <p className="hidden sm:block text-[#9ab2d4] text-sm sm:text-[15px] leading-relaxed">
+              Manage accounts, sessions, and operations for PlayBeat Digital from a single command surface.
+            </p>
+          </div>
         </section>
 
-        {/* RIGHT GLASSMORPHIC AUTH CARD */}
+        {/* RIGHT LIQUID-GLASS AUTH CARD */}
         <section
           aria-label="Account access"
-          className="pb-login-card p-6 sm:p-7 w-full max-w-[540px] mx-auto"
+          className="pb-login-card p-6 sm:p-8 w-full max-w-[530px] mx-auto"
         >
-          {/* Brand Row */}
-          <div className="pb-login-head flex items-center gap-2.5 mb-5 text-[15px] font-semibold text-[#dbe5f5]">
-            <span className="grid place-items-center w-8 h-8 rounded-[10px] text-xs font-bold text-white bg-gradient-to-br from-[#1f6bff] to-[#0b3aa8] shadow-[0_0_16px_rgba(31,107,255,0.6)] shrink-0">
-              PB
-            </span>
-            <span>PlayBeat Admin</span>
-          </div>
-
-          {/* 3-Tab Switcher */}
-          {!isSetup && (
-            <div
-              role="tablist"
-              className="grid grid-cols-3 gap-1 p-1 rounded-[14px] bg-[#030816]/70 border border-[#78a0ff]/20"
-            >
-              {[
-                { id: 'signin' as const, label: 'Sign In' },
-                { id: 'register' as const, label: 'Open Account' },
-                { id: 'reset' as const, label: 'Reset Password' },
-              ].map((t) => {
-                const selected = tab === t.id;
-                return (
-                  <button
-                    key={t.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={selected}
-                    onClick={() => switchTab(t.id)}
-                    className={`py-2.5 px-1.5 text-[13px] sm:text-[13.5px] font-semibold rounded-[10px] transition-all whitespace-nowrap ${
-                      selected
-                        ? 'text-white bg-gradient-to-br from-[#2a77ff] to-[#1450d6] shadow-[0_6px_22px_rgba(31,107,255,0.45)]'
-                        : 'text-[#8fa0c0] hover:text-[#dbe5f5]'
-                    }`}
-                  >
-                    {t.label}
-                  </button>
-                );
-              })}
+          <div className="relative z-10">
+            {/* Brand Row */}
+            <div className="pb-login-head flex items-center justify-between gap-3 pb-4 mb-5 border-b border-[#bae6fd]/14">
+              <div className="flex items-center gap-2.5 text-[15px] font-semibold tracking-[0.02em] text-[#eef6ff]">
+                <span className="grid place-items-center w-8 h-8 rounded-[9px] text-xs font-bold text-white bg-gradient-to-b from-[#3892ff] to-[#0f45be] border border-[#e0f2fe]/45 shadow-[0_6px_18px_rgba(31,107,255,0.5),inset_0_1px_0_rgba(255,255,255,0.65)] shrink-0">
+                  PB
+                </span>
+                <span>PlayBeat Admin</span>
+              </div>
+              <span className="text-[11px] font-mono uppercase tracking-[0.14em] text-[#7dd3fc]/85">
+                Console
+              </span>
             </div>
-          )}
 
-          {/* SIGN IN / FIRST-RUN SETUP */}
-          {(isSetup || tab === 'signin') && (
-            <>
-              <h1 className="pb-login-head text-[clamp(26px,3.2vw,32px)] leading-[1.1] font-bold tracking-[0.005em] text-white mt-6 mb-2">
-                {isSetup
-                  ? 'Claim Admin Access'
-                  : 'Sign in to PlayBeat Admin'}
-              </h1>
-              <p className="text-[14.5px] text-[#8fa0c0] leading-relaxed mb-5">
-                {isSetup
-                  ? 'ADMIN_PASSWORD is not configured in server secrets yet. Set an initial operator password to unlock this console.'
-                  : signInKind === 'admin'
-                    ? 'Enter your operator password to mint a 24-hour Bearer session for PlayBeat operations.'
-                    : 'Use your account ID or email with your password to start a session.'}
-              </p>
+            {/* 3-Tab Switcher */}
+            {!isSetup && (
+              <div
+                role="tablist"
+                className="pb-glass-rail grid grid-cols-3 gap-1 p-1 rounded-[12px]"
+              >
+                {[
+                  { id: 'signin' as const, label: 'Sign In' },
+                  { id: 'register' as const, label: 'Open Account' },
+                  { id: 'reset' as const, label: 'Reset Password' },
+                ].map((t) => {
+                  const selected = tab === t.id;
+                  return (
+                    <button
+                      key={t.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={selected}
+                      onClick={() => switchTab(t.id)}
+                      className={`py-2.5 px-1.5 text-[13px] sm:text-[13.5px] font-semibold rounded-[9px] transition-all cursor-pointer whitespace-nowrap ${
+                        selected ? 'pb-glass-tab-active' : 'pb-glass-tab-idle'
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
-              {!isSetup && (
-                <div className="flex flex-wrap gap-2 mb-5">
-                  <button
-                    type="button"
-                    aria-pressed={signInKind === 'admin'}
-                    onClick={() => {
-                      setSignInKind('admin');
-                      setError(null);
-                    }}
-                    className={`px-3.5 py-2.5 rounded-[10px] border text-[13px] font-semibold transition-all whitespace-nowrap ${
-                      signInKind === 'admin'
-                        ? 'text-white border-[#38bdf8] bg-[#38bdf8]/10 shadow-[0_0_18px_rgba(56,189,248,0.18)]'
-                        : 'text-[#8fa0c0] border-[#78a0ff]/20 hover:text-[#dbe5f5]'
-                    }`}
-                  >
-                    Admin Operator
-                  </button>
-                  <button
-                    type="button"
-                    aria-pressed={signInKind === 'customer'}
-                    onClick={() => {
-                      setSignInKind('customer');
-                      setError(null);
-                    }}
-                    className={`px-3.5 py-2.5 rounded-[10px] border text-[13px] font-semibold transition-all whitespace-nowrap ${
-                      signInKind === 'customer'
-                        ? 'text-white border-[#38bdf8] bg-[#38bdf8]/10 shadow-[0_0_18px_rgba(56,189,248,0.18)]'
-                        : 'text-[#8fa0c0] border-[#78a0ff]/20 hover:text-[#dbe5f5]'
-                    }`}
-                  >
-                    Account ID / Email
-                  </button>
-                </div>
-              )}
+            {/* SIGN IN / FIRST-RUN SETUP */}
+            {(isSetup || tab === 'signin') && (
+              <>
+                <h1 className="pb-login-head text-[clamp(24px,3vw,30px)] leading-[1.12] font-bold tracking-[0.01em] text-white mt-6 mb-2">
+                  {isSetup
+                    ? 'Claim Admin Access'
+                    : 'Sign in to PlayBeat Admin'}
+                </h1>
+                <p className="text-[14.5px] text-[#9ab2d4] leading-relaxed mb-5">
+                  {isSetup
+                    ? 'Set an initial administrator password to initialize access to this console.'
+                    : signInKind === 'admin'
+                      ? 'Enter your administrator password to access PlayBeat operations.'
+                      : 'Use your account ID or email with your password to continue.'}
+                </p>
 
-              <form onSubmit={handleSignInOrSetup} className="space-y-4" noValidate>
-                {!isSetup && signInKind === 'customer' && (
-                  <div>
-                    <label htmlFor="account-identifier" className={labelClass}>
-                      Account ID or email
-                    </label>
-                    <input
-                      id="account-identifier"
-                      type="text"
-                      autoComplete="username"
-                      value={accountIdentifier}
-                      onChange={(e) => setAccountIdentifier(e.target.value)}
-                      placeholder="you@playbeat.com or uid_pb_..."
-                      className={inputClass}
-                      required
-                    />
-                  </div>
-                )}
-
-                <div>
-                  <label htmlFor="admin-password" className={labelClass}>
-                    {isSetup
-                      ? 'New Admin Password'
-                      : signInKind === 'admin'
-                        ? 'Admin Password'
-                        : 'Password'}
-                  </label>
-                  <div className="relative">
-                    <input
-                      id="admin-password"
-                      type={showPassword ? 'text' : 'password'}
-                      autoComplete={isSetup ? 'new-password' : 'current-password'}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder={isSetup ? 'Minimum 8 characters' : 'Enter password'}
-                      className={`${inputClass} pr-12`}
-                      required
-                    />
+                {!isSetup && (
+                  <div className="grid grid-cols-2 gap-2 mb-5">
                     <button
                       type="button"
-                      onClick={() => setShowPassword((v) => !v)}
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
-                      className="absolute right-1.5 top-1.5 w-10 h-10 rounded-lg text-[#8fa0c0] hover:text-white grid place-items-center transition-colors"
+                      aria-pressed={signInKind === 'admin'}
+                      onClick={() => {
+                        setSignInKind('admin');
+                        setError(null);
+                      }}
+                      className={`px-3.5 py-2.5 rounded-[10px] border text-[13px] font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                        signInKind === 'admin'
+                          ? 'pb-glass-toggle-active'
+                          : 'pb-glass-toggle-idle'
+                      }`}
                     >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      Admin Operator
                     </button>
-                  </div>
-                </div>
-
-                {isSetup && (
-                  <div>
-                    <label htmlFor="admin-password-confirm" className={labelClass}>
-                      Confirm Password
-                    </label>
-                    <input
-                      id="admin-password-confirm"
-                      type={showPassword ? 'text' : 'password'}
-                      autoComplete="new-password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Re-enter password"
-                      className={inputClass}
-                      required
-                    />
+                    <button
+                      type="button"
+                      aria-pressed={signInKind === 'customer'}
+                      onClick={() => {
+                        setSignInKind('customer');
+                        setError(null);
+                      }}
+                      className={`px-3.5 py-2.5 rounded-[10px] border text-[13px] font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                        signInKind === 'customer'
+                          ? 'pb-glass-toggle-active'
+                          : 'pb-glass-toggle-idle'
+                      }`}
+                    >
+                      Account ID / Email
+                    </button>
                   </div>
                 )}
 
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="pb-login-go pb-login-head w-full h-[54px] mt-1.5 rounded-xl text-white text-base font-bold tracking-[0.04em] disabled:opacity-60 cursor-pointer whitespace-nowrap"
-                >
-                  {submitting
-                    ? isSetup
-                      ? 'Creating Session...'
-                      : 'Signing In...'
-                    : isSetup
-                      ? 'Set Password & Enter Console'
-                      : 'Sign In'}
-                </button>
-              </form>
-            </>
-          )}
+                <form onSubmit={handleSignInOrSetup} className="space-y-4" noValidate>
+                  {!isSetup && signInKind === 'customer' && (
+                    <div>
+                      <label htmlFor="account-identifier" className={labelClass}>
+                        Account ID or email
+                      </label>
+                      <input
+                        id="account-identifier"
+                        type="text"
+                        autoComplete="username"
+                        value={accountIdentifier}
+                        onChange={(e) => setAccountIdentifier(e.target.value)}
+                        placeholder="you@playbeat.com or uid_pb_..."
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                  )}
 
-          {/* OPEN ACCOUNT */}
-          {!isSetup && tab === 'register' && (
-            <>
-              <h1 className="pb-login-head text-[clamp(26px,3.2vw,32px)] leading-[1.1] font-bold tracking-[0.005em] text-white mt-6 mb-2">
-                Open your account
-              </h1>
-              <p className="text-[14.5px] text-[#8fa0c0] leading-relaxed mb-5">
-                Create a PlayBeat account to manage orders, license keys, and profile security.
-              </p>
-
-              <form onSubmit={handleRegister} className="space-y-4" noValidate>
-                <div>
-                  <label htmlFor="reg-name" className={labelClass}>
-                    Full name
-                  </label>
-                  <input
-                    id="reg-name"
-                    type="text"
-                    required
-                    value={regName}
-                    onChange={(e) => setRegName(e.target.value)}
-                    placeholder="Your name"
-                    className={inputClass}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div>
-                    <label htmlFor="reg-email" className={labelClass}>
-                      Email
-                    </label>
-                    <input
-                      id="reg-email"
-                      type="email"
-                      required
-                      autoComplete="email"
-                      value={regEmail}
-                      onChange={(e) => setRegEmail(e.target.value)}
-                      placeholder="you@playbeat.com"
-                      className={inputClass}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="reg-phone" className={labelClass}>
-                      Phone (Optional)
-                    </label>
-                    <input
-                      id="reg-phone"
-                      type="tel"
-                      value={regPhone}
-                      onChange={(e) => setRegPhone(e.target.value)}
-                      placeholder="+92300..."
-                      className={inputClass}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  <div>
-                    <label htmlFor="reg-password" className={labelClass}>
-                      Password
+                    <label htmlFor="admin-password" className={labelClass}>
+                      {isSetup
+                        ? 'New Admin Password'
+                        : signInKind === 'admin'
+                          ? 'Admin Password'
+                          : 'Password'}
                     </label>
                     <div className="relative">
                       <input
-                        id="reg-password"
-                        type={showRegPassword ? 'text' : 'password'}
+                        id="admin-password"
+                        type={showPassword ? 'text' : 'password'}
+                        autoComplete={isSetup ? 'new-password' : 'current-password'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder={isSetup ? 'Minimum 8 characters' : 'Enter password'}
+                        className={`${inputClass} pr-12`}
                         required
-                        minLength={8}
-                        autoComplete="new-password"
-                        value={regPassword}
-                        onChange={(e) => setRegPassword(e.target.value)}
-                        placeholder="Min 8 chars"
-                        className={`${inputClass} pr-11`}
                       />
                       <button
                         type="button"
-                        onClick={() => setShowRegPassword((v) => !v)}
-                        aria-label={showRegPassword ? 'Hide password' : 'Show password'}
-                        className="absolute right-1.5 top-1.5 w-10 h-10 rounded-lg text-[#8fa0c0] hover:text-white grid place-items-center"
+                        onClick={() => setShowPassword((v) => !v)}
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        className="absolute right-1.5 top-1.5 w-9 h-9 rounded-lg text-[#93a9ca] hover:text-white hover:bg-[#bae6fd]/10 grid place-items-center transition-colors cursor-pointer"
                       >
-                        {showRegPassword ? (
-                          <EyeOff className="w-4 h-4" />
-                        ) : (
-                          <Eye className="w-4 h-4" />
-                        )}
+                        {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
                       </button>
                     </div>
                   </div>
-                  <div>
-                    <label htmlFor="reg-confirm" className={labelClass}>
-                      Confirm Password
-                    </label>
-                    <input
-                      id="reg-confirm"
-                      type={showRegPassword ? 'text' : 'password'}
-                      minLength={8}
-                      autoComplete="new-password"
-                      value={regConfirm}
-                      onChange={(e) => setRegConfirm(e.target.value)}
-                      placeholder="Repeat password"
-                      className={inputClass}
-                    />
-                  </div>
-                </div>
 
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="pb-login-go pb-login-head w-full h-[54px] mt-1.5 rounded-xl text-white text-base font-bold tracking-[0.04em] disabled:opacity-60 cursor-pointer whitespace-nowrap"
-                >
-                  {submitting ? 'Opening Account...' : 'Open Account'}
-                </button>
-              </form>
-            </>
-          )}
+                  {isSetup && (
+                    <div>
+                      <label htmlFor="admin-password-confirm" className={labelClass}>
+                        Confirm Password
+                      </label>
+                      <input
+                        id="admin-password-confirm"
+                        type={showPassword ? 'text' : 'password'}
+                        autoComplete="new-password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Re-enter password"
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+                  )}
 
-          {/* RESET PASSWORD */}
-          {!isSetup && tab === 'reset' && (
-            <>
-              <h1 className="pb-login-head text-[clamp(26px,3.2vw,32px)] leading-[1.1] font-bold tracking-[0.005em] text-white mt-6 mb-2">
-                Reset your password
-              </h1>
-              <p className="text-[14.5px] text-[#8fa0c0] leading-relaxed mb-5">
-                Request a reset or redeem a 30-minute one-time reset code issued by an administrator.
-              </p>
-
-              <div className="flex flex-wrap gap-2 mb-5">
-                <button
-                  type="button"
-                  aria-pressed={resetStage === 'request'}
-                  onClick={() => {
-                    setResetStage('request');
-                    setError(null);
-                  }}
-                  className={`px-3.5 py-2 rounded-[10px] border text-[13px] font-semibold transition-all whitespace-nowrap ${
-                    resetStage === 'request'
-                      ? 'text-white border-[#38bdf8] bg-[#38bdf8]/10 shadow-[0_0_18px_rgba(56,189,248,0.18)]'
-                      : 'text-[#8fa0c0] border-[#78a0ff]/20 hover:text-[#dbe5f5]'
-                  }`}
-                >
-                  1. Request Reset
-                </button>
-                <button
-                  type="button"
-                  aria-pressed={resetStage === 'redeem'}
-                  onClick={() => {
-                    setResetStage('redeem');
-                    setError(null);
-                  }}
-                  className={`px-3.5 py-2 rounded-[10px] border text-[13px] font-semibold transition-all whitespace-nowrap ${
-                    resetStage === 'redeem'
-                      ? 'text-white border-[#38bdf8] bg-[#38bdf8]/10 shadow-[0_0_18px_rgba(56,189,248,0.18)]'
-                      : 'text-[#8fa0c0] border-[#78a0ff]/20 hover:text-[#dbe5f5]'
-                  }`}
-                >
-                  2. Enter Reset Code
-                </button>
-              </div>
-
-              {resetStage === 'request' ? (
-                <form onSubmit={handleRequestReset} className="space-y-4" noValidate>
-                  <div>
-                    <label htmlFor="reset-email" className={labelClass}>
-                      Account email
-                    </label>
-                    <input
-                      id="reset-email"
-                      type="email"
-                      required
-                      value={resetEmail}
-                      onChange={(e) => setResetEmail(e.target.value)}
-                      placeholder="you@playbeat.com"
-                      className={inputClass}
-                    />
-                  </div>
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="pb-login-go pb-login-head w-full h-[54px] mt-1.5 rounded-xl text-white text-base font-bold tracking-[0.04em] disabled:opacity-60 cursor-pointer whitespace-nowrap"
+                    className="pb-login-go pb-login-head w-full h-[52px] mt-1.5 rounded-[11px] text-white text-[15px] font-bold tracking-[0.06em] uppercase disabled:opacity-60 cursor-pointer whitespace-nowrap"
                   >
-                    {submitting ? 'Submitting...' : 'Send Reset Request'}
+                    {submitting
+                      ? isSetup
+                        ? 'Creating Session...'
+                        : 'Signing In...'
+                      : isSetup
+                        ? 'Set Password & Enter Console'
+                        : 'Sign In'}
                   </button>
                 </form>
-              ) : (
-                <form onSubmit={handleRedeemReset} className="space-y-4" noValidate>
+              </>
+            )}
+
+            {/* OPEN ACCOUNT */}
+            {!isSetup && tab === 'register' && (
+              <>
+                <h1 className="pb-login-head text-[clamp(24px,3vw,30px)] leading-[1.12] font-bold tracking-[0.01em] text-white mt-6 mb-2">
+                  Open your account
+                </h1>
+                <p className="text-[14.5px] text-[#9ab2d4] leading-relaxed mb-5">
+                  Create a PlayBeat account to manage orders, license keys, and profile security.
+                </p>
+
+                <form onSubmit={handleRegister} className="space-y-4" noValidate>
                   <div>
-                    <label htmlFor="redeem-email" className={labelClass}>
-                      Account email
+                    <label htmlFor="reg-name" className={labelClass}>
+                      Full name
                     </label>
                     <input
-                      id="redeem-email"
-                      type="email"
+                      id="reg-name"
+                      type="text"
                       required
-                      value={resetEmail}
-                      onChange={(e) => setResetEmail(e.target.value)}
-                      placeholder="you@playbeat.com"
+                      value={regName}
+                      onChange={(e) => setRegName(e.target.value)}
+                      placeholder="Your name"
                       className={inputClass}
                     />
                   </div>
-                  <div>
-                    <label htmlFor="redeem-code" className={labelClass}>
-                      One-Time Reset Code
-                    </label>
-                    <input
-                      id="redeem-code"
-                      type="text"
-                      required
-                      value={resetCode}
-                      onChange={(e) => setResetCode(e.target.value)}
-                      placeholder="PB-XXXXXXXX-XXXXXXXX"
-                      className={`${inputClass} font-mono`}
-                    />
-                  </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                     <div>
-                      <label htmlFor="redeem-new-pass" className={labelClass}>
-                        New Password
+                      <label htmlFor="reg-email" className={labelClass}>
+                        Email
                       </label>
                       <input
-                        id="redeem-new-pass"
-                        type="password"
+                        id="reg-email"
+                        type="email"
                         required
-                        minLength={8}
-                        value={resetNewPassword}
-                        onChange={(e) => setResetNewPassword(e.target.value)}
-                        placeholder="Min 8 chars"
+                        autoComplete="email"
+                        value={regEmail}
+                        onChange={(e) => setRegEmail(e.target.value)}
+                        placeholder="you@playbeat.com"
                         className={inputClass}
                       />
                     </div>
                     <div>
-                      <label htmlFor="redeem-confirm-pass" className={labelClass}>
+                      <label htmlFor="reg-phone" className={labelClass}>
+                        Phone (Optional)
+                      </label>
+                      <input
+                        id="reg-phone"
+                        type="tel"
+                        value={regPhone}
+                        onChange={(e) => setRegPhone(e.target.value)}
+                        placeholder="+92300..."
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <label htmlFor="reg-password" className={labelClass}>
+                        Password
+                      </label>
+                      <div className="relative">
+                        <input
+                          id="reg-password"
+                          type={showRegPassword ? 'text' : 'password'}
+                          required
+                          minLength={8}
+                          autoComplete="new-password"
+                          value={regPassword}
+                          onChange={(e) => setRegPassword(e.target.value)}
+                          placeholder="Min 8 chars"
+                          className={`${inputClass} pr-11`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowRegPassword((v) => !v)}
+                          aria-label={showRegPassword ? 'Hide password' : 'Show password'}
+                          className="absolute right-1.5 top-1.5 w-9 h-9 rounded-lg text-[#93a9ca] hover:text-white hover:bg-[#bae6fd]/10 grid place-items-center transition-colors cursor-pointer"
+                        >
+                          {showRegPassword ? (
+                            <EyeOff className="w-4 h-4" />
+                          ) : (
+                            <Eye className="w-4 h-4" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <label htmlFor="reg-confirm" className={labelClass}>
                         Confirm Password
                       </label>
                       <input
-                        id="redeem-confirm-pass"
-                        type="password"
-                        required
+                        id="reg-confirm"
+                        type={showRegPassword ? 'text' : 'password'}
                         minLength={8}
-                        value={resetConfirmPassword}
-                        onChange={(e) => setResetConfirmPassword(e.target.value)}
+                        autoComplete="new-password"
+                        value={regConfirm}
+                        onChange={(e) => setRegConfirm(e.target.value)}
                         placeholder="Repeat password"
                         className={inputClass}
                       />
                     </div>
                   </div>
+
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="pb-login-go pb-login-head w-full h-[54px] mt-1.5 rounded-xl text-white text-base font-bold tracking-[0.04em] disabled:opacity-60 cursor-pointer whitespace-nowrap"
+                    className="pb-login-go pb-login-head w-full h-[52px] mt-1.5 rounded-[11px] text-white text-[15px] font-bold tracking-[0.06em] uppercase disabled:opacity-60 cursor-pointer whitespace-nowrap"
                   >
-                    {submitting ? 'Updating Password...' : 'Reset Password'}
+                    {submitting ? 'Opening Account...' : 'Open Account'}
                   </button>
                 </form>
-              )}
-            </>
-          )}
+              </>
+            )}
 
-          {/* Live Status / Error Message */}
-          <div role="status" aria-live="polite" className="min-h-[20px] mt-3 text-[13.5px]">
-            {error && <p className="text-[#fca5a5]">{error}</p>}
-            {!error && info && <p className="text-[#7dd3fc]">{info}</p>}
-          </div>
+            {/* RESET PASSWORD */}
+            {!isSetup && tab === 'reset' && (
+              <>
+                <h1 className="pb-login-head text-[clamp(24px,3vw,30px)] leading-[1.12] font-bold tracking-[0.01em] text-white mt-6 mb-2">
+                  Reset your password
+                </h1>
+                <p className="text-[14.5px] text-[#9ab2d4] leading-relaxed mb-5">
+                  Request a reset or redeem a one-time reset code issued by an administrator.
+                </p>
 
-          {/* Security Footer */}
-          <div className="mt-4 pt-4 border-t border-[#78a0ff]/20 text-[12.5px] text-[#8fa0c0] leading-relaxed space-y-2">
-            <p>
-              Bearer tokens are verified server-side and kept in memory only for the active browser session.
-            </p>
-            <p>
-              For production deployments, configure{' '}
-              <code className="font-mono text-[#dbe5f5] bg-[#78a0ff]/12 px-1.5 py-0.5 rounded-[5px]">
-                ADMIN_PASSWORD
-              </code>{' '}
-              in Settings → Secrets.
-            </p>
+                <div className="grid grid-cols-2 gap-2 mb-5">
+                  <button
+                    type="button"
+                    aria-pressed={resetStage === 'request'}
+                    onClick={() => {
+                      setResetStage('request');
+                      setError(null);
+                    }}
+                    className={`px-3.5 py-2.5 rounded-[10px] border text-[13px] font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                      resetStage === 'request'
+                        ? 'pb-glass-toggle-active'
+                        : 'pb-glass-toggle-idle'
+                    }`}
+                  >
+                    1. Request Reset
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={resetStage === 'redeem'}
+                    onClick={() => {
+                      setResetStage('redeem');
+                      setError(null);
+                    }}
+                    className={`px-3.5 py-2.5 rounded-[10px] border text-[13px] font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                      resetStage === 'redeem'
+                        ? 'pb-glass-toggle-active'
+                        : 'pb-glass-toggle-idle'
+                    }`}
+                  >
+                    2. Enter Reset Code
+                  </button>
+                </div>
+
+                {resetStage === 'request' ? (
+                  <form onSubmit={handleRequestReset} className="space-y-4" noValidate>
+                    <div>
+                      <label htmlFor="reset-email" className={labelClass}>
+                        Account email
+                      </label>
+                      <input
+                        id="reset-email"
+                        type="email"
+                        required
+                        value={resetEmail}
+                        onChange={(e) => setResetEmail(e.target.value)}
+                        placeholder="you@playbeat.com"
+                        className={inputClass}
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="pb-login-go pb-login-head w-full h-[52px] mt-1.5 rounded-[11px] text-white text-[15px] font-bold tracking-[0.06em] uppercase disabled:opacity-60 cursor-pointer whitespace-nowrap"
+                    >
+                      {submitting ? 'Submitting...' : 'Send Reset Request'}
+                    </button>
+                  </form>
+                ) : (
+                  <form onSubmit={handleRedeemReset} className="space-y-4" noValidate>
+                    <div>
+                      <label htmlFor="redeem-email" className={labelClass}>
+                        Account email
+                      </label>
+                      <input
+                        id="redeem-email"
+                        type="email"
+                        required
+                        value={resetEmail}
+                        onChange={(e) => setResetEmail(e.target.value)}
+                        placeholder="you@playbeat.com"
+                        className={inputClass}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="redeem-code" className={labelClass}>
+                        One-Time Reset Code
+                      </label>
+                      <input
+                        id="redeem-code"
+                        type="text"
+                        required
+                        value={resetCode}
+                        onChange={(e) => setResetCode(e.target.value)}
+                        placeholder="PB-XXXXXXXX-XXXXXXXX"
+                        className={`${inputClass} font-mono`}
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                      <div>
+                        <label htmlFor="redeem-new-pass" className={labelClass}>
+                          New Password
+                        </label>
+                        <input
+                          id="redeem-new-pass"
+                          type="password"
+                          required
+                          minLength={8}
+                          value={resetNewPassword}
+                          onChange={(e) => setResetNewPassword(e.target.value)}
+                          placeholder="Min 8 chars"
+                          className={inputClass}
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="redeem-confirm-pass" className={labelClass}>
+                          Confirm Password
+                        </label>
+                        <input
+                          id="redeem-confirm-pass"
+                          type="password"
+                          required
+                          minLength={8}
+                          value={resetConfirmPassword}
+                          onChange={(e) => setResetConfirmPassword(e.target.value)}
+                          placeholder="Repeat password"
+                          className={inputClass}
+                        />
+                      </div>
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="pb-login-go pb-login-head w-full h-[52px] mt-1.5 rounded-[11px] text-white text-[15px] font-bold tracking-[0.06em] uppercase disabled:opacity-60 cursor-pointer whitespace-nowrap"
+                    >
+                      {submitting ? 'Updating Password...' : 'Reset Password'}
+                    </button>
+                  </form>
+                )}
+              </>
+            )}
+
+            {/* Live Status / Error Message */}
+            <div role="status" aria-live="polite" className="min-h-[22px] mt-3.5 text-[13.5px]">
+              {error && <p className="text-[#fca5a5] font-medium">{error}</p>}
+              {!error && info && <p className="text-[#7dd3fc] font-medium">{info}</p>}
+            </div>
+
+            {/* Minimal Brand Footer */}
+            <div className="mt-4 pt-4 border-t border-[#bae6fd]/14 flex items-center justify-between text-[12px] text-[#7e98be]">
+              <span>PlayBeat Digital</span>
+              <span className="font-mono tracking-[0.04em] text-[#93b4dc]">playbeat.digital</span>
+            </div>
           </div>
         </section>
       </main>
