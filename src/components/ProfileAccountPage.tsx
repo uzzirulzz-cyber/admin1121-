@@ -693,17 +693,17 @@ export function ProfileAccountPage({
 
   if (!profile) {
     return (
-      <div className="argon-card p-8 text-sm text-[#8392ab]">
+      <div className="argon-card p-8 text-sm text-[#9a9a9a]">
         Loading user profile...
       </div>
     );
   }
 
   const inputClass =
-    'w-full px-3.5 py-2.5 text-sm bg-white dark:bg-[#161c24] border border-[#dee2e6] dark:border-slate-700/70 rounded-lg text-[#344767] dark:text-slate-100 placeholder:text-[#adb5bd] dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#f78109]/30 focus:border-[#f78109] transition-colors';
+    'w-full px-3.5 py-2.5 text-sm bg-white dark:bg-[#1c1b1a] border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg text-[#252422] dark:text-slate-100 placeholder:text-[#adb5bd] dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#51cbce]/30 focus:border-[#51cbce] transition-colors';
 
   const labelClass =
-    'block text-xs font-bold uppercase tracking-wider text-[#8392ab] dark:text-slate-400 mb-1.5';
+    'block text-xs font-bold uppercase tracking-wider text-[#9a9a9a] dark:text-slate-400 mb-1.5';
 
   const tabs: Array<{
     id: ProfileTab;
@@ -733,7 +733,7 @@ export function ProfileAccountPage({
               alt={liveName}
               referrerPolicy="no-referrer"
               onError={() => setAvatarPreviewError(true)}
-              className="w-16 h-16 rounded-xl object-cover border border-[#e9ecef] dark:border-slate-700/70 shadow-xs shrink-0"
+              className="w-16 h-16 rounded-xl object-cover border border-[#e8e5dc] dark:border-slate-700/70 shadow-xs shrink-0"
             />
           ) : (
             <div
@@ -743,21 +743,21 @@ export function ProfileAccountPage({
             </div>
           )}
           <div className="min-w-0">
-            <h1 className="text-xl font-bold tracking-tight text-[#344767] dark:text-white truncate">
+            <h1 className="text-xl font-bold tracking-tight text-[#252422] dark:text-white truncate">
               {liveName}
             </h1>
-            <p className="mt-0.5 text-sm text-[#67748e] dark:text-slate-400 truncate">
+            <p className="mt-0.5 text-sm text-[#66615b] dark:text-slate-400 truncate">
               {title || (isAdmin ? 'Lead Operations Admin' : 'Storefront Member')}
               {department ? ` · ${department}` : ''}
             </p>
-            <p className="mt-1 text-xs font-mono text-[#8392ab] dark:text-slate-500 truncate">
+            <p className="mt-1 text-xs font-mono text-[#9a9a9a] dark:text-slate-500 truncate">
               @{liveHandle} · {profile.uid}
             </p>
           </div>
         </div>
 
         {/* Argon Segmented Tab Switcher */}
-        <div className="flex flex-wrap items-center gap-1 p-1 bg-[#f5f8fa] dark:bg-[#161c24] border border-[#e9ecef] dark:border-slate-700/60 rounded-xl shrink-0">
+        <div className="flex flex-wrap items-center gap-1 p-1 bg-[#f4f3ef] dark:bg-[#1c1b1a] border border-[#e8e5dc] dark:border-slate-700/60 rounded-xl shrink-0">
           {tabs.map((t) => {
             const Icon = t.icon;
             const active = activeTab === t.id;
@@ -771,8 +771,8 @@ export function ProfileAccountPage({
                 }}
                 className={`inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-lg transition-all whitespace-nowrap ${
                   active
-                    ? 'bg-white dark:bg-[#212b36] text-[#344767] dark:text-white shadow-xs'
-                    : 'text-[#67748e] dark:text-slate-400 hover:text-[#344767] dark:hover:text-white'
+                    ? 'bg-white dark:bg-[#252422] text-[#252422] dark:text-white shadow-xs'
+                    : 'text-[#66615b] dark:text-slate-400 hover:text-[#252422] dark:hover:text-white'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -789,7 +789,7 @@ export function ProfileAccountPage({
           className={`flex items-center justify-between gap-4 px-4 py-3 text-xs font-medium rounded-xl border ${
             notice.type === 'error'
               ? 'bg-[#fff5f6] dark:bg-[#2a1220] border-[#f5365c]/40 text-[#c92a49] dark:text-[#ff7591]'
-              : 'bg-white dark:bg-[#212b36] border-[#f78109]/30 text-[#344767] dark:text-slate-100'
+              : 'bg-white dark:bg-[#252422] border-[#51cbce]/30 text-[#252422] dark:text-slate-100'
           }`}
         >
           <span>{notice.text}</span>
@@ -806,12 +806,12 @@ export function ProfileAccountPage({
           {/* TAB 1: EDIT PROFILE & CUSTOMIZE */}
           {activeTab === 'profile' && (
             <form onSubmit={handleSaveProfile} className="argon-card overflow-hidden">
-              <div className="px-6 py-4 flex flex-wrap items-center justify-between gap-3 border-b border-[#e9ecef] dark:border-slate-700/60 bg-[#fafbfe] dark:bg-[#1a202c]">
+              <div className="px-6 py-4 flex flex-wrap items-center justify-between gap-3 border-b border-[#e8e5dc] dark:border-slate-700/60 bg-[#fafbfe] dark:bg-[#1f1e1d]">
                 <div>
-                  <h2 className="text-base font-bold text-[#344767] dark:text-white">
+                  <h2 className="text-base font-bold text-[#252422] dark:text-white">
                     Edit Profile & Workspace Appearance
                   </h2>
-                  <p className="text-xs text-[#8392ab] dark:text-slate-400">
+                  <p className="text-xs text-[#9a9a9a] dark:text-slate-400">
                     Customize identity, contact details, Argon theme banner, avatar, and alerts.
                   </p>
                 </div>
@@ -829,7 +829,7 @@ export function ProfileAccountPage({
                       <button
                         type="button"
                         onClick={() => setConfirmResetProfile(false)}
-                        className="px-2.5 py-2 text-xs font-semibold text-[#67748e] hover:text-[#344767] dark:text-slate-300 border border-[#dee2e6] dark:border-slate-700/70 rounded-lg whitespace-nowrap"
+                        className="px-2.5 py-2 text-xs font-semibold text-[#66615b] hover:text-[#252422] dark:text-slate-300 border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg whitespace-nowrap"
                       >
                         Cancel
                       </button>
@@ -838,7 +838,7 @@ export function ProfileAccountPage({
                     <button
                       type="button"
                       onClick={() => setConfirmResetProfile(true)}
-                      className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-[#67748e] dark:text-slate-300 bg-white dark:bg-[#212b36] border border-[#dee2e6] dark:border-slate-700/70 rounded-lg hover:bg-[#f5f8fa] dark:hover:bg-[#1a202c] whitespace-nowrap"
+                      className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-[#66615b] dark:text-slate-300 bg-white dark:bg-[#252422] border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27] whitespace-nowrap"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
                       <span>Reset Defaults</span>
@@ -847,7 +847,7 @@ export function ProfileAccountPage({
                   <button
                     type="submit"
                     disabled={savingProfile}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-[#161c24] bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg shadow-xs transition-colors whitespace-nowrap"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold paper-btn-primary disabled:opacity-60 rounded-lg shadow-xs transition-colors whitespace-nowrap"
                   >
                     <Save className="w-3.5 h-3.5" />
                     <span>{savingProfile ? 'Saving...' : 'Save Profile'}</span>
@@ -858,7 +858,7 @@ export function ProfileAccountPage({
               <div className="p-6 space-y-8">
                 {/* SECTION 1: USER INFORMATION */}
                 <div className="space-y-4">
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#8392ab] dark:text-slate-400">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#9a9a9a] dark:text-slate-400">
                     User Information
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -960,8 +960,8 @@ export function ProfileAccountPage({
                 </div>
 
                 {/* SECTION 2: CONTACT INFORMATION */}
-                <div className="pt-6 border-t border-[#e9ecef] dark:border-slate-700/60 space-y-4">
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#8392ab] dark:text-slate-400">
+                <div className="pt-6 border-t border-[#e8e5dc] dark:border-slate-700/60 space-y-4">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#9a9a9a] dark:text-slate-400">
                     Contact Information
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1049,8 +1049,8 @@ export function ProfileAccountPage({
                 </div>
 
                 {/* SECTION 3: ABOUT ME */}
-                <div className="pt-6 border-t border-[#e9ecef] dark:border-slate-700/60 space-y-3">
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#8392ab] dark:text-slate-400">
+                <div className="pt-6 border-t border-[#e8e5dc] dark:border-slate-700/60 space-y-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#9a9a9a] dark:text-slate-400">
                     About Me
                   </p>
                   <div>
@@ -1069,10 +1069,10 @@ export function ProfileAccountPage({
                 </div>
 
                 {/* SECTION 4: ARGON APPEARANCE & AVATAR CUSTOMIZER */}
-                <div className="pt-6 border-t border-[#e9ecef] dark:border-slate-700/60 space-y-5">
+                <div className="pt-6 border-t border-[#e8e5dc] dark:border-slate-700/60 space-y-5">
                   <div className="flex items-center gap-2">
-                    <Palette className="w-4 h-4 text-[#f78109] dark:text-[#fda92d]" />
-                    <p className="text-xs font-bold uppercase tracking-wider text-[#8392ab] dark:text-slate-400">
+                    <Palette className="w-4 h-4 text-[#2ca8ab] dark:text-[#51cbce]" />
+                    <p className="text-xs font-bold uppercase tracking-wider text-[#9a9a9a] dark:text-slate-400">
                       Argon Workspace & Avatar Customizer
                     </p>
                   </div>
@@ -1091,8 +1091,8 @@ export function ProfileAccountPage({
                             onClick={() => handleThemeSelect(key)}
                             className={`inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg border transition-all whitespace-nowrap ${
                               selected
-                                ? 'border-[#f78109] bg-[#f5f8fa] dark:bg-[#1a202c] text-[#344767] dark:text-white shadow-xs'
-                                : 'border-[#dee2e6] dark:border-slate-700/70 text-[#67748e] dark:text-slate-300 hover:border-[#adb5bd]'
+                                ? 'border-[#51cbce] bg-[#f4f3ef] dark:bg-[#1f1e1d] text-[#252422] dark:text-white shadow-xs'
+                                : 'border-[#ddd9ce] dark:border-slate-700/70 text-[#66615b] dark:text-slate-300 hover:border-[#adb5bd]'
                             }`}
                           >
                             <span
@@ -1151,7 +1151,7 @@ export function ProfileAccountPage({
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-[#161c24] bg-[#f78109] hover:bg-[#fda92d] rounded-lg whitespace-nowrap"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold paper-btn-primary rounded-lg whitespace-nowrap"
                     >
                       <ImagePlus className="w-3.5 h-3.5" />
                       <span>Upload Avatar</span>
@@ -1159,7 +1159,7 @@ export function ProfileAccountPage({
                     <button
                       type="button"
                       onClick={handleUseDefaultAvatar}
-                      className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-[#344767] dark:text-slate-200 bg-white dark:bg-[#1a202c] border border-[#dee2e6] dark:border-slate-700/70 rounded-lg hover:bg-[#f5f8fa] dark:hover:bg-[#1e2d62] whitespace-nowrap"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-[#252422] dark:text-slate-200 bg-white dark:bg-[#1f1e1d] border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27] whitespace-nowrap"
                     >
                       <span>Use Default Portrait</span>
                     </button>
@@ -1177,8 +1177,8 @@ export function ProfileAccountPage({
                 </div>
 
                 {/* SECTION 5: NOTIFICATION PREFERENCES */}
-                <div className="pt-6 border-t border-[#e9ecef] dark:border-slate-700/60 space-y-3">
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#8392ab] dark:text-slate-400">
+                <div className="pt-6 border-t border-[#e8e5dc] dark:border-slate-700/60 space-y-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#9a9a9a] dark:text-slate-400">
                     Notification Preferences
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -1201,19 +1201,19 @@ export function ProfileAccountPage({
                     ].map((pref) => (
                       <label
                         key={pref.key}
-                        className="flex items-start gap-3 p-3.5 rounded-xl border border-[#e9ecef] dark:border-slate-700/60 bg-[#fafbfe] dark:bg-[#1a202c] cursor-pointer"
+                        className="flex items-start gap-3 p-3.5 rounded-xl border border-[#e8e5dc] dark:border-slate-700/60 bg-[#fafbfe] dark:bg-[#1f1e1d] cursor-pointer"
                       >
                         <input
                           type="checkbox"
                           checked={profile.prefs[pref.key]}
                           onChange={(e) => handleTogglePref(pref.key, e.target.checked)}
-                          className="mt-0.5 rounded border-[#dee2e6] accent-[#f78109]"
+                          className="mt-0.5 rounded border-[#ddd9ce] accent-[#51cbce]"
                         />
                         <span>
-                          <span className="block text-xs font-bold text-[#344767] dark:text-white">
+                          <span className="block text-xs font-bold text-[#252422] dark:text-white">
                             {pref.title}
                           </span>
-                          <span className="block text-[11px] text-[#8392ab] dark:text-slate-400">
+                          <span className="block text-[11px] text-[#9a9a9a] dark:text-slate-400">
                             {pref.desc}
                           </span>
                         </span>
@@ -1231,10 +1231,10 @@ export function ProfileAccountPage({
               {/* Custom Profile Fields CRUD */}
               <section className="argon-card p-6 space-y-5">
                 <div>
-                  <h2 className="text-base font-bold text-[#344767] dark:text-white">
+                  <h2 className="text-base font-bold text-[#252422] dark:text-white">
                     Custom Profile Fields
                   </h2>
-                  <p className="mt-0.5 text-xs text-[#67748e] dark:text-slate-400">
+                  <p className="mt-0.5 text-xs text-[#66615b] dark:text-slate-400">
                     Add, edit, or delete custom operational identifiers (publisher IDs, billing tags, contact channels).
                   </p>
                 </div>
@@ -1276,14 +1276,14 @@ export function ProfileAccountPage({
                   <button
                     type="submit"
                     disabled={addingField}
-                    className="sm:col-span-2 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold text-[#161c24] bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg whitespace-nowrap"
+                    className="sm:col-span-2 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold paper-btn-primary disabled:opacity-60 rounded-lg whitespace-nowrap"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Add Field</span>
                   </button>
                 </form>
 
-                <div className="divide-y divide-[#e9ecef] dark:divide-[#1e2952] border-t border-[#e9ecef] dark:border-slate-700/60">
+                <div className="divide-y divide-[#e8e5dc] dark:divide-[#1e2952] border-t border-[#e8e5dc] dark:border-slate-700/60">
                   {profile.customFields.map((field) => {
                     const isEditing = editingFieldId === field.id;
                     return (
@@ -1320,10 +1320,10 @@ export function ProfileAccountPage({
                           </div>
                         ) : (
                           <div className="min-w-0">
-                            <p className="text-xs font-bold uppercase tracking-wider text-[#8392ab]">
+                            <p className="text-xs font-bold uppercase tracking-wider text-[#9a9a9a]">
                               {field.category} · {field.label}
                             </p>
-                            <p className="mt-0.5 text-sm font-mono font-medium text-[#344767] dark:text-white break-all">
+                            <p className="mt-0.5 text-sm font-mono font-medium text-[#252422] dark:text-white break-all">
                               {field.value}
                             </p>
                           </div>
@@ -1343,7 +1343,7 @@ export function ProfileAccountPage({
                               <button
                                 type="button"
                                 onClick={() => setEditingFieldId(null)}
-                                className="px-2.5 py-1.5 text-xs font-semibold text-[#67748e] border border-[#dee2e6] dark:border-slate-700/70 rounded-lg"
+                                className="px-2.5 py-1.5 text-xs font-semibold text-[#66615b] border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg"
                               >
                                 Cancel
                               </button>
@@ -1353,7 +1353,7 @@ export function ProfileAccountPage({
                               <button
                                 type="button"
                                 onClick={() => startEditCustomField(field)}
-                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#f78109] dark:text-[#fda92d] border border-[#e9ecef] dark:border-slate-700/70 rounded-lg hover:bg-[#f5f8fa] dark:hover:bg-[#1a202c] whitespace-nowrap"
+                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#2ca8ab] dark:text-[#51cbce] border border-[#e8e5dc] dark:border-slate-700/70 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27] whitespace-nowrap"
                               >
                                 <Edit3 className="w-3.5 h-3.5" />
                                 <span>Edit</span>
@@ -1374,7 +1374,7 @@ export function ProfileAccountPage({
                     );
                   })}
                   {profile.customFields.length === 0 && (
-                    <p className="py-6 text-center text-xs text-[#8392ab]">
+                    <p className="py-6 text-center text-xs text-[#9a9a9a]">
                       No custom fields added yet. Use the form above to add one.
                     </p>
                   )}
@@ -1384,10 +1384,10 @@ export function ProfileAccountPage({
               {/* Social & Contact Links CRUD */}
               <section className="argon-card p-6 space-y-5">
                 <div>
-                  <h2 className="text-base font-bold text-[#344767] dark:text-white">
+                  <h2 className="text-base font-bold text-[#252422] dark:text-white">
                     Social & Workspace Links
                   </h2>
-                  <p className="mt-0.5 text-xs text-[#67748e] dark:text-slate-400">
+                  <p className="mt-0.5 text-xs text-[#66615b] dark:text-slate-400">
                     Add, edit, or delete verified https:// links displayed on your Argon profile card.
                   </p>
                 </div>
@@ -1422,14 +1422,14 @@ export function ProfileAccountPage({
                   <button
                     type="submit"
                     disabled={addingLink}
-                    className="sm:col-span-2 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold text-[#161c24] bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg whitespace-nowrap"
+                    className="sm:col-span-2 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold paper-btn-primary disabled:opacity-60 rounded-lg whitespace-nowrap"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Add Link</span>
                   </button>
                 </form>
 
-                <div className="divide-y divide-[#e9ecef] dark:divide-[#1e2952] border-t border-[#e9ecef] dark:border-slate-700/60">
+                <div className="divide-y divide-[#e8e5dc] dark:divide-[#1e2952] border-t border-[#e8e5dc] dark:border-slate-700/60">
                   {profile.socialLinks.map((link) => {
                     const isEditing = editingLinkId === link.id;
                     return (
@@ -1457,13 +1457,13 @@ export function ProfileAccountPage({
                           </div>
                         ) : (
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-[#344767] dark:text-white">
+                            <p className="text-sm font-semibold text-[#252422] dark:text-white">
                               {link.platform}{' '}
-                              <span className="font-normal text-xs text-[#8392ab]">
+                              <span className="font-normal text-xs text-[#9a9a9a]">
                                 {link.handle}
                               </span>
                             </p>
-                            <p className="text-xs font-mono text-[#f78109] dark:text-[#fda92d] truncate">
+                            <p className="text-xs font-mono text-[#2ca8ab] dark:text-[#51cbce] truncate">
                               {link.url}
                             </p>
                           </div>
@@ -1483,7 +1483,7 @@ export function ProfileAccountPage({
                               <button
                                 type="button"
                                 onClick={() => setEditingLinkId(null)}
-                                className="px-2.5 py-1.5 text-xs font-semibold text-[#67748e] border border-[#dee2e6] dark:border-slate-700/70 rounded-lg"
+                                className="px-2.5 py-1.5 text-xs font-semibold text-[#66615b] border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg"
                               >
                                 Cancel
                               </button>
@@ -1493,7 +1493,7 @@ export function ProfileAccountPage({
                               <button
                                 type="button"
                                 onClick={() => startEditSocialLink(link)}
-                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#f78109] dark:text-[#fda92d] border border-[#e9ecef] dark:border-slate-700/70 rounded-lg hover:bg-[#f5f8fa] dark:hover:bg-[#1a202c] whitespace-nowrap"
+                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#2ca8ab] dark:text-[#51cbce] border border-[#e8e5dc] dark:border-slate-700/70 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27] whitespace-nowrap"
                               >
                                 <Edit3 className="w-3.5 h-3.5" />
                                 <span>Edit</span>
@@ -1514,7 +1514,7 @@ export function ProfileAccountPage({
                     );
                   })}
                   {profile.socialLinks.length === 0 && (
-                    <p className="py-6 text-center text-xs text-[#8392ab]">
+                    <p className="py-6 text-center text-xs text-[#9a9a9a]">
                       No links configured yet.
                     </p>
                   )}
@@ -1524,10 +1524,10 @@ export function ProfileAccountPage({
               {/* Specialties / Responsibilities CRUD */}
               <section className="argon-card p-6 space-y-4">
                 <div>
-                  <h2 className="text-base font-bold text-[#344767] dark:text-white">
+                  <h2 className="text-base font-bold text-[#252422] dark:text-white">
                     Specialties & Responsibilities
                   </h2>
-                  <p className="mt-0.5 text-xs text-[#67748e] dark:text-slate-400">
+                  <p className="mt-0.5 text-xs text-[#66615b] dark:text-slate-400">
                     Add or remove operational domains listed on your profile.
                   </p>
                 </div>
@@ -1544,20 +1544,20 @@ export function ProfileAccountPage({
                   <button
                     type="submit"
                     disabled={addingSkill}
-                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-[#161c24] bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg whitespace-nowrap shrink-0"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold paper-btn-primary disabled:opacity-60 rounded-lg whitespace-nowrap shrink-0"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Add Specialty</span>
                   </button>
                 </form>
 
-                <div className="divide-y divide-[#e9ecef] dark:divide-[#1e2952] border-t border-[#e9ecef] dark:border-slate-700/60">
+                <div className="divide-y divide-[#e8e5dc] dark:divide-[#1e2952] border-t border-[#e8e5dc] dark:border-slate-700/60">
                   {profile.skills.map((skill, idx) => (
                     <div
                       key={`${skill}-${idx}`}
                       className="py-2.5 flex items-center justify-between gap-3 text-sm"
                     >
-                      <span className="font-medium text-[#344767] dark:text-slate-100">
+                      <span className="font-medium text-[#252422] dark:text-slate-100">
                         {skill}
                       </span>
                       <button
@@ -1571,7 +1571,7 @@ export function ProfileAccountPage({
                     </div>
                   ))}
                   {profile.skills.length === 0 && (
-                    <p className="py-5 text-center text-xs text-[#8392ab]">
+                    <p className="py-5 text-center text-xs text-[#9a9a9a]">
                       No specialties added yet.
                     </p>
                   )}
@@ -1585,12 +1585,12 @@ export function ProfileAccountPage({
             <div className="space-y-6">
               <section className="argon-card p-6 space-y-5">
                 <div className="flex items-center gap-2.5">
-                  <KeyRound className="w-4 h-4 text-[#f78109] dark:text-[#fda92d]" />
+                  <KeyRound className="w-4 h-4 text-[#2ca8ab] dark:text-[#51cbce]" />
                   <div>
-                    <h2 className="text-base font-bold text-[#344767] dark:text-white">
+                    <h2 className="text-base font-bold text-[#252422] dark:text-white">
                       Reset / Change Account Password
                     </h2>
-                    <p className="text-xs text-[#67748e] dark:text-slate-400">
+                    <p className="text-xs text-[#66615b] dark:text-slate-400">
                       {isAdmin
                         ? 'Update the operator password used to sign in to this console.'
                         : 'Update your PlayBeat account password. Minimum 8 characters.'}
@@ -1650,7 +1650,7 @@ export function ProfileAccountPage({
                   <button
                     type="submit"
                     disabled={changingPassword}
-                    className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-[#161c24] bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg shadow-xs whitespace-nowrap"
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold paper-btn-primary disabled:opacity-60 rounded-lg shadow-xs whitespace-nowrap"
                   >
                     <KeyRound className="w-3.5 h-3.5" />
                     <span>{changingPassword ? 'Updating...' : 'Update Password'}</span>
@@ -1662,10 +1662,10 @@ export function ProfileAccountPage({
               <section className="argon-card p-6 space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <h2 className="text-base font-bold text-[#344767] dark:text-white">
+                    <h2 className="text-base font-bold text-[#252422] dark:text-white">
                       Active Sessions
                     </h2>
-                    <p className="text-xs text-[#67748e] dark:text-slate-400">
+                    <p className="text-xs text-[#66615b] dark:text-slate-400">
                       Signed-in browsers and devices for this account.
                     </p>
                   </div>
@@ -1673,7 +1673,7 @@ export function ProfileAccountPage({
                     type="button"
                     disabled={revokingSessions || sessions.length <= 1}
                     onClick={handleRevokeOthers}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-[#344767] dark:text-slate-200 border border-[#dee2e6] dark:border-slate-700/70 rounded-lg hover:bg-[#f5f8fa] dark:hover:bg-[#1a202c] disabled:opacity-40 whitespace-nowrap self-start sm:self-auto"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-[#252422] dark:text-slate-200 border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27] disabled:opacity-40 whitespace-nowrap self-start sm:self-auto"
                   >
                     <ShieldOff className="w-3.5 h-3.5" />
                     <span>
@@ -1682,14 +1682,14 @@ export function ProfileAccountPage({
                   </button>
                 </div>
 
-                <div className="divide-y divide-[#e9ecef] dark:divide-[#1e2952] border-t border-[#e9ecef] dark:border-slate-700/60">
+                <div className="divide-y divide-[#e8e5dc] dark:divide-[#1e2952] border-t border-[#e8e5dc] dark:border-slate-700/60">
                   {sessions.map((s) => (
                     <div
                       key={s.id}
                       className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
                     >
                       <div className="min-w-0">
-                        <p className="font-semibold text-[#344767] dark:text-white truncate">
+                        <p className="font-semibold text-[#252422] dark:text-white truncate">
                           {s.userAgent}
                           {s.isCurrent && (
                             <span className="ml-2 text-[#2dce89] font-semibold">
@@ -1697,16 +1697,16 @@ export function ProfileAccountPage({
                             </span>
                           )}
                         </p>
-                        <p className="mt-0.5 text-[#8392ab] font-mono tabular-nums">
+                        <p className="mt-0.5 text-[#9a9a9a] font-mono tabular-nums">
                           Started {s.createdAt.slice(0, 19).replace('T', ' ')} · Expires{' '}
                           {s.expiresAt.slice(0, 19).replace('T', ' ')}
                         </p>
                       </div>
-                      <span className="font-mono text-[#8392ab] shrink-0">{s.id}</span>
+                      <span className="font-mono text-[#9a9a9a] shrink-0">{s.id}</span>
                     </div>
                   ))}
                   {sessions.length === 0 && (
-                    <p className="py-5 text-xs text-[#8392ab]">No active sessions recorded.</p>
+                    <p className="py-5 text-xs text-[#9a9a9a]">No active sessions recorded.</p>
                   )}
                 </div>
               </section>
@@ -1714,34 +1714,34 @@ export function ProfileAccountPage({
               {/* Customer-only Orders & License Keys */}
               {!isAdmin && (
                 <section className="argon-card overflow-hidden">
-                  <div className="px-6 py-4 border-b border-[#e9ecef] dark:border-slate-700/60">
-                    <h2 className="text-base font-bold text-[#344767] dark:text-white">
+                  <div className="px-6 py-4 border-b border-[#e8e5dc] dark:border-slate-700/60">
+                    <h2 className="text-base font-bold text-[#252422] dark:text-white">
                       My Orders & License Keys
                     </h2>
-                    <p className="text-xs text-[#67748e] dark:text-slate-400">
+                    <p className="text-xs text-[#66615b] dark:text-slate-400">
                       Orders linked to {profile.email}
                     </p>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="border-b border-[#e9ecef] dark:border-slate-700/60 bg-[#f5f8fa] dark:bg-[#1a202c] text-[11px] font-bold uppercase tracking-wider text-[#8392ab]">
+                        <tr className="border-b border-[#e8e5dc] dark:border-slate-700/60 bg-[#f4f3ef] dark:bg-[#1f1e1d] text-[11px] font-bold uppercase tracking-wider text-[#9a9a9a]">
                           <th className="py-3 px-6">Order</th>
                           <th className="py-3 px-4">Items</th>
                           <th className="py-3 px-4">Status</th>
                           <th className="py-3 px-6 text-right">Total</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-[#e9ecef] dark:divide-[#1e2952] text-sm">
+                      <tbody className="divide-y divide-[#e8e5dc] dark:divide-[#1e2952] text-sm">
                         {myOrders.map((o) => (
                           <tr key={o.id}>
-                            <td className="py-3 px-6 font-mono text-xs font-semibold text-[#344767] dark:text-white whitespace-nowrap">
+                            <td className="py-3 px-6 font-mono text-xs font-semibold text-[#252422] dark:text-white whitespace-nowrap">
                               {o.id}
                             </td>
-                            <td className="py-3 px-4 text-xs text-[#67748e] dark:text-slate-300">
+                            <td className="py-3 px-4 text-xs text-[#66615b] dark:text-slate-300">
                               {o.items.map((i) => `${i.name} ×${i.qty}`).join(', ')}
                               {o.issuedKeys.length > 0 && (
-                                <p className="mt-1 font-mono text-[#f78109] dark:text-[#fda92d]">
+                                <p className="mt-1 font-mono text-[#2ca8ab] dark:text-[#51cbce]">
                                   Keys: {o.issuedKeys.join(', ')}
                                 </p>
                               )}
@@ -1770,7 +1770,7 @@ export function ProfileAccountPage({
                         ))}
                         {myOrders.length === 0 && (
                           <tr>
-                            <td colSpan={4} className="py-8 text-center text-xs text-[#8392ab]">
+                            <td colSpan={4} className="py-8 text-center text-xs text-[#9a9a9a]">
                               No orders linked to this account yet.
                             </td>
                           </tr>
@@ -1788,12 +1788,12 @@ export function ProfileAccountPage({
             <div className="space-y-6">
               <section className="argon-card p-6 space-y-4">
                 <div className="flex items-center gap-2.5">
-                  <UserPlus className="w-4 h-4 text-[#f78109] dark:text-[#fda92d]" />
+                  <UserPlus className="w-4 h-4 text-[#2ca8ab] dark:text-[#51cbce]" />
                   <div>
-                    <h2 className="text-base font-bold text-[#344767] dark:text-white">
+                    <h2 className="text-base font-bold text-[#252422] dark:text-white">
                       Open New Customer Account
                     </h2>
-                    <p className="text-xs text-[#67748e] dark:text-slate-400">
+                    <p className="text-xs text-[#66615b] dark:text-slate-400">
                       Provision a new storefront profile with optional initial sign-in password.
                     </p>
                   </div>
@@ -1875,7 +1875,7 @@ export function ProfileAccountPage({
                     <button
                       type="submit"
                       disabled={openingAccount}
-                      className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-[#161c24] bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg shadow-xs whitespace-nowrap"
+                      className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold paper-btn-primary disabled:opacity-60 rounded-lg shadow-xs whitespace-nowrap"
                     >
                       <UserPlus className="w-3.5 h-3.5" />
                       <span>{openingAccount ? 'Opening...' : 'Open Account'}</span>
@@ -1885,15 +1885,15 @@ export function ProfileAccountPage({
               </section>
 
               {issuedCode && (
-                <div className="argon-card px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-[#f78109]/40">
+                <div className="argon-card px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-[#51cbce]/40">
                   <div className="text-xs">
-                    <p className="text-[#67748e] dark:text-slate-400">
+                    <p className="text-[#66615b] dark:text-slate-400">
                       One-time 30-min reset code for{' '}
-                      <span className="font-bold text-[#344767] dark:text-white">
+                      <span className="font-bold text-[#252422] dark:text-white">
                         {issuedCode.email}
                       </span>
                     </p>
-                    <p className="mt-1 font-mono text-sm font-bold text-[#f78109] dark:text-[#fda92d]">
+                    <p className="mt-1 font-mono text-sm font-bold text-[#2ca8ab] dark:text-[#51cbce]">
                       {issuedCode.code}
                     </p>
                   </div>
@@ -1905,7 +1905,7 @@ export function ProfileAccountPage({
                         setCopiedCode(true);
                         setTimeout(() => setCopiedCode(false), 1800);
                       }}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#344767] dark:text-slate-200 border border-[#dee2e6] dark:border-slate-700/70 rounded-lg hover:bg-[#f5f8fa] dark:hover:bg-[#1a202c] whitespace-nowrap"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#252422] dark:text-slate-200 border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27] whitespace-nowrap"
                     >
                       {copiedCode ? (
                         <Check className="w-3.5 h-3.5 text-[#2dce89]" />
@@ -1918,7 +1918,7 @@ export function ProfileAccountPage({
                       type="button"
                       onClick={() => setIssuedCode(null)}
                       aria-label="Dismiss code"
-                      className="p-1.5 text-[#8392ab] hover:text-[#344767] dark:hover:text-white"
+                      className="p-1.5 text-[#9a9a9a] hover:text-[#252422] dark:hover:text-white"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -1928,16 +1928,16 @@ export function ProfileAccountPage({
 
               {/* Full Accounts Edit / Reset / Delete Directory */}
               <section className="argon-card overflow-hidden">
-                <div className="px-6 py-4 border-b border-[#e9ecef] dark:border-slate-700/60">
-                  <h2 className="text-base font-bold text-[#344767] dark:text-white">
+                <div className="px-6 py-4 border-b border-[#e8e5dc] dark:border-slate-700/60">
+                  <h2 className="text-base font-bold text-[#252422] dark:text-white">
                     Manage Accounts (Edit · Reset Password · Delete)
                   </h2>
-                  <p className="text-xs text-[#67748e] dark:text-slate-400">
+                  <p className="text-xs text-[#66615b] dark:text-slate-400">
                     Edit profile details, issue 30-minute reset codes, set temporary passwords, or delete accounts.
                   </p>
                 </div>
 
-                <div className="divide-y divide-[#e9ecef] dark:divide-[#1e2952]">
+                <div className="divide-y divide-[#e8e5dc] dark:divide-[#1e2952]">
                   {customers.map((c) => {
                     const isEditing = editingCustomerUid === c.uid;
                     const isDeleting = confirmDeleteUid === c.uid;
@@ -1991,7 +1991,7 @@ export function ProfileAccountPage({
                               <button
                                 type="button"
                                 onClick={() => setEditingCustomerUid(null)}
-                                className="px-3 py-1.5 text-xs font-semibold text-[#67748e] border border-[#dee2e6] dark:border-slate-700/70 rounded-lg"
+                                className="px-3 py-1.5 text-xs font-semibold text-[#66615b] border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg"
                               >
                                 Cancel
                               </button>
@@ -2000,13 +2000,13 @@ export function ProfileAccountPage({
                         ) : (
                           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
                             <div className="min-w-0">
-                              <p className="text-sm font-bold text-[#344767] dark:text-white">
+                              <p className="text-sm font-bold text-[#252422] dark:text-white">
                                 {c.displayName}{' '}
-                                <span className="font-mono text-xs font-normal text-[#8392ab]">
+                                <span className="font-mono text-xs font-normal text-[#9a9a9a]">
                                   · {c.uid}
                                 </span>
                               </p>
-                              <p className="mt-0.5 text-xs text-[#67748e] dark:text-slate-400">
+                              <p className="mt-0.5 text-xs text-[#66615b] dark:text-slate-400">
                                 {c.email}
                                 {c.phone ? ` · ${c.phone}` : ''} · {c.provider} ·{' '}
                                 <span className="font-mono tabular-nums">
@@ -2019,7 +2019,7 @@ export function ProfileAccountPage({
                               <button
                                 type="button"
                                 onClick={() => startEditCustomer(c)}
-                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#f78109] dark:text-[#fda92d] border border-[#e9ecef] dark:border-slate-700/70 rounded-lg hover:bg-[#f5f8fa] dark:hover:bg-[#1a202c] whitespace-nowrap"
+                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#2ca8ab] dark:text-[#51cbce] border border-[#e8e5dc] dark:border-slate-700/70 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27] whitespace-nowrap"
                               >
                                 <Edit3 className="w-3.5 h-3.5" />
                                 <span>Edit</span>
@@ -2027,7 +2027,7 @@ export function ProfileAccountPage({
                               <button
                                 type="button"
                                 onClick={() => handleIssueResetCode(c)}
-                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#344767] dark:text-slate-200 border border-[#e9ecef] dark:border-slate-700/70 rounded-lg hover:bg-[#f5f8fa] dark:hover:bg-[#1a202c] whitespace-nowrap"
+                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#252422] dark:text-slate-200 border border-[#e8e5dc] dark:border-slate-700/70 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27] whitespace-nowrap"
                               >
                                 <KeyRound className="w-3.5 h-3.5" />
                                 <span>Reset Code</span>
@@ -2038,7 +2038,7 @@ export function ProfileAccountPage({
                                   setDirectResetUid(directResetUid === c.uid ? null : c.uid);
                                   setDirectResetPassword('');
                                 }}
-                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#344767] dark:text-slate-200 border border-[#e9ecef] dark:border-slate-700/70 rounded-lg hover:bg-[#f5f8fa] dark:hover:bg-[#1a202c] whitespace-nowrap"
+                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#252422] dark:text-slate-200 border border-[#e8e5dc] dark:border-slate-700/70 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27] whitespace-nowrap"
                               >
                                 <span>Set Password</span>
                               </button>
@@ -2046,7 +2046,7 @@ export function ProfileAccountPage({
                                 type="button"
                                 disabled={c.activeSessions === 0}
                                 onClick={() => handleRevokeCustomerSessions(c.uid)}
-                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#67748e] border border-[#e9ecef] dark:border-slate-700/70 rounded-lg hover:bg-[#f5f8fa] dark:hover:bg-[#1a202c] disabled:opacity-40 whitespace-nowrap"
+                                className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#66615b] border border-[#e8e5dc] dark:border-slate-700/70 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27] disabled:opacity-40 whitespace-nowrap"
                               >
                                 <ShieldOff className="w-3.5 h-3.5" />
                                 <span>Revoke</span>
@@ -2065,7 +2065,7 @@ export function ProfileAccountPage({
                                   <button
                                     type="button"
                                     onClick={() => setConfirmDeleteUid(null)}
-                                    className="px-2 py-1.5 text-xs font-semibold text-[#67748e] border border-[#dee2e6] dark:border-slate-700/70 rounded-lg"
+                                    className="px-2 py-1.5 text-xs font-semibold text-[#66615b] border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg"
                                   >
                                     Cancel
                                   </button>
@@ -2096,14 +2096,14 @@ export function ProfileAccountPage({
                             <button
                               type="button"
                               onClick={() => handleDirectPasswordReset(c.uid)}
-                              className="px-3.5 py-2 text-xs font-semibold text-[#161c24] bg-[#f78109] hover:bg-[#fda92d] rounded-lg whitespace-nowrap"
+                              className="px-3.5 py-2 text-xs font-semibold paper-btn-primary rounded-lg whitespace-nowrap"
                             >
                               Save Password
                             </button>
                             <button
                               type="button"
                               onClick={() => setDirectResetUid(null)}
-                              className="px-3 py-2 text-xs font-semibold text-[#67748e] border border-[#dee2e6] dark:border-slate-700/70 rounded-lg"
+                              className="px-3 py-2 text-xs font-semibold text-[#66615b] border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg"
                             >
                               Cancel
                             </button>
@@ -2113,7 +2113,7 @@ export function ProfileAccountPage({
                     );
                   })}
                   {customers.length === 0 && (
-                    <p className="py-8 text-center text-xs text-[#8392ab]">
+                    <p className="py-8 text-center text-xs text-[#9a9a9a]">
                       No customer accounts found.
                     </p>
                   )}
@@ -2148,11 +2148,11 @@ export function ProfileAccountPage({
                     alt={liveName}
                     referrerPolicy="no-referrer"
                     onError={() => setAvatarPreviewError(true)}
-                    className="w-24 h-24 rounded-full object-cover ring-4 ring-white dark:ring-[#212b36] shadow-md bg-white dark:bg-[#212b36]"
+                    className="w-24 h-24 rounded-full object-cover ring-4 ring-white dark:ring-[#252422] shadow-md bg-white dark:bg-[#252422]"
                   />
                 ) : (
                   <div
-                    className={`w-24 h-24 rounded-full ${activeThemeObj.bannerClass} text-white flex items-center justify-center text-2xl font-bold ring-4 ring-white dark:ring-[#212b36] shadow-md`}
+                    className={`w-24 h-24 rounded-full ${activeThemeObj.bannerClass} text-white flex items-center justify-center text-2xl font-bold ring-4 ring-white dark:ring-[#252422] shadow-md`}
                   >
                     {getInitials(liveName)}
                   </div>
@@ -2171,49 +2171,49 @@ export function ProfileAccountPage({
                 <button
                   type="button"
                   onClick={() => setActiveTab('fields')}
-                  className="px-3.5 py-1.5 text-xs font-semibold text-white bg-[#172b4d] hover:bg-[#101f38] dark:bg-[#f78109] dark:text-[#161c24] dark:hover:bg-[#fda92d] rounded-lg shadow-xs transition-colors whitespace-nowrap"
+                  className="px-3.5 py-1.5 text-xs font-semibold text-white bg-[#212120] hover:bg-[#363532] dark:bg-[#51cbce] dark:text-white dark:hover:bg-[#34b5b8] rounded-lg shadow-xs transition-colors whitespace-nowrap"
                 >
                   Edit Fields
                 </button>
               </div>
 
               {/* Argon 3-Column Profile Stats */}
-              <div className="grid grid-cols-3 gap-2 py-3 border-y border-[#e9ecef] dark:border-slate-700/60 text-center">
+              <div className="grid grid-cols-3 gap-2 py-3 border-y border-[#e8e5dc] dark:border-slate-700/60 text-center">
                 <div>
-                  <p className="text-base font-bold font-mono tabular-nums text-[#344767] dark:text-white">
+                  <p className="text-base font-bold font-mono tabular-nums text-[#252422] dark:text-white">
                     {profile.customFields.length}
                   </p>
-                  <p className="text-[11px] font-medium text-[#8392ab]">Fields</p>
+                  <p className="text-[11px] font-medium text-[#9a9a9a]">Fields</p>
                 </div>
                 <div>
-                  <p className="text-base font-bold font-mono tabular-nums text-[#344767] dark:text-white">
+                  <p className="text-base font-bold font-mono tabular-nums text-[#252422] dark:text-white">
                     {profile.socialLinks.length}
                   </p>
-                  <p className="text-[11px] font-medium text-[#8392ab]">Links</p>
+                  <p className="text-[11px] font-medium text-[#9a9a9a]">Links</p>
                 </div>
                 <div>
-                  <p className="text-base font-bold font-mono tabular-nums text-[#344767] dark:text-white">
+                  <p className="text-base font-bold font-mono tabular-nums text-[#252422] dark:text-white">
                     {profile.skills.length}
                   </p>
-                  <p className="text-[11px] font-medium text-[#8392ab]">Specialties</p>
+                  <p className="text-[11px] font-medium text-[#9a9a9a]">Specialties</p>
                 </div>
               </div>
 
               {/* Identity Details */}
               <div className="mt-5 text-center space-y-1.5">
-                <h3 className="text-lg font-bold text-[#344767] dark:text-white">{liveName}</h3>
-                <p className="text-xs font-mono text-[#8392ab]">@{liveHandle}</p>
+                <h3 className="text-lg font-bold text-[#252422] dark:text-white">{liveName}</h3>
+                <p className="text-xs font-mono text-[#9a9a9a]">@{liveHandle}</p>
 
                 {liveLocation && (
-                  <p className="inline-flex items-center justify-center gap-1.5 text-xs font-medium text-[#67748e] dark:text-slate-300">
-                    <MapPin className="w-3.5 h-3.5 text-[#8392ab]" />
+                  <p className="inline-flex items-center justify-center gap-1.5 text-xs font-medium text-[#66615b] dark:text-slate-300">
+                    <MapPin className="w-3.5 h-3.5 text-[#9a9a9a]" />
                     <span>{liveLocation}</span>
                   </p>
                 )}
 
                 {(title || department) && (
-                  <p className="flex items-center justify-center gap-1.5 text-xs font-semibold text-[#344767] dark:text-slate-200 pt-1">
-                    <Briefcase className="w-3.5 h-3.5 text-[#f78109] dark:text-[#fda92d]" />
+                  <p className="flex items-center justify-center gap-1.5 text-xs font-semibold text-[#252422] dark:text-slate-200 pt-1">
+                    <Briefcase className="w-3.5 h-3.5 text-[#2ca8ab] dark:text-[#51cbce]" />
                     <span>
                       {[title, department].filter(Boolean).join(' — ')}
                     </span>
@@ -2225,7 +2225,7 @@ export function ProfileAccountPage({
                     href={website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-1 text-xs font-semibold text-[#f78109] dark:text-[#fda92d] hover:underline pt-0.5"
+                    className="inline-flex items-center justify-center gap-1 text-xs font-semibold text-[#2ca8ab] dark:text-[#51cbce] hover:underline pt-0.5"
                   >
                     <Globe className="w-3.5 h-3.5" />
                     <span>{website.replace(/^https?:\/\//, '')}</span>
@@ -2234,15 +2234,15 @@ export function ProfileAccountPage({
               </div>
 
               {bio && (
-                <p className="mt-4 pt-4 border-t border-[#e9ecef] dark:border-slate-700/60 text-xs text-center text-[#67748e] dark:text-slate-300 leading-relaxed">
+                <p className="mt-4 pt-4 border-t border-[#e8e5dc] dark:border-slate-700/60 text-xs text-center text-[#66615b] dark:text-slate-300 leading-relaxed">
                   {bio}
                 </p>
               )}
 
               {/* Live Custom Fields Summary */}
               {profile.customFields.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-[#e9ecef] dark:border-slate-700/60 space-y-2">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#8392ab]">
+                <div className="mt-4 pt-4 border-t border-[#e8e5dc] dark:border-slate-700/60 space-y-2">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#9a9a9a]">
                     Profile Details
                   </p>
                   {profile.customFields.map((f) => (
@@ -2250,8 +2250,8 @@ export function ProfileAccountPage({
                       key={f.id}
                       className="flex items-center justify-between gap-3 text-xs"
                     >
-                      <span className="text-[#8392ab] truncate">{f.label}</span>
-                      <span className="font-mono font-medium text-[#344767] dark:text-slate-100 truncate">
+                      <span className="text-[#9a9a9a] truncate">{f.label}</span>
+                      <span className="font-mono font-medium text-[#252422] dark:text-slate-100 truncate">
                         {f.value}
                       </span>
                     </div>
@@ -2261,8 +2261,8 @@ export function ProfileAccountPage({
 
               {/* Live Verified Social Links */}
               {profile.socialLinks.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-[#e9ecef] dark:border-slate-700/60 space-y-2">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#8392ab]">
+                <div className="mt-4 pt-4 border-t border-[#e8e5dc] dark:border-slate-700/60 space-y-2">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#9a9a9a]">
                     Connected Links
                   </p>
                   <div className="space-y-1.5">
@@ -2271,8 +2271,8 @@ export function ProfileAccountPage({
                         key={link.id}
                         className="flex items-center justify-between gap-2 text-xs"
                       >
-                        <span className="inline-flex items-center gap-1.5 text-[#344767] dark:text-slate-200 font-medium truncate">
-                          <Link2 className="w-3.5 h-3.5 text-[#f78109] dark:text-[#fda92d] shrink-0" />
+                        <span className="inline-flex items-center gap-1.5 text-[#252422] dark:text-slate-200 font-medium truncate">
+                          <Link2 className="w-3.5 h-3.5 text-[#2ca8ab] dark:text-[#51cbce] shrink-0" />
                           <span className="truncate">{link.platform}</span>
                         </span>
                         {isValidExternalHref(link.url) ? (
@@ -2280,13 +2280,13 @@ export function ProfileAccountPage({
                             href={link.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 font-mono text-[#f78109] dark:text-[#fda92d] hover:underline truncate"
+                            className="inline-flex items-center gap-1 font-mono text-[#2ca8ab] dark:text-[#51cbce] hover:underline truncate"
                           >
                             <span className="truncate">{link.handle || 'Open'}</span>
                             <ExternalLink className="w-3 h-3 shrink-0" />
                           </a>
                         ) : (
-                          <span className="font-mono text-[#8392ab] truncate">
+                          <span className="font-mono text-[#9a9a9a] truncate">
                             {link.handle}
                           </span>
                         )}
@@ -2298,11 +2298,11 @@ export function ProfileAccountPage({
 
               {/* Live Specialties Summary */}
               {profile.skills.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-[#e9ecef] dark:border-slate-700/60 space-y-1.5">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#8392ab]">
+                <div className="mt-4 pt-4 border-t border-[#e8e5dc] dark:border-slate-700/60 space-y-1.5">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#9a9a9a]">
                     Specialties
                   </p>
-                  <p className="text-xs text-[#67748e] dark:text-slate-300 leading-relaxed">
+                  <p className="text-xs text-[#66615b] dark:text-slate-300 leading-relaxed">
                     {profile.skills.join(' · ')}
                   </p>
                 </div>

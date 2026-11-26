@@ -254,7 +254,7 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
         <button
           type="button"
           onClick={loadChannels}
-          className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c] transition-colors whitespace-nowrap shrink-0 self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27] transition-colors whitespace-nowrap shrink-0 self-start sm:self-auto"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           <span>Refresh Channels</span>
@@ -262,9 +262,9 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
       </div>
 
       {/* Security Architecture Notice */}
-      <div className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl px-5 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl px-5 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-3">
-          <ShieldCheck className="w-5 h-5 text-[#f78109] dark:text-[#fda92d] shrink-0 mt-0.5" />
+          <ShieldCheck className="w-5 h-5 text-[#2ca8ab] dark:text-[#51cbce] shrink-0 mt-0.5" />
           <div className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
             <span className="font-semibold text-zinc-900 dark:text-zinc-100">
               Official OAuth 2.0 Direct Sign-In:
@@ -283,7 +283,7 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
           className={`flex items-center justify-between gap-4 px-4 py-3 text-xs rounded-lg border ${
             notice.type === 'error'
               ? 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-900 text-red-700 dark:text-red-300'
-              : 'bg-zinc-100 dark:bg-[#212b36] border-zinc-200 dark:border-slate-700/60 text-zinc-800 dark:text-zinc-200'
+              : 'bg-zinc-100 dark:bg-[#252422] border-zinc-200 dark:border-slate-700/60 text-zinc-800 dark:text-zinc-200'
           }`}
         >
           <span>{notice.text}</span>
@@ -294,7 +294,7 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
       )}
 
       {/* Filter Bar */}
-      <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-zinc-100 dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
+      <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-zinc-100 dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
         {[
           { key: 'ALL' as const, label: `All Platforms (${channels.length || 7})` },
           { key: 'Google' as const, label: `Google Ads · AdSense · GA4 (${googleCount})` },
@@ -307,7 +307,7 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
             onClick={() => setFilter(tab.key)}
             className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
               filter === tab.key
-                ? 'bg-white dark:bg-[#1a202c] text-zinc-950 dark:text-zinc-50 shadow-xs'
+                ? 'bg-white dark:bg-[#1f1e1d] text-zinc-950 dark:text-zinc-50 shadow-xs'
                 : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
             }`}
           >
@@ -322,7 +322,7 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="h-72 bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl animate-pulse"
+              className="h-72 bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl animate-pulse"
             />
           ))}
         </div>
@@ -342,7 +342,7 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
             return (
               <section
                 key={ch.platform}
-                className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 flex flex-col justify-between space-y-5"
+                className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 flex flex-col justify-between space-y-5"
               >
                 <div className="space-y-4">
                   {/* Card Header */}
@@ -385,7 +385,7 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
                         value={draft.accountId}
                         onChange={(e) => updateDraft(ch.platform, 'accountId', e.target.value)}
                         placeholder={ch.accountIdPlaceholder}
-                        className="w-full px-3 py-2 text-xs font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+                        className="w-full px-3 py-2 text-xs font-mono bg-white dark:bg-[#1c1b1a] border border-zinc-300 dark:border-slate-700/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
                       />
                     </div>
                     <div>
@@ -401,7 +401,7 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
                         value={draft.secondaryId}
                         onChange={(e) => updateDraft(ch.platform, 'secondaryId', e.target.value)}
                         placeholder={ch.secondaryIdPlaceholder}
-                        className="w-full px-3 py-2 text-xs font-mono bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+                        className="w-full px-3 py-2 text-xs font-mono bg-white dark:bg-[#1c1b1a] border border-zinc-300 dark:border-slate-700/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
                       />
                     </div>
                   </div>
@@ -420,7 +420,7 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
                         value={draft.loginIdentifier}
                         onChange={(e) => updateDraft(ch.platform, 'loginIdentifier', e.target.value)}
                         placeholder="email@playbeat.digital or @handle"
-                        className="w-full px-3 py-2 text-xs bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+                        className="w-full px-3 py-2 text-xs bg-white dark:bg-[#1c1b1a] border border-zinc-300 dark:border-slate-700/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
                       />
                     </div>
                     <div>
@@ -436,7 +436,7 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
                         value={draft.notes}
                         onChange={(e) => updateDraft(ch.platform, 'notes', e.target.value)}
                         placeholder="Property / ad set purpose"
-                        className="w-full px-3 py-2 text-xs bg-white dark:bg-[#161c24] border border-zinc-300 dark:border-slate-700/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+                        className="w-full px-3 py-2 text-xs bg-white dark:bg-[#1c1b1a] border border-zinc-300 dark:border-slate-700/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
                       />
                     </div>
                   </div>
@@ -450,7 +450,7 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
                       <button
                         type="button"
                         onClick={() => handleCopyCallback(fullCallbackUri)}
-                        className="inline-flex items-center gap-1 text-[#f78109] dark:text-[#fda92d] hover:underline whitespace-nowrap shrink-0"
+                        className="inline-flex items-center gap-1 text-[#2ca8ab] dark:text-[#51cbce] hover:underline whitespace-nowrap shrink-0"
                       >
                         {copiedUri === fullCallbackUri ? (
                           <Check className="w-3 h-3 text-emerald-600" />
@@ -494,7 +494,7 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
                       type="button"
                       disabled={isBusy}
                       onClick={() => handleSaveProfile(ch.platform)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c] disabled:opacity-50 whitespace-nowrap shrink-0"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27] disabled:opacity-50 whitespace-nowrap shrink-0"
                     >
                       <Save className="w-3.5 h-3.5" />
                       <span>Save ID</span>
@@ -503,7 +503,7 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
                       type="button"
                       disabled={isBusy}
                       onClick={() => handleVerify(ch.platform)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c] disabled:opacity-50 whitespace-nowrap shrink-0"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27] disabled:opacity-50 whitespace-nowrap shrink-0"
                     >
                       <RefreshCw className="w-3.5 h-3.5" />
                       <span>Verify</span>
@@ -526,7 +526,7 @@ export function ChannelConnectionsPage({ onDataChanged }: ChannelConnectionsPage
                       type="button"
                       disabled={isBusy}
                       onClick={() => handleOAuthConnect(ch)}
-                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg transition-colors whitespace-nowrap shrink-0"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs paper-btn-primary disabled:opacity-60 rounded-lg transition-colors whitespace-nowrap shrink-0"
                     >
                       <Link2 className="w-3.5 h-3.5" />
                       <span>

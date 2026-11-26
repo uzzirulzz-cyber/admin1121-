@@ -379,7 +379,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
             type="button"
             disabled={connecting}
             onClick={handleConnectAdSenseOAuth}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg transition-colors whitespace-nowrap shrink-0"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs paper-btn-primary disabled:opacity-60 rounded-lg transition-colors whitespace-nowrap shrink-0"
           >
             <Link2 className="w-3.5 h-3.5" />
             <span>{status?.refreshTokenPresent ? 'Reconnect OAuth' : 'Connect Google OAuth'}</span>
@@ -388,7 +388,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
             <button
               type="button"
               onClick={() => onNavigate('channels')}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c] transition-colors whitespace-nowrap shrink-0"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27] transition-colors whitespace-nowrap shrink-0"
             >
               <Share2 className="w-3.5 h-3.5" />
               <span>All Ad & Social Logins</span>
@@ -401,7 +401,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
               loadServiceAccounts();
               if (activeTab === 'traffic') loadTraffic(range);
             }}
-            className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c] transition-colors whitespace-nowrap shrink-0"
+            className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27] transition-colors whitespace-nowrap shrink-0"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Refresh</span>
@@ -411,9 +411,9 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
 
       {/* Active Service Account Banner */}
       {activeSa && (
-        <div className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-start gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center shrink-0 text-[#f78109] dark:text-[#fda92d]">
+            <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center shrink-0 text-[#2ca8ab] dark:text-[#51cbce]">
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div className="min-w-0">
@@ -436,7 +436,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
             <button
               type="button"
               onClick={() => handleCopy('active_sa_email', activeSa.clientEmail)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c] whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27] whitespace-nowrap"
             >
               {copiedKey === 'active_sa_email' ? (
                 <Check className="w-3.5 h-3.5 text-emerald-600" />
@@ -452,7 +452,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                 setActiveTab('service_accounts');
                 handleProbeAccount(activeSa.id);
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#161c24] bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold paper-btn-primary disabled:opacity-60 rounded-lg whitespace-nowrap"
             >
               <Activity className="w-3.5 h-3.5" />
               <span>{probingId === activeSa.id ? 'Probing APIs...' : 'Probe AdSense & GA4'}</span>
@@ -462,13 +462,13 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
       )}
 
       {/* Primary Section Tabs */}
-      <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-zinc-100 dark:bg-[#161c24] border border-zinc-200 dark:border-slate-700/60 rounded-xl">
+      <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-zinc-100 dark:bg-[#1c1b1a] border border-zinc-200 dark:border-slate-700/60 rounded-xl">
         <button
           type="button"
           onClick={() => setActiveTab('revenue')}
           className={`inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
             activeTab === 'revenue'
-              ? 'bg-white dark:bg-[#1a202c] text-zinc-950 dark:text-zinc-50 shadow-xs'
+              ? 'bg-white dark:bg-[#1f1e1d] text-zinc-950 dark:text-zinc-50 shadow-xs'
               : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
           }`}
         >
@@ -480,7 +480,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
           onClick={() => setActiveTab('traffic')}
           className={`inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
             activeTab === 'traffic'
-              ? 'bg-white dark:bg-[#1a202c] text-zinc-950 dark:text-zinc-50 shadow-xs'
+              ? 'bg-white dark:bg-[#1f1e1d] text-zinc-950 dark:text-zinc-50 shadow-xs'
               : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
           }`}
         >
@@ -492,7 +492,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
           onClick={() => setActiveTab('service_accounts')}
           className={`inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
             activeTab === 'service_accounts'
-              ? 'bg-white dark:bg-[#1a202c] text-zinc-950 dark:text-zinc-50 shadow-xs'
+              ? 'bg-white dark:bg-[#1f1e1d] text-zinc-950 dark:text-zinc-50 shadow-xs'
               : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
           }`}
         >
@@ -507,7 +507,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
           className={`px-4 py-3 text-xs rounded-lg border ${
             notice.tone === 'error'
               ? 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-900 text-red-700 dark:text-red-300'
-              : 'bg-zinc-100 dark:bg-[#212b36] border-zinc-200 dark:border-slate-700/60 text-zinc-800 dark:text-zinc-200'
+              : 'bg-zinc-100 dark:bg-[#252422] border-zinc-200 dark:border-slate-700/60 text-zinc-800 dark:text-zinc-200'
           }`}
         >
           {notice.text}
@@ -518,8 +518,8 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
       {activeTab === 'revenue' && (
         <div className="space-y-6">
           {/* Controls Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
-            <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-zinc-100 dark:bg-[#161c24] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
+            <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-zinc-100 dark:bg-[#1c1b1a] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
               {RANGES.map((r) => (
                 <button
                   key={r.value}
@@ -527,7 +527,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                   onClick={() => setRange(r.value)}
                   className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
                     range === r.value
-                      ? 'bg-white dark:bg-[#1a202c] text-zinc-950 dark:text-zinc-50 shadow-xs'
+                      ? 'bg-white dark:bg-[#1f1e1d] text-zinc-950 dark:text-zinc-50 shadow-xs'
                       : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
                   }`}
                 >
@@ -536,13 +536,13 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
               ))}
             </div>
 
-            <div className="inline-flex items-center p-1 bg-zinc-100 dark:bg-[#161c24] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
+            <div className="inline-flex items-center p-1 bg-zinc-100 dark:bg-[#1c1b1a] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
               <button
                 type="button"
                 onClick={() => setBy('date')}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
                   by === 'date'
-                    ? 'bg-white dark:bg-[#1a202c] text-zinc-950 dark:text-zinc-50 shadow-xs'
+                    ? 'bg-white dark:bg-[#1f1e1d] text-zinc-950 dark:text-zinc-50 shadow-xs'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
                 }`}
               >
@@ -553,7 +553,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                 onClick={() => setBy('domain')}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
                   by === 'domain'
-                    ? 'bg-white dark:bg-[#1a202c] text-zinc-950 dark:text-zinc-50 shadow-xs'
+                    ? 'bg-white dark:bg-[#1f1e1d] text-zinc-950 dark:text-zinc-50 shadow-xs'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
                 }`}
               >
@@ -563,42 +563,42 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
           </div>
 
           {loading ? (
-            <div className="h-80 bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl animate-pulse" />
+            <div className="h-80 bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl animate-pulse" />
           ) : report?.ok && chartData.length > 0 ? (
             <div className="space-y-6">
               {report.totals && (
                 <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
-                  <div className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
+                  <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
                     <p className="text-xs text-zinc-500 dark:text-zinc-400">Est. Earnings</p>
                     <p className="mt-1.5 text-xl font-semibold font-mono tabular-nums">
                       ${report.totals.earnings.toFixed(2)}
                     </p>
                   </div>
-                  <div className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
+                  <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
                     <p className="text-xs text-zinc-500 dark:text-zinc-400">Page Views</p>
                     <p className="mt-1.5 text-xl font-semibold font-mono tabular-nums">
                       {report.totals.pageViews.toLocaleString()}
                     </p>
                   </div>
-                  <div className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
+                  <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
                     <p className="text-xs text-zinc-500 dark:text-zinc-400">Impressions</p>
                     <p className="mt-1.5 text-xl font-semibold font-mono tabular-nums">
                       {report.totals.impressions.toLocaleString()}
                     </p>
                   </div>
-                  <div className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
+                  <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
                     <p className="text-xs text-zinc-500 dark:text-zinc-400">Clicks</p>
                     <p className="mt-1.5 text-xl font-semibold font-mono tabular-nums">
                       {report.totals.clicks.toLocaleString()}
                     </p>
                   </div>
-                  <div className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
+                  <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
                     <p className="text-xs text-zinc-500 dark:text-zinc-400">Page RPM</p>
                     <p className="mt-1.5 text-xl font-semibold font-mono tabular-nums">
                       ${report.totals.rpm.toFixed(2)}
                     </p>
                   </div>
-                  <div className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
+                  <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
                     <p className="text-xs text-zinc-500 dark:text-zinc-400">CTR</p>
                     <p className="mt-1.5 text-xl font-semibold font-mono tabular-nums">
                       {report.totals.ctr.toFixed(2)}%
@@ -607,12 +607,12 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                 </div>
               )}
 
-              <section className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6">
+              <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-zinc-200 dark:border-slate-700/60">
                   <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
                     {activeMetric.label} ({by === 'date' ? 'Daily Trend' : 'Domain Breakdown'})
                   </h2>
-                  <div className="inline-flex items-center p-1 bg-zinc-100 dark:bg-[#161c24] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
+                  <div className="inline-flex items-center p-1 bg-zinc-100 dark:bg-[#1c1b1a] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
                     {METRICS.map((m) => (
                       <button
                         key={m.key}
@@ -620,7 +620,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                         onClick={() => setMetric(m.key)}
                         className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
                           metric === m.key
-                            ? 'bg-white dark:bg-[#1a202c] text-zinc-950 dark:text-zinc-50 shadow-xs'
+                            ? 'bg-white dark:bg-[#1f1e1d] text-zinc-950 dark:text-zinc-50 shadow-xs'
                             : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
                         }`}
                       >
@@ -642,8 +642,8 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                           type="monotone"
                           dataKey={metric}
                           name={activeMetric.label}
-                          stroke="#f78109"
-                          fill="#f78109"
+                          stroke="#51cbce"
+                          fill="#51cbce"
                           fillOpacity={0.14}
                           strokeWidth={2}
                         />
@@ -654,14 +654,14 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                         <XAxis dataKey="domain" tick={{ fontSize: 12 }} stroke="#71717a" />
                         <YAxis tick={{ fontSize: 12 }} stroke="#71717a" />
                         <Tooltip />
-                        <Bar dataKey={metric} name={activeMetric.label} fill="#f78109" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey={metric} name={activeMetric.label} fill="#51cbce" radius={[4, 4, 0, 0]} />
                       </BarChart>
                     )}
                   </ResponsiveContainer>
                 </div>
               </section>
 
-              <section className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+              <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
                 <div className="px-6 py-4 border-b border-zinc-200 dark:border-slate-700/60">
                   <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
                     {by === 'date' ? 'Daily Metrics Table' : 'Per-Domain Metrics Table'}
@@ -692,7 +692,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                           const label = row.date || row.domain || '';
                           const rpm = row.pageViews > 0 ? (row.earnings / row.pageViews) * 1000 : 0;
                           return (
-                            <tr key={label} className="hover:bg-zinc-50 dark:hover:bg-[#1a202c]/40">
+                            <tr key={label} className="hover:bg-zinc-50 dark:hover:bg-[#2c2a27]/40">
                               <td className="py-3 px-6 font-sans font-medium text-zinc-900 dark:text-zinc-100">
                                 {label}
                               </td>
@@ -711,7 +711,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
               </section>
             </div>
           ) : (
-            <section className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 space-y-6">
+            <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 space-y-6">
               <div className="space-y-1.5">
                 <h2 className="text-base font-semibold text-amber-700 dark:text-amber-400">
                   AdSense Access Verification Needed ({report?.error || 'PERMISSION_REQUIRED'})
@@ -766,7 +766,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                         href="https://www.google.com/adsense"
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[#f78109] dark:text-[#fda92d] hover:underline font-medium"
+                        className="text-[#2ca8ab] dark:text-[#51cbce] hover:underline font-medium"
                       >
                         Google AdSense → Account → Access and Authorization → User Management
                       </a>
@@ -774,7 +774,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                     </li>
                     <li>
                       Add your active service account email:{' '}
-                      <code className="font-mono text-zinc-900 dark:text-zinc-100 bg-zinc-100 dark:bg-[#1a202c] px-1.5 py-0.5 rounded">
+                      <code className="font-mono text-zinc-900 dark:text-zinc-100 bg-zinc-100 dark:bg-[#1f1e1d] px-1.5 py-0.5 rounded">
                         {status?.serviceAccountEmail || 'firebase-adminsdk-fbsvc@gen-lang-client-0365890093.iam.gserviceaccount.com'}
                       </code>
                     </li>
@@ -801,7 +801,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                       status?.adsTxtLine || 'google.com, pub-9777611286139666, DIRECT, f08c47fec0942fa0',
                     )
                   }
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c] whitespace-nowrap shrink-0 self-start sm:self-auto"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27] whitespace-nowrap shrink-0 self-start sm:self-auto"
                 >
                   {copiedKey === 'adstxt' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedKey === 'adstxt' ? 'Copied' : 'Copy ads.txt'}</span>
@@ -815,8 +815,8 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
       {/* ==================== TAB 2: GA4 & SEARCH TRAFFIC ==================== */}
       {activeTab === 'traffic' && (
         <div className="space-y-6">
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
-            <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-zinc-100 dark:bg-[#161c24] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
+            <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-zinc-100 dark:bg-[#1c1b1a] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
               {RANGES.map((r) => (
                 <button
                   key={r.value}
@@ -824,7 +824,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                   onClick={() => setRange(r.value)}
                   className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
                     range === r.value
-                      ? 'bg-white dark:bg-[#1a202c] text-zinc-950 dark:text-zinc-50 shadow-xs'
+                      ? 'bg-white dark:bg-[#1f1e1d] text-zinc-950 dark:text-zinc-50 shadow-xs'
                       : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
                   }`}
                 >
@@ -838,35 +838,35 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
           </div>
 
           {trafficLoading ? (
-            <div className="h-80 bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl animate-pulse" />
+            <div className="h-80 bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl animate-pulse" />
           ) : traffic?.ok && traffic.totals ? (
             <div className="space-y-6">
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
+                <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
                   <p className="text-xs text-zinc-500 dark:text-zinc-400">Active Users</p>
                   <p className="mt-1.5 text-xl font-semibold font-mono tabular-nums">
                     {traffic.totals.activeUsers.toLocaleString()}
                   </p>
                 </div>
-                <div className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
+                <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
                   <p className="text-xs text-zinc-500 dark:text-zinc-400">Sessions</p>
                   <p className="mt-1.5 text-xl font-semibold font-mono tabular-nums">
                     {traffic.totals.sessions.toLocaleString()}
                   </p>
                 </div>
-                <div className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
+                <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
                   <p className="text-xs text-zinc-500 dark:text-zinc-400">Page Views</p>
                   <p className="mt-1.5 text-xl font-semibold font-mono tabular-nums">
                     {traffic.totals.pageViews.toLocaleString()}
                   </p>
                 </div>
-                <div className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
+                <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
                   <p className="text-xs text-zinc-500 dark:text-zinc-400">Avg Bounce Rate</p>
                   <p className="mt-1.5 text-xl font-semibold font-mono tabular-nums">
                     {traffic.totals.avgBounceRate}%
                   </p>
                 </div>
-                <div className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
+                <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-4">
                   <p className="text-xs text-zinc-500 dark:text-zinc-400">Avg Session</p>
                   <p className="mt-1.5 text-xl font-semibold font-mono tabular-nums">
                     {traffic.totals.avgSessionDurationSec}s
@@ -874,7 +874,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                 </div>
               </div>
 
-              <section className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6">
+              <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6">
                 <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50 pb-4 border-b border-zinc-200 dark:border-slate-700/60">
                   Daily Traffic Trend (GA4 Data API v1beta)
                 </h2>
@@ -889,8 +889,8 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                         type="monotone"
                         dataKey="pageViews"
                         name="Page Views"
-                        stroke="#f78109"
-                        fill="#f78109"
+                        stroke="#51cbce"
+                        fill="#51cbce"
                         fillOpacity={0.14}
                         strokeWidth={2}
                       />
@@ -909,7 +909,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
               </section>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <section className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+                <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
                   <div className="px-6 py-4 border-b border-zinc-200 dark:border-slate-700/60">
                     <h3 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">Top Storefront Pages</h3>
                   </div>
@@ -933,7 +933,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                   </table>
                 </section>
 
-                <section className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+                <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
                   <div className="px-6 py-4 border-b border-zinc-200 dark:border-slate-700/60">
                     <h3 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">Traffic Channels</h3>
                   </div>
@@ -959,7 +959,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
               </div>
             </div>
           ) : (
-            <section className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 space-y-4">
+            <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 space-y-4">
               <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
                 GA4 Traffic Feed Ready — Bind a Property ID
               </h2>
@@ -971,7 +971,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                 <button
                   type="button"
                   onClick={() => setActiveTab('service_accounts')}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] rounded-lg"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs paper-btn-primary rounded-lg"
                 >
                   <KeyRound className="w-3.5 h-3.5" />
                   <span>Configure GA4 Property in Service Accounts</span>
@@ -980,7 +980,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                   href="https://analytics.google.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c]"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27]"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   <span>Open Google Analytics Admin</span>
@@ -1006,7 +1006,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
             <button
               type="button"
               onClick={() => setShowAddForm((v) => !v)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] rounded-lg whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs paper-btn-primary rounded-lg whitespace-nowrap"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>{showAddForm ? 'Cancel' : 'Add Service Account JSON'}</span>
@@ -1016,13 +1016,13 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
           {showAddForm && (
             <form
               onSubmit={handleAddServiceAccount}
-              className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 space-y-4"
+              className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 space-y-4"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h3 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
                   Import Google Cloud Service Account JSON
                 </h3>
-                <label className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c] cursor-pointer">
+                <label className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27] cursor-pointer">
                   <Upload className="w-3.5 h-3.5" />
                   <span>Upload .json File</span>
                   <input type="file" accept=".json,application/json" onChange={handleJsonFileUpload} className="hidden" />
@@ -1039,7 +1039,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                     value={newLabel}
                     onChange={(e) => setNewLabel(e.target.value)}
                     placeholder="e.g. PlayBeat AdSense & GA4 Key"
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#161c24]"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#1c1b1a]"
                   />
                 </div>
                 <div>
@@ -1051,7 +1051,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                     value={newAdsenseId}
                     onChange={(e) => setNewAdsenseId(e.target.value)}
                     placeholder="accounts/pub-9777611286139666"
-                    className="w-full px-3 py-2 text-xs font-mono rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#161c24]"
+                    className="w-full px-3 py-2 text-xs font-mono rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#1c1b1a]"
                   />
                 </div>
                 <div>
@@ -1063,7 +1063,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                     value={newGa4Id}
                     onChange={(e) => setNewGa4Id(e.target.value)}
                     placeholder="properties/123456789"
-                    className="w-full px-3 py-2 text-xs font-mono rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#161c24]"
+                    className="w-full px-3 py-2 text-xs font-mono rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#1c1b1a]"
                   />
                 </div>
                 <div>
@@ -1075,7 +1075,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                     value={newSearchSite}
                     onChange={(e) => setNewSearchSite(e.target.value)}
                     placeholder="https://playbeat.digital/"
-                    className="w-full px-3 py-2 text-xs font-mono rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#161c24]"
+                    className="w-full px-3 py-2 text-xs font-mono rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#1c1b1a]"
                   />
                 </div>
               </div>
@@ -1089,7 +1089,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                   value={newJson}
                   onChange={(e) => setNewJson(e.target.value)}
                   placeholder='{"type":"service_account","project_id":"...","client_email":"...","private_key":"<paste full JSON from Google Cloud IAM>"}'
-                  className="w-full px-3 py-2 text-xs font-mono rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#161c24]"
+                  className="w-full px-3 py-2 text-xs font-mono rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#1c1b1a]"
                 />
               </div>
 
@@ -1104,7 +1104,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                 <button
                   type="submit"
                   disabled={savingSa}
-                  className="px-4 py-2 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg"
+                  className="px-4 py-2 text-xs paper-btn-primary disabled:opacity-60 rounded-lg"
                 >
                   {savingSa ? 'Saving...' : 'Save & Activate'}
                 </button>
@@ -1113,7 +1113,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
           )}
 
           {saLoading ? (
-            <div className="h-40 bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl animate-pulse" />
+            <div className="h-40 bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl animate-pulse" />
           ) : (
             <div className="space-y-4">
               {accounts.map((acc) => {
@@ -1121,7 +1121,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                 return (
                   <div
                     key={acc.id}
-                    className={`bg-white dark:bg-[#212b36] border rounded-xl p-5 space-y-4 ${
+                    className={`bg-white dark:bg-[#252422] border rounded-xl p-5 space-y-4 ${
                       acc.active
                         ? 'border-blue-500/70 dark:border-blue-500/60'
                         : 'border-zinc-200 dark:border-slate-700/60'
@@ -1153,7 +1153,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                         <button
                           type="button"
                           onClick={() => handleCopy(acc.id, acc.clientEmail)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c]"
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27]"
                         >
                           {copiedKey === acc.id ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                           <span>{copiedKey === acc.id ? 'Copied' : 'Copy Email'}</span>
@@ -1162,7 +1162,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                           type="button"
                           disabled={probingId === acc.id}
                           onClick={() => handleProbeAccount(acc.id)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] disabled:opacity-60 rounded-lg"
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs paper-btn-primary disabled:opacity-60 rounded-lg"
                         >
                           <Activity className="w-3.5 h-3.5" />
                           <span>{probingId === acc.id ? 'Probing...' : 'Probe APIs'}</span>
@@ -1171,7 +1171,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                           <button
                             type="button"
                             onClick={() => handleSetActiveAccount(acc.id)}
-                            className="px-2.5 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c]"
+                            className="px-2.5 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27]"
                           >
                             Set Active
                           </button>
@@ -1191,7 +1191,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                               });
                             }
                           }}
-                          className="px-2.5 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c]"
+                          className="px-2.5 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27]"
                         >
                           {isEditing ? 'Close' : 'Configure IDs'}
                         </button>
@@ -1216,7 +1216,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                             type="text"
                             value={editDraft.label}
                             onChange={(e) => setEditDraft({ ...editDraft, label: e.target.value })}
-                            className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#161c24]"
+                            className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#1c1b1a]"
                           />
                         </div>
                         <div>
@@ -1225,7 +1225,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                             type="text"
                             value={editDraft.adsenseAccountId}
                             onChange={(e) => setEditDraft({ ...editDraft, adsenseAccountId: e.target.value })}
-                            className="w-full px-2.5 py-1.5 text-xs font-mono rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#161c24]"
+                            className="w-full px-2.5 py-1.5 text-xs font-mono rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#1c1b1a]"
                           />
                         </div>
                         <div>
@@ -1235,7 +1235,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                             value={editDraft.ga4PropertyId}
                             onChange={(e) => setEditDraft({ ...editDraft, ga4PropertyId: e.target.value })}
                             placeholder="properties/123456789"
-                            className="w-full px-2.5 py-1.5 text-xs font-mono rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#161c24]"
+                            className="w-full px-2.5 py-1.5 text-xs font-mono rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#1c1b1a]"
                           />
                         </div>
                         <div>
@@ -1245,12 +1245,12 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                               type="text"
                               value={editDraft.searchConsoleSite}
                               onChange={(e) => setEditDraft({ ...editDraft, searchConsoleSite: e.target.value })}
-                              className="w-full px-2.5 py-1.5 text-xs font-mono rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#161c24]"
+                              className="w-full px-2.5 py-1.5 text-xs font-mono rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#1c1b1a]"
                             />
                             <button
                               type="button"
                               onClick={() => handleSaveEdit(acc.id)}
-                              className="px-3 py-1.5 text-xs font-medium text-[#161c24] font-semibold bg-[#f78109] hover:bg-[#fda92d] rounded-lg shrink-0"
+                              className="px-3 py-1.5 text-xs paper-btn-primary rounded-lg shrink-0"
                             >
                               Save
                             </button>
@@ -1283,7 +1283,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
 
           {/* Live Multi-API Probe Diagnostics */}
           {probeResult && (
-            <section className="bg-white dark:bg-[#212b36] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+            <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
               <div className="px-6 py-4 border-b border-zinc-200 dark:border-slate-700/60 flex flex-wrap items-center justify-between gap-2">
                 <div>
                   <h3 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
@@ -1340,7 +1340,7 @@ export function AdSensePage({ onNavigate }: AdSensePageProps) {
                         href={chk.actionUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#1a202c] whitespace-nowrap self-start lg:self-center"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27] whitespace-nowrap self-start lg:self-center"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                         <span>Open Console</span>
