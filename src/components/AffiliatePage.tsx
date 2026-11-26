@@ -101,7 +101,7 @@ export function AffiliatePage() {
               </thead>
               <tbody className="divide-y divide-zinc-100 dark:divide-slate-700/50 text-xs font-mono tabular-nums">
                 {data.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-zinc-50 dark:hover:bg-[#2c2a27]/40">
+                  <tr key={idx} className="hover:bg-zinc-50 dark:hover:bg-[#132240]/40">
                     {columns.map((col) => (
                       <td key={col} className="py-2.5 px-4 text-zinc-800 dark:text-zinc-200">
                         {String((row as Record<string, unknown>)[col] ?? '—')}
@@ -123,7 +123,7 @@ export function AffiliatePage() {
           {entries.map(([k, v]) => (
             <div
               key={k}
-              className="p-4 bg-zinc-50 dark:bg-[#1c1b1a] border border-zinc-200 dark:border-slate-700/60 rounded-lg"
+              className="p-4 bg-zinc-50 dark:bg-[#060e20] border border-zinc-200 dark:border-slate-700/60 rounded-lg"
             >
               <p className="text-xs text-zinc-500 dark:text-zinc-400">{k}</p>
               <p className="mt-1 text-base font-semibold font-mono tabular-nums text-zinc-950 dark:text-zinc-50 break-all">
@@ -136,7 +136,7 @@ export function AffiliatePage() {
     }
 
     return (
-      <pre className="p-4 text-xs font-mono bg-zinc-50 dark:bg-[#1c1b1a] border border-zinc-200 dark:border-slate-700/60 rounded-lg overflow-x-auto">
+      <pre className="p-4 text-xs font-mono bg-zinc-50 dark:bg-[#060e20] border border-zinc-200 dark:border-slate-700/60 rounded-lg overflow-x-auto">
         {JSON.stringify(data, null, 2)}
       </pre>
     );
@@ -168,7 +168,7 @@ export function AffiliatePage() {
 
       {/* Top 4-column status strip */}
       <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-5">
+        <div className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-5">
           <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
             Api-Key Status
           </p>
@@ -186,7 +186,7 @@ export function AffiliatePage() {
           </p>
         </div>
 
-        <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-5">
+        <div className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-5">
           <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
             Affiliate Reference
           </p>
@@ -198,7 +198,7 @@ export function AffiliatePage() {
           </p>
         </div>
 
-        <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-5">
+        <div className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-5">
           <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
             Throttle Budget (60s)
           </p>
@@ -213,7 +213,7 @@ export function AffiliatePage() {
           </p>
         </div>
 
-        <div className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-5">
+        <div className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-5">
           <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
             Last Ping Check
           </p>
@@ -239,7 +239,7 @@ export function AffiliatePage() {
       </section>
 
       {/* Referral Links + Setup Note */}
-      <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 space-y-4">
+      <section className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 space-y-4">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="space-y-1">
             <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
@@ -253,7 +253,7 @@ export function AffiliatePage() {
             href={status?.affiliateLink || 'https://www.electronicfirst.com/?ref=ywzhmdg'}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#2ca8ab] dark:text-[#51cbce] hover:underline whitespace-nowrap shrink-0"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#1e40af] dark:text-[#93c5fd] hover:underline whitespace-nowrap shrink-0"
           >
             <span>Open Electronic First</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -261,7 +261,7 @@ export function AffiliatePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-zinc-200 dark:border-slate-700/60">
-          <div className="flex items-center justify-between gap-3 p-3.5 bg-zinc-50 dark:bg-[#1c1b1a] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
+          <div className="flex items-center justify-between gap-3 p-3.5 bg-zinc-50 dark:bg-[#060e20] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
             <div className="min-w-0">
               <p className="text-xs text-zinc-500 dark:text-zinc-400">Primary Affiliate Link</p>
               <p className="mt-0.5 text-xs font-mono text-zinc-900 dark:text-zinc-100 truncate">
@@ -287,7 +287,7 @@ export function AffiliatePage() {
             </button>
           </div>
 
-          <div className="flex items-center justify-between gap-3 p-3.5 bg-zinc-50 dark:bg-[#1c1b1a] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
+          <div className="flex items-center justify-between gap-3 p-3.5 bg-zinc-50 dark:bg-[#060e20] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
             <div className="min-w-0">
               <p className="text-xs text-zinc-500 dark:text-zinc-400">Campaign Shortlink</p>
               <p className="mt-0.5 text-xs font-mono text-zinc-900 dark:text-zinc-100 truncate">
@@ -313,9 +313,9 @@ export function AffiliatePage() {
       </section>
 
       {/* Live Affiliate Endpoints Tabs */}
-      <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+      <section className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
         <div className="px-6 py-4 flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 dark:border-slate-700/60">
-          <div className="inline-flex items-center p-1 bg-zinc-100 dark:bg-[#1c1b1a] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
+          <div className="inline-flex items-center p-1 bg-zinc-100 dark:bg-[#060e20] border border-zinc-200 dark:border-slate-700/60 rounded-lg">
             {(
               [
                 { id: 'balance', label: 'Balance' },
@@ -329,7 +329,7 @@ export function AffiliatePage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
                   activeTab === tab.id
-                    ? 'bg-white dark:bg-[#1f1e1d] text-zinc-950 dark:text-zinc-50 shadow-xs'
+                    ? 'bg-white dark:bg-[#081226] text-zinc-950 dark:text-zinc-50 shadow-xs'
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
                 }`}
               >
@@ -342,7 +342,7 @@ export function AffiliatePage() {
             type="button"
             disabled={loadingTab}
             onClick={() => loadTabData(activeTab)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27] whitespace-nowrap"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#132240] whitespace-nowrap"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Reload Endpoint</span>
@@ -351,7 +351,7 @@ export function AffiliatePage() {
 
         <div className="p-6">
           {loadingTab ? (
-            <div className="h-36 rounded-lg bg-zinc-50 dark:bg-[#1c1b1a] animate-pulse" />
+            <div className="h-36 rounded-lg bg-zinc-50 dark:bg-[#060e20] animate-pulse" />
           ) : tabResult?.ok ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
@@ -380,7 +380,7 @@ export function AffiliatePage() {
       </section>
 
       {/* API Error Handling & Contract Table */}
-      <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+      <section className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
         <div className="px-6 py-4 border-b border-zinc-200 dark:border-slate-700/60">
           <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
             Electronic First v1 Error Codes & Actions
@@ -400,7 +400,7 @@ export function AffiliatePage() {
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-slate-700/50 text-xs">
               {EF_ERROR_CODES.map((row) => (
-                <tr key={row.code} className="hover:bg-zinc-50 dark:hover:bg-[#2c2a27]/40">
+                <tr key={row.code} className="hover:bg-zinc-50 dark:hover:bg-[#132240]/40">
                   <td className="py-2.5 px-6 font-mono font-semibold text-zinc-900 dark:text-zinc-100 whitespace-nowrap">
                     {row.status}
                   </td>

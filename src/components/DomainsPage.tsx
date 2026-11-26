@@ -57,7 +57,7 @@ export function DomainsPage({ onDataChanged }: DomainsPageProps) {
       </div>
 
       {/* Publisher Reference Bar */}
-      <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <section className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
           <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
             Authorized Publisher · {publisherId}
@@ -69,7 +69,7 @@ export function DomainsPage({ onDataChanged }: DomainsPageProps) {
         <button
           type="button"
           onClick={handleCopy}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27] whitespace-nowrap shrink-0 self-start md:self-auto"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#132240] whitespace-nowrap shrink-0 self-start md:self-auto"
         >
           {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
           <span>{copied ? 'Copied ads.txt' : 'Copy ads.txt Line'}</span>
@@ -77,7 +77,7 @@ export function DomainsPage({ onDataChanged }: DomainsPageProps) {
       </section>
 
       {/* Domains Table */}
-      <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+      <section className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -101,7 +101,7 @@ export function DomainsPage({ onDataChanged }: DomainsPageProps) {
                 domains.map((d) => (
                   <tr
                     key={d.domain}
-                    className="hover:bg-zinc-50 dark:hover:bg-[#2c2a27]/40 align-top transition-colors"
+                    className="hover:bg-zinc-50 dark:hover:bg-[#132240]/40 align-top transition-colors"
                   >
                     <td className="py-4 px-5">
                       <p className="font-semibold text-zinc-950 dark:text-zinc-50 font-mono text-xs">

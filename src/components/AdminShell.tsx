@@ -39,58 +39,82 @@ export type NavSection =
   | 'integrations'
   | 'profile';
 
-export type PaperSidebarTheme = 'charcoal' | 'paper' | 'espresso';
-export type PaperAccentId = 'teal' | 'coral' | 'sun' | 'mint' | 'azure';
+export type PaperSidebarTheme = 'navy' | 'silver' | 'steel';
+export type PaperAccentId = 'platinum' | 'silver' | 'sapphire' | 'cobalt' | 'chrome';
 
 interface PaperAccentConfig {
   id: PaperAccentId;
   label: string;
   hex: string;
-  hoverHex: string;
+  brightHex: string;
+  topHex: string;
+  bottomHex: string;
+  hoverTopHex: string;
+  hoverBottomHex: string;
   fgHex: string;
   softRgba: string;
 }
 
 const PAPER_ACCENTS: Record<PaperAccentId, PaperAccentConfig> = {
-  teal: {
-    id: 'teal',
-    label: 'Paper Teal',
-    hex: '#51cbce',
-    hoverHex: '#34b5b8',
+  platinum: {
+    id: 'platinum',
+    label: 'Platinum Navy',
+    hex: '#1e40af',
+    brightHex: '#93c5fd',
+    topHex: '#2b5ce0',
+    bottomHex: '#16338f',
+    hoverTopHex: '#376cf0',
+    hoverBottomHex: '#1d41b3',
+    fgHex: '#f8fafc',
+    softRgba: 'rgba(59, 130, 246, 0.14)',
+  },
+  silver: {
+    id: 'silver',
+    label: 'Liquid Silver',
+    hex: '#475569',
+    brightHex: '#e2e8f0',
+    topHex: '#64748b',
+    bottomHex: '#334155',
+    hoverTopHex: '#7889a0',
+    hoverBottomHex: '#475569',
     fgHex: '#ffffff',
-    softRgba: 'rgba(81, 203, 206, 0.14)',
+    softRgba: 'rgba(148, 163, 184, 0.18)',
   },
-  coral: {
-    id: 'coral',
-    label: 'Paper Coral',
-    hex: '#ef8157',
-    hoverHex: '#e4693b',
+  sapphire: {
+    id: 'sapphire',
+    label: 'Sapphire Ice',
+    hex: '#0284c7',
+    brightHex: '#7dd3fc',
+    topHex: '#0ea5e9',
+    bottomHex: '#0369a1',
+    hoverTopHex: '#38bdf8',
+    hoverBottomHex: '#0284c7',
     fgHex: '#ffffff',
-    softRgba: 'rgba(239, 129, 87, 0.14)',
+    softRgba: 'rgba(56, 189, 248, 0.15)',
   },
-  sun: {
-    id: 'sun',
-    label: 'Warm Sun',
-    hex: '#fbc658',
-    hoverHex: '#f5b432',
-    fgHex: '#252422',
-    softRgba: 'rgba(251, 198, 88, 0.18)',
-  },
-  mint: {
-    id: 'mint',
-    label: 'Sage Mint',
-    hex: '#6bd098',
-    hoverHex: '#4ec082',
-    fgHex: '#1c1b1a',
-    softRgba: 'rgba(107, 208, 152, 0.16)',
-  },
-  azure: {
-    id: 'azure',
-    label: 'Sky Azure',
-    hex: '#51bcda',
-    hoverHex: '#35a6c7',
+  cobalt: {
+    id: 'cobalt',
+    label: 'Cobalt Steel',
+    hex: '#312e81',
+    brightHex: '#a5b4fc',
+    topHex: '#4338ca',
+    bottomHex: '#1e1b4b',
+    hoverTopHex: '#4f46e5',
+    hoverBottomHex: '#312e81',
     fgHex: '#ffffff',
-    softRgba: 'rgba(81, 188, 218, 0.14)',
+    softRgba: 'rgba(99, 102, 241, 0.15)',
+  },
+  chrome: {
+    id: 'chrome',
+    label: 'Chrome Teal',
+    hex: '#0f766e',
+    brightHex: '#5eead4',
+    topHex: '#14b8a6',
+    bottomHex: '#0f766e',
+    hoverTopHex: '#2dd4bf',
+    hoverBottomHex: '#0d9488',
+    fgHex: '#ffffff',
+    softRgba: 'rgba(20, 184, 166, 0.15)',
   },
 };
 
@@ -105,39 +129,39 @@ export const ARGON_COVER_THEMES: Record<
   }
 > = {
   'argon-sunset': {
-    label: 'Paper Coral',
-    hex: '#ef8157',
-    bannerClass: 'bg-[#ef8157]',
-    scrimClass: 'bg-[#ef8157]/75',
-    accentTextClass: 'text-[#ef8157]',
+    label: 'Platinum Navy',
+    hex: '#1e3a8a',
+    bannerClass: 'bg-gradient-to-r from-[#0b162c] via-[#1e3a8a] to-[#3b5ea8]',
+    scrimClass: 'bg-[#0b162c]/70',
+    accentTextClass: 'text-[#1e40af]',
   },
   'argon-blue': {
-    label: 'Paper Teal',
-    hex: '#51cbce',
-    bannerClass: 'bg-[#51cbce]',
-    scrimClass: 'bg-[#51cbce]/75',
-    accentTextClass: 'text-[#51cbce]',
+    label: 'Sapphire Steel',
+    hex: '#0369a1',
+    bannerClass: 'bg-gradient-to-r from-[#082f49] via-[#0369a1] to-[#38bdf8]',
+    scrimClass: 'bg-[#082f49]/70',
+    accentTextClass: 'text-[#0284c7]',
   },
   'argon-ocean': {
-    label: 'Sky Azure',
-    hex: '#51bcda',
-    bannerClass: 'bg-[#51bcda]',
-    scrimClass: 'bg-[#51bcda]/75',
-    accentTextClass: 'text-[#51bcda]',
+    label: 'Midnight Abyss',
+    hex: '#0f172a',
+    bannerClass: 'bg-gradient-to-r from-[#050b18] via-[#0f1f40] to-[#1e3a8a]',
+    scrimClass: 'bg-[#050b18]/75',
+    accentTextClass: 'text-[#1d4ed8]',
   },
   'argon-emerald': {
-    label: 'Sage Mint',
-    hex: '#6bd098',
-    bannerClass: 'bg-[#6bd098]',
-    scrimClass: 'bg-[#6bd098]/75',
-    accentTextClass: 'text-[#6bd098]',
+    label: 'Chrome Slate',
+    hex: '#334155',
+    bannerClass: 'bg-gradient-to-r from-[#1e293b] via-[#475569] to-[#94a3b8]',
+    scrimClass: 'bg-[#1e293b]/70',
+    accentTextClass: 'text-[#475569]',
   },
   'argon-slate': {
-    label: 'Charcoal Ink',
-    hex: '#212120',
-    bannerClass: 'bg-[#212120]',
-    scrimClass: 'bg-[#212120]/80',
-    accentTextClass: 'text-[#66615b]',
+    label: 'Brushed Silver',
+    hex: '#64748b',
+    bannerClass: 'bg-gradient-to-r from-[#334155] via-[#64748b] to-[#cbd5e1]',
+    scrimClass: 'bg-[#334155]/70',
+    accentTextClass: 'text-[#475a78]',
   },
 };
 
@@ -215,20 +239,20 @@ export function AdminShell({
   });
   const [sidebarTheme, setSidebarTheme] = useState<PaperSidebarTheme>(() => {
     try {
-      const saved = localStorage.getItem('pb_paper_sidebar') as PaperSidebarTheme | null;
-      return saved === 'charcoal' || saved === 'paper' || saved === 'espresso'
+      const saved = localStorage.getItem('pb_sn_sidebar') as PaperSidebarTheme | null;
+      return saved === 'navy' || saved === 'silver' || saved === 'steel'
         ? saved
-        : 'charcoal';
+        : 'navy';
     } catch {
-      return 'charcoal';
+      return 'navy';
     }
   });
   const [accentId, setAccentId] = useState<PaperAccentId>(() => {
     try {
-      const saved = localStorage.getItem('pb_paper_accent') as PaperAccentId | null;
-      return saved && saved in PAPER_ACCENTS ? saved : 'teal';
+      const saved = localStorage.getItem('pb_sn_accent') as PaperAccentId | null;
+      return saved && saved in PAPER_ACCENTS ? saved : 'platinum';
     } catch {
-      return 'teal';
+      return 'platinum';
     }
   });
   const [sidebarUserOpen, setSidebarUserOpen] = useState(false);
@@ -261,7 +285,7 @@ export function AdminShell({
 
   useEffect(() => {
     try {
-      localStorage.setItem('pb_paper_sidebar', sidebarTheme);
+      localStorage.setItem('pb_sn_sidebar', sidebarTheme);
     } catch {
       // ignore storage errors
     }
@@ -270,11 +294,15 @@ export function AdminShell({
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty('--paper-accent', activeAccent.hex);
-    root.style.setProperty('--paper-accent-hover', activeAccent.hoverHex);
+    root.style.setProperty('--paper-accent-bright', activeAccent.brightHex);
+    root.style.setProperty('--paper-accent-top', activeAccent.topHex);
+    root.style.setProperty('--paper-accent-bottom', activeAccent.bottomHex);
+    root.style.setProperty('--paper-accent-hover-top', activeAccent.hoverTopHex);
+    root.style.setProperty('--paper-accent-hover-bottom', activeAccent.hoverBottomHex);
     root.style.setProperty('--paper-accent-fg', activeAccent.fgHex);
     root.style.setProperty('--paper-accent-soft', activeAccent.softRgba);
     try {
-      localStorage.setItem('pb_paper_accent', accentId);
+      localStorage.setItem('pb_sn_accent', accentId);
     } catch {
       // ignore storage errors
     }
@@ -309,19 +337,20 @@ export function AdminShell({
     }
   }
 
-  const isLightSidebar = sidebarTheme === 'paper';
+  const isLightSidebar = sidebarTheme === 'silver';
   const sidebarSurfaceClass =
-    sidebarTheme === 'paper'
-      ? 'bg-white text-[#252422] border-r border-[#ddd9ce]'
-      : sidebarTheme === 'espresso'
-        ? 'bg-[#2c2926] text-[#f4f3ef] border-r border-white/10'
-        : 'bg-[#212120] text-[#f4f3ef] border-r border-white/10';
+    sidebarTheme === 'silver'
+      ? 'bg-gradient-to-b from-white via-[#f5f8fc] to-[#eaeff7] text-[#0b162c] border-r border-[#cbd5e1]'
+      : sidebarTheme === 'steel'
+        ? 'bg-gradient-to-b from-[#11203d] via-[#0c172e] to-[#081022] text-[#e6edf7] border-r border-[#cbd5e1]/18'
+        : 'bg-gradient-to-b from-[#0a152c] via-[#071022] to-[#040915] text-[#e6edf7] border-r border-[#cbd5e1]/16';
 
-  const sidebarDividerClass = isLightSidebar ? 'border-[#e8e5dc]' : 'border-white/12';
+  const sidebarDividerClass = isLightSidebar ? 'border-[#d8e0ec]' : 'border-[#cbd5e1]/14';
 
   const renderNavItem = (item: NavItem, collapsed: boolean) => {
     const Icon = item.icon;
     const active = activeSection === item.id;
+    const activeColor = isLightSidebar ? activeAccent.hex : activeAccent.brightHex;
     return (
       <button
         key={item.id}
@@ -331,16 +360,16 @@ export function AdminShell({
           onSelectSection(item.id);
           setMobileOpen(false);
         }}
-        className={`group relative w-full flex items-center gap-3.5 rounded-lg transition-colors duration-150 whitespace-nowrap cursor-pointer ${
+        className={`group relative w-full flex items-center gap-3.5 rounded-lg transition-all duration-150 whitespace-nowrap cursor-pointer ${
           collapsed ? 'justify-center px-2 py-2.5' : 'px-3.5 py-2.5'
         } ${
           active
             ? isLightSidebar
-              ? 'bg-[#f4f3ef] font-semibold text-[#252422]'
-              : 'bg-white/[0.08] font-semibold text-white'
+              ? 'bg-gradient-to-r from-[#e2eaf6] to-[#eef3fa] font-semibold text-[#0b162c] border border-[#cbd5e1] shadow-xs'
+              : 'bg-gradient-to-r from-[#cbd5e1]/14 via-[#93c5fd]/10 to-transparent font-semibold text-white border border-[#cbd5e1]/22 shadow-[inset_0_1px_0_rgba(241,245,249,0.18)]'
             : isLightSidebar
-              ? 'text-[#66615b] font-medium hover:text-[#252422] hover:bg-[#f4f3ef]/70'
-              : 'text-[#d4d0c8] font-medium hover:text-white hover:bg-white/[0.05]'
+              ? 'text-[#475a78] font-medium border border-transparent hover:text-[#0b162c] hover:bg-[#e8eef7]/70'
+              : 'text-[#a3b4cf] font-medium border border-transparent hover:text-[#f1f5f9] hover:bg-white/[0.05]'
         }`}
       >
         <Icon
@@ -348,15 +377,15 @@ export function AdminShell({
             active
               ? ''
               : isLightSidebar
-                ? 'text-[#8c867c] group-hover:text-[#252422]'
-                : 'text-[#9a9a9a] group-hover:text-white'
+                ? 'text-[#6c7f9e] group-hover:text-[#0b162c]'
+                : 'text-[#7c92b4] group-hover:text-[#e2e8f0]'
           }`}
-          style={active ? { color: activeAccent.hex } : undefined}
+          style={active ? { color: activeColor } : undefined}
         />
         {!collapsed && (
           <span
             className="text-[12.5px] tracking-[0.02em] truncate"
-            style={active ? { color: activeAccent.hex } : undefined}
+            style={active ? { color: activeColor } : undefined}
           >
             {item.label}
           </span>
@@ -367,7 +396,7 @@ export function AdminShell({
 
   const renderSidebarBody = (collapsed: boolean, isMobile = false) => (
     <div className={`flex flex-col h-full ${sidebarSurfaceClass}`}>
-      {/* Paper Dashboard PRO Brand Header */}
+      {/* Silver-Navy Brand Header */}
       <div
         className={`h-16 flex items-center border-b ${sidebarDividerClass} shrink-0 ${
           collapsed ? 'justify-center px-2' : 'justify-between px-4'
@@ -382,9 +411,9 @@ export function AdminShell({
           className="flex items-center gap-3 min-w-0 text-left cursor-pointer"
         >
           <span
-            className="w-8 h-8 rounded-full font-bold text-xs flex items-center justify-center shrink-0 shadow-xs"
+            className="w-8 h-8 rounded-full font-bold text-xs flex items-center justify-center shrink-0 border border-[#e2e8f0]/45 shadow-[0_4px_12px_rgba(0,0,0,0.28),inset_0_1px_0_rgba(255,255,255,0.45)]"
             style={{
-              backgroundColor: activeAccent.hex,
+              background: `linear-gradient(180deg, ${activeAccent.topHex}, ${activeAccent.bottomHex})`,
               color: activeAccent.fgHex,
             }}
           >
@@ -392,8 +421,10 @@ export function AdminShell({
           </span>
           {!collapsed && (
             <span
-              className={`text-[13.5px] font-semibold tracking-[0.04em] uppercase truncate ${
-                isLightSidebar ? 'text-[#252422]' : 'text-white'
+              className={`text-[13px] font-bold tracking-[0.08em] uppercase truncate ${
+                isLightSidebar
+                  ? 'text-[#0b162c]'
+                  : 'bg-gradient-to-b from-white to-[#cbd5e1] bg-clip-text text-transparent'
               }`}
             >
               {brandTitle}
@@ -406,10 +437,10 @@ export function AdminShell({
             type="button"
             onClick={() => setMobileOpen(false)}
             aria-label="Close navigation menu"
-            className={`p-1.5 rounded-lg transition-colors ${
+            className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
               isLightSidebar
-                ? 'text-[#66615b] hover:text-[#252422]'
-                : 'text-[#9a9a9a] hover:text-white'
+                ? 'text-[#475a78] hover:text-[#0b162c]'
+                : 'text-[#94a3b8] hover:text-white'
             }`}
           >
             <X className="w-5 h-5" />
@@ -417,7 +448,7 @@ export function AdminShell({
         )}
       </div>
 
-      {/* Paper Dashboard PRO Sidebar UserMenu Accordion (UserMenu.vue) */}
+      {/* Paper Dashboard PRO Sidebar UserMenu Accordion */}
       <div className={`px-3 py-3 border-b ${sidebarDividerClass} shrink-0`}>
         <button
           type="button"
@@ -433,7 +464,7 @@ export function AdminShell({
           className={`w-full flex items-center gap-3 rounded-lg px-1.5 py-1.5 transition-colors cursor-pointer ${
             collapsed ? 'justify-center' : 'justify-between'
           } ${
-            isLightSidebar ? 'hover:bg-[#f4f3ef]' : 'hover:bg-white/[0.06]'
+            isLightSidebar ? 'hover:bg-[#e8eef7]/80' : 'hover:bg-white/[0.06]'
           }`}
         >
           <div className="flex items-center gap-3 min-w-0">
@@ -443,15 +474,15 @@ export function AdminShell({
                 alt={displayName}
                 referrerPolicy="no-referrer"
                 onError={() => setAvatarError(true)}
-                className="w-8 h-8 rounded-full object-cover shrink-0 border border-black/10"
+                className="w-8 h-8 rounded-full object-cover shrink-0 border border-[#cbd5e1]/40"
               />
             ) : (
               <span
-                className="w-8 h-8 rounded-full font-semibold text-xs flex items-center justify-center shrink-0"
-                style={{
-                  backgroundColor: isLightSidebar ? '#f4f3ef' : 'rgba(255,255,255,0.12)',
-                  color: isLightSidebar ? '#252422' : '#ffffff',
-                }}
+                className={`w-8 h-8 rounded-full font-semibold text-xs flex items-center justify-center shrink-0 border ${
+                  isLightSidebar
+                    ? 'bg-gradient-to-b from-white to-[#e2e8f0] text-[#0b162c] border-[#cbd5e1]'
+                    : 'bg-gradient-to-b from-[#1e3157] to-[#0f1d38] text-[#e2e8f0] border-[#cbd5e1]/28'
+                }`}
               >
                 {getInitials(displayName)}
               </span>
@@ -459,7 +490,7 @@ export function AdminShell({
             {!collapsed && (
               <span
                 className={`text-[13px] font-medium truncate ${
-                  isLightSidebar ? 'text-[#252422]' : 'text-[#f4f3ef]'
+                  isLightSidebar ? 'text-[#0b162c]' : 'text-[#e6edf7]'
                 }`}
               >
                 {displayName}
@@ -470,7 +501,7 @@ export function AdminShell({
             <ChevronDown
               className={`w-3.5 h-3.5 shrink-0 transition-transform duration-150 ${
                 sidebarUserOpen ? 'rotate-180' : ''
-              } ${isLightSidebar ? 'text-[#66615b]' : 'text-[#9a9a9a]'}`}
+              } ${isLightSidebar ? 'text-[#6c7f9e]' : 'text-[#8da2c0]'}`}
             />
           )}
         </button>
@@ -487,10 +518,14 @@ export function AdminShell({
                 activeSection === 'profile'
                   ? 'font-semibold'
                   : isLightSidebar
-                    ? 'text-[#66615b] hover:text-[#252422]'
-                    : 'text-[#cfcac0] hover:text-white'
+                    ? 'text-[#475a78] hover:text-[#0b162c]'
+                    : 'text-[#b8c7dc] hover:text-white'
               }`}
-              style={activeSection === 'profile' ? { color: activeAccent.hex } : undefined}
+              style={
+                activeSection === 'profile'
+                  ? { color: isLightSidebar ? activeAccent.hex : activeAccent.brightHex }
+                  : undefined
+              }
             >
               <span className="w-5 text-center font-mono text-[11px] opacity-75">MP</span>
               <span>My Profile</span>
@@ -505,10 +540,14 @@ export function AdminShell({
                 activeSection === 'customers'
                   ? 'font-semibold'
                   : isLightSidebar
-                    ? 'text-[#66615b] hover:text-[#252422]'
-                    : 'text-[#cfcac0] hover:text-white'
+                    ? 'text-[#475a78] hover:text-[#0b162c]'
+                    : 'text-[#b8c7dc] hover:text-white'
               }`}
-              style={activeSection === 'customers' ? { color: activeAccent.hex } : undefined}
+              style={
+                activeSection === 'customers'
+                  ? { color: isLightSidebar ? activeAccent.hex : activeAccent.brightHex }
+                  : undefined
+              }
             >
               <span className="w-5 text-center font-mono text-[11px] opacity-75">CA</span>
               <span>Customers & Access</span>
@@ -518,8 +557,8 @@ export function AdminShell({
               onClick={onSignOut}
               className={`w-full flex items-center gap-3 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
                 isLightSidebar
-                  ? 'text-[#ef8157] hover:bg-[#ef8157]/10'
-                  : 'text-[#ef8157] hover:bg-white/[0.06]'
+                  ? 'text-rose-600 hover:bg-rose-50'
+                  : 'text-rose-300 hover:bg-white/[0.06]'
               }`}
             >
               <span className="w-5 text-center font-mono text-[11px] opacity-85">LO</span>
@@ -558,8 +597,8 @@ export function AdminShell({
             collapsed ? 'justify-center p-2.5' : 'justify-center px-3 py-2'
           } ${
             isLightSidebar
-              ? 'text-[#66615b] hover:text-[#252422] border border-[#ddd9ce] hover:bg-[#f4f3ef]'
-              : 'text-[#d4d0c8] hover:text-white border border-white/15 hover:bg-white/[0.06]'
+              ? 'text-[#334155] hover:text-[#0b162c] border border-[#cbd5e1] bg-white/80 hover:bg-white'
+              : 'text-[#cbd5e1] hover:text-white border border-[#cbd5e1]/20 bg-white/[0.03] hover:bg-white/[0.08]'
           }`}
         >
           <LogOut className="w-4 h-4 shrink-0" />
@@ -570,8 +609,8 @@ export function AdminShell({
   );
 
   return (
-    <div className="min-h-screen bg-[#f4f3ef] dark:bg-[#1c1b1a] text-[#252422] dark:text-[#f4f3ef]">
-      {/* Desktop Fixed Paper Dashboard PRO Sidebar */}
+    <div className="min-h-screen sn-shell-bg text-[#0b162c] dark:text-[#e6edf7]">
+      {/* Desktop Fixed Silver-Navy Sidebar */}
       <aside
         className={`hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 z-40 transition-all duration-200 ${
           sidebarOpen ? 'md:w-[260px]' : 'md:w-[80px]'
@@ -584,7 +623,7 @@ export function AdminShell({
       {mobileOpen && (
         <div className="fixed inset-0 z-50 md:hidden flex">
           <div
-            className="fixed inset-0 bg-[#1c1b1a]/75 backdrop-blur-xs"
+            className="fixed inset-0 bg-[#050b18]/80 backdrop-blur-xs"
             onClick={() => setMobileOpen(false)}
             aria-hidden="true"
           />
@@ -594,32 +633,32 @@ export function AdminShell({
         </div>
       )}
 
-      {/* Main Paper Panel */}
+      {/* Main Content Column */}
       <div
         className={`flex flex-col min-h-screen transition-all duration-200 ${
           sidebarOpen ? 'md:pl-[260px]' : 'md:pl-[80px]'
         }`}
       >
-        {/* Paper Dashboard PRO Transparent Top Navbar (TopNavbar.vue) */}
-        <header className="sticky top-0 z-30 h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 bg-[#f4f3ef]/95 dark:bg-[#1c1b1a]/95 backdrop-blur-sm border-b border-[#ddd9ce] dark:border-white/10">
+        {/* Frosted Silver-Navy Top Navbar */}
+        <header className="sticky top-0 z-30 h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 bg-[#edf1f7]/88 dark:bg-[#070f21]/88 backdrop-blur-md border-b border-[#cbd5e1]/80 dark:border-[#cbd5e1]/14">
           <div className="flex items-center gap-3 min-w-0">
             {/* Mobile Hamburger */}
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
               aria-label="Open navigation menu"
-              className="md:hidden p-2 -ml-2 text-[#66615b] dark:text-[#cfcac0] hover:text-[#252422] dark:hover:text-white rounded-lg cursor-pointer"
+              className="md:hidden p-2 -ml-2 text-[#475a78] dark:text-[#b8c7dc] hover:text-[#0b162c] dark:hover:text-white rounded-lg cursor-pointer"
             >
               <Menu className="w-5 h-5" />
             </button>
 
-            {/* Iconic Paper Dashboard PRO Round Mini-Sidebar Button */}
+            {/* Iconic Brushed-Silver Round Mini-Sidebar Button */}
             <button
               type="button"
               onClick={() => setSidebarOpen((open) => !open)}
               aria-label={sidebarOpen ? 'Minimize sidebar' : 'Expand sidebar'}
               title={sidebarOpen ? 'Minimize sidebar' : 'Expand sidebar'}
-              className="hidden md:inline-flex items-center justify-center w-9 h-9 rounded-full bg-white dark:bg-[#252422] text-[#66615b] dark:text-[#cfcac0] border border-[#ddd9ce] dark:border-white/10 shadow-xs hover:text-[#252422] dark:hover:text-white transition-colors shrink-0 cursor-pointer"
+              className="sn-btn-silver hidden md:inline-flex items-center justify-center w-9 h-9 rounded-full shrink-0 cursor-pointer"
             >
               {sidebarOpen ? (
                 <MoreVertical className="w-4 h-4" />
@@ -630,11 +669,13 @@ export function AdminShell({
 
             {/* Clean Breadcrumb Title */}
             <div className="flex items-center gap-2 text-sm min-w-0">
-              <span className="hidden sm:inline text-[#9a9a9a] whitespace-nowrap">Paper Console</span>
-              <span className="hidden sm:inline text-[#9a9a9a]" aria-hidden="true">
+              <span className="hidden sm:inline text-[#6c7f9e] dark:text-[#7d92b3] whitespace-nowrap">
+                Console
+              </span>
+              <span className="hidden sm:inline text-[#94a3b8] dark:text-[#475a78]" aria-hidden="true">
                 /
               </span>
-              <span className="text-[15px] font-semibold tracking-tight text-[#252422] dark:text-white truncate">
+              <span className="text-[15px] font-semibold tracking-tight text-[#0b162c] dark:text-white truncate">
                 {SECTION_LABELS[activeSection]}
               </span>
             </div>
@@ -643,31 +684,31 @@ export function AdminShell({
           <div className="flex items-center gap-2 shrink-0">
             {headerAction}
 
-            {/* Paper Dashboard PRO Interactive Style Customizer (FixedPlugin.vue) */}
+            {/* Silver-Navy Theme Customizer (FixedPlugin.vue) */}
             <div className="relative" ref={pluginRef}>
               <button
                 type="button"
                 onClick={() => setPluginOpen((o) => !o)}
                 aria-expanded={pluginOpen}
-                aria-label="Customize Paper Dashboard theme"
-                title="Customize sidebar & accent"
-                className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white dark:bg-[#252422] text-[#66615b] dark:text-[#cfcac0] border border-[#ddd9ce] dark:border-white/10 shadow-xs hover:text-[#252422] dark:hover:text-white transition-colors shrink-0 cursor-pointer"
+                aria-label="Customize Silver-Navy theme"
+                title="Customize sidebar & metallic accent"
+                className="sn-btn-silver inline-flex items-center justify-center w-9 h-9 rounded-full shrink-0 cursor-pointer"
               >
                 <Palette className="w-4 h-4" />
               </button>
 
               {pluginOpen && (
-                <div className="absolute right-0 mt-2 w-64 origin-top-right rounded-xl bg-white dark:bg-[#252422] border border-[#ddd9ce] dark:border-white/12 shadow-xl p-4 space-y-4 z-50">
+                <div className="absolute right-0 mt-2 w-68 origin-top-right rounded-xl bg-white dark:bg-[#0d182e] border border-[#cbd5e1] dark:border-[#cbd5e1]/20 shadow-2xl p-4 space-y-4 z-50">
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9a9a9a] mb-2">
-                      Sidebar Background
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#6c7f9e] dark:text-[#94a3b8] mb-2">
+                      Sidebar Finish
                     </p>
                     <div className="grid grid-cols-3 gap-1.5">
                       {(
                         [
-                          { id: 'charcoal', label: 'Charcoal', swatch: '#212120' },
-                          { id: 'paper', label: 'Paper', swatch: '#f4f3ef' },
-                          { id: 'espresso', label: 'Espresso', swatch: '#2c2926' },
+                          { id: 'navy', label: 'Midnight', swatch: '#081124' },
+                          { id: 'silver', label: 'Silver', swatch: '#eef2f8' },
+                          { id: 'steel', label: 'Steel', swatch: '#132447' },
                         ] as const
                       ).map((opt) => (
                         <button
@@ -676,12 +717,12 @@ export function AdminShell({
                           onClick={() => setSidebarTheme(opt.id)}
                           className={`flex flex-col items-center gap-1.5 py-2 px-1.5 rounded-lg border text-[11px] font-medium transition-colors cursor-pointer ${
                             sidebarTheme === opt.id
-                              ? 'border-[#51cbce] bg-[#51cbce]/10 text-[#252422] dark:text-white'
-                              : 'border-[#e8e5dc] dark:border-white/10 text-[#66615b] dark:text-[#cfcac0] hover:bg-[#f4f3ef] dark:hover:bg-white/[0.04]'
+                              ? 'border-[#2563eb] dark:border-[#93c5fd] bg-[#eff6ff] dark:bg-[#1e3a8a]/30 text-[#0b162c] dark:text-white'
+                              : 'border-[#dde4ef] dark:border-[#cbd5e1]/14 text-[#475a78] dark:text-[#b8c7dc] hover:bg-[#f4f7fb] dark:hover:bg-white/[0.04]'
                           }`}
                         >
                           <span
-                            className="w-5 h-5 rounded-full border border-black/15"
+                            className="w-5 h-5 rounded-full border border-slate-400/40 shadow-inner"
                             style={{ backgroundColor: opt.swatch }}
                           />
                           <span>{opt.label}</span>
@@ -691,8 +732,8 @@ export function AdminShell({
                   </div>
 
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9a9a9a] mb-2">
-                      Active Accent
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#6c7f9e] dark:text-[#94a3b8] mb-2">
+                      Metallic Accent
                     </p>
                     <div className="flex items-center justify-between gap-2">
                       {(Object.values(PAPER_ACCENTS) as PaperAccentConfig[]).map((acc) => (
@@ -702,28 +743,30 @@ export function AdminShell({
                           onClick={() => setAccentId(acc.id)}
                           title={acc.label}
                           aria-label={acc.label}
-                          className={`w-7 h-7 rounded-full transition-transform cursor-pointer ${
+                          className={`w-7 h-7 rounded-full border border-white/40 shadow-xs transition-transform cursor-pointer ${
                             accentId === acc.id
-                              ? 'scale-110 ring-2 ring-offset-2 ring-[#252422] dark:ring-white dark:ring-offset-[#252422]'
+                              ? 'scale-110 ring-2 ring-offset-2 ring-[#1e40af] dark:ring-[#93c5fd] dark:ring-offset-[#0d182e]'
                               : 'hover:scale-105'
                           }`}
-                          style={{ backgroundColor: acc.hex }}
+                          style={{
+                            background: `linear-gradient(145deg, ${acc.brightHex}, ${acc.hex})`,
+                          }}
                         />
                       ))}
                     </div>
                   </div>
 
-                  <div className="pt-2 border-t border-[#e8e5dc] dark:border-white/10 flex items-center justify-between">
-                    <span className="text-xs font-medium text-[#66615b] dark:text-[#cfcac0]">
+                  <div className="pt-2.5 border-t border-[#e2e8f0] dark:border-[#cbd5e1]/14 flex items-center justify-between">
+                    <span className="text-xs font-medium text-[#475a78] dark:text-[#b8c7dc]">
                       Surface Mode
                     </span>
                     <button
                       type="button"
                       onClick={onToggleTheme}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border border-[#ddd9ce] dark:border-white/15 text-[#252422] dark:text-white hover:bg-[#f4f3ef] dark:hover:bg-white/[0.06] cursor-pointer"
+                      className="sn-btn-silver inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold cursor-pointer"
                     >
                       {dark ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
-                      <span>{dark ? 'Light Paper' : 'Dark Paper'}</span>
+                      <span>{dark ? 'Silver Light' : 'Midnight Navy'}</span>
                     </button>
                   </div>
                 </div>
@@ -735,7 +778,7 @@ export function AdminShell({
               onClick={toggleFullscreen}
               aria-label={isFullscreen ? 'Exit fullscreen' : 'Toggle fullscreen'}
               title={isFullscreen ? 'Exit fullscreen' : 'Toggle fullscreen'}
-              className="hidden sm:inline-flex items-center justify-center w-9 h-9 rounded-full bg-white dark:bg-[#252422] text-[#66615b] dark:text-[#cfcac0] border border-[#ddd9ce] dark:border-white/10 shadow-xs hover:text-[#252422] dark:hover:text-white transition-colors shrink-0 cursor-pointer"
+              className="sn-btn-silver hidden sm:inline-flex items-center justify-center w-9 h-9 rounded-full shrink-0 cursor-pointer"
             >
               {isFullscreen ? (
                 <Minimize2 className="w-4 h-4" />
@@ -747,9 +790,9 @@ export function AdminShell({
             <button
               type="button"
               onClick={onToggleTheme}
-              aria-label={dark ? 'Switch to light paper mode' : 'Switch to dark paper mode'}
-              title={dark ? 'Switch to light paper mode' : 'Switch to dark paper mode'}
-              className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white dark:bg-[#252422] text-[#66615b] dark:text-[#cfcac0] border border-[#ddd9ce] dark:border-white/10 shadow-xs hover:text-[#252422] dark:hover:text-white transition-colors shrink-0 cursor-pointer"
+              aria-label={dark ? 'Switch to Silver Light mode' : 'Switch to Midnight Navy mode'}
+              title={dark ? 'Switch to Silver Light mode' : 'Switch to Midnight Navy mode'}
+              className="sn-btn-silver inline-flex items-center justify-center w-9 h-9 rounded-full shrink-0 cursor-pointer"
             >
               {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
@@ -761,7 +804,7 @@ export function AdminShell({
                 onClick={() => setUserMenuOpen((o) => !o)}
                 aria-expanded={userMenuOpen}
                 aria-haspopup="menu"
-                className="flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full bg-white dark:bg-[#252422] border border-[#ddd9ce] dark:border-white/10 shadow-xs hover:border-[#51cbce] transition-colors shrink-0 cursor-pointer"
+                className="sn-btn-silver flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full shrink-0 cursor-pointer"
               >
                 {avatarUrl && !avatarError ? (
                   <img
@@ -773,27 +816,27 @@ export function AdminShell({
                   />
                 ) : (
                   <span
-                    className="w-7 h-7 rounded-full font-bold text-[11px] flex items-center justify-center"
+                    className="w-7 h-7 rounded-full font-bold text-[11px] flex items-center justify-center border border-white/35"
                     style={{
-                      backgroundColor: activeAccent.hex,
+                      background: `linear-gradient(180deg, ${activeAccent.topHex}, ${activeAccent.bottomHex})`,
                       color: activeAccent.fgHex,
                     }}
                   >
                     {getInitials(displayName)}
                   </span>
                 )}
-                <span className="hidden lg:inline text-xs font-semibold text-[#252422] dark:text-[#f4f3ef] max-w-[120px] truncate">
+                <span className="hidden lg:inline text-xs font-semibold text-[#0b162c] dark:text-[#f1f5f9] max-w-[120px] truncate">
                   {displayName}
                 </span>
-                <ChevronDown className="w-3.5 h-3.5 text-[#9a9a9a] hidden sm:block" />
+                <ChevronDown className="w-3.5 h-3.5 text-[#6c7f9e] hidden sm:block" />
               </button>
 
               {userMenuOpen && (
                 <div
                   role="menu"
-                  className="absolute right-0 mt-2 w-72 origin-top-right rounded-xl bg-white dark:bg-[#252422] border border-[#ddd9ce] dark:border-white/12 shadow-xl overflow-hidden z-50"
+                  className="absolute right-0 mt-2 w-72 origin-top-right rounded-xl bg-white dark:bg-[#0d182e] border border-[#cbd5e1] dark:border-[#cbd5e1]/20 shadow-2xl overflow-hidden z-50"
                 >
-                  <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[#e8e5dc] dark:border-white/10">
+                  <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[#e2e8f0] dark:border-[#cbd5e1]/14">
                     {avatarUrl && !avatarError ? (
                       <img
                         src={avatarUrl}
@@ -804,9 +847,9 @@ export function AdminShell({
                       />
                     ) : (
                       <span
-                        className="w-9 h-9 rounded-full font-bold text-xs flex items-center justify-center shrink-0"
+                        className="w-9 h-9 rounded-full font-bold text-xs flex items-center justify-center shrink-0 border border-white/35"
                         style={{
-                          backgroundColor: activeAccent.hex,
+                          background: `linear-gradient(180deg, ${activeAccent.topHex}, ${activeAccent.bottomHex})`,
                           color: activeAccent.fgHex,
                         }}
                       >
@@ -814,10 +857,10 @@ export function AdminShell({
                       </span>
                     )}
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-[#252422] dark:text-white truncate">
+                      <p className="text-sm font-semibold text-[#0b162c] dark:text-white truncate">
                         {displayName}
                       </p>
-                      <p className="text-xs text-[#66615b] dark:text-[#9a9a9a] truncate">
+                      <p className="text-xs text-[#475a78] dark:text-[#94a3b8] truncate">
                         {displayEmail}
                       </p>
                     </div>
@@ -831,9 +874,9 @@ export function AdminShell({
                         setUserMenuOpen(false);
                         onSelectSection('profile');
                       }}
-                      className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-[#252422] dark:text-[#f4f3ef] hover:bg-[#f4f3ef] dark:hover:bg-white/[0.06] transition-colors text-left cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-[#0b162c] dark:text-[#e6edf7] hover:bg-[#edf1f7] dark:hover:bg-white/[0.06] transition-colors text-left cursor-pointer"
                     >
-                      <UserCog className="w-4 h-4 shrink-0 text-[#51cbce]" />
+                      <UserCog className="w-4 h-4 shrink-0 text-[#1e40af] dark:text-[#93c5fd]" />
                       <span>My Profile</span>
                     </button>
                     <button
@@ -843,14 +886,14 @@ export function AdminShell({
                         setUserMenuOpen(false);
                         onSelectSection('profile');
                       }}
-                      className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-[#252422] dark:text-[#f4f3ef] hover:bg-[#f4f3ef] dark:hover:bg-white/[0.06] transition-colors text-left cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-[#0b162c] dark:text-[#e6edf7] hover:bg-[#edf1f7] dark:hover:bg-white/[0.06] transition-colors text-left cursor-pointer"
                     >
-                      <KeyRound className="w-4 h-4 shrink-0 text-[#ef8157]" />
+                      <KeyRound className="w-4 h-4 shrink-0 text-[#475569] dark:text-[#cbd5e1]" />
                       <span>Change Password</span>
                     </button>
                   </div>
 
-                  <div className="p-3 border-t border-[#e8e5dc] dark:border-white/10">
+                  <div className="p-3 border-t border-[#e2e8f0] dark:border-[#cbd5e1]/14">
                     <button
                       type="button"
                       role="menuitem"
@@ -858,7 +901,7 @@ export function AdminShell({
                         setUserMenuOpen(false);
                         onSignOut();
                       }}
-                      className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-[#252422] dark:text-[#f4f3ef] border border-[#ddd9ce] dark:border-white/15 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+                      className="sn-btn-silver w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg cursor-pointer"
                     >
                       <LogOut className="w-3.5 h-3.5" />
                       <span>Log Out</span>
@@ -875,34 +918,34 @@ export function AdminShell({
           {children}
         </main>
 
-        {/* Paper Dashboard PRO Quiet Footer (ContentFooter.vue) */}
-        <footer className="px-4 sm:px-6 lg:px-8 py-4 border-t border-[#ddd9ce] dark:border-white/10 text-xs text-[#66615b] dark:text-[#9a9a9a] flex flex-col sm:flex-row items-center justify-between gap-2 max-w-[1440px] w-full mx-auto">
+        {/* Quiet Silver-Navy Footer */}
+        <footer className="px-4 sm:px-6 lg:px-8 py-4 border-t border-[#cbd5e1]/75 dark:border-[#cbd5e1]/14 text-xs text-[#475a78] dark:text-[#7d92b3] flex flex-col sm:flex-row items-center justify-between gap-2 max-w-[1440px] w-full mx-auto">
           <div className="flex items-center gap-5">
             <button
               type="button"
               onClick={() => onSelectSection('overview')}
-              className="hover:text-[#252422] dark:hover:text-white transition-colors cursor-pointer"
+              className="hover:text-[#0b162c] dark:hover:text-white transition-colors cursor-pointer"
             >
               Dashboard
             </button>
             <button
               type="button"
               onClick={() => onSelectSection('adsense')}
-              className="hover:text-[#252422] dark:hover:text-white transition-colors cursor-pointer"
+              className="hover:text-[#0b162c] dark:hover:text-white transition-colors cursor-pointer"
             >
               AdSense & GA4
             </button>
             <button
               type="button"
               onClick={() => onSelectSection('domains')}
-              className="hover:text-[#252422] dark:hover:text-white transition-colors cursor-pointer"
+              className="hover:text-[#0b162c] dark:hover:text-white transition-colors cursor-pointer"
             >
               Domains
             </button>
             <button
               type="button"
               onClick={() => onSelectSection('profile')}
-              className="hover:text-[#252422] dark:hover:text-white transition-colors cursor-pointer"
+              className="hover:text-[#0b162c] dark:hover:text-white transition-colors cursor-pointer"
             >
               Profile
             </button>

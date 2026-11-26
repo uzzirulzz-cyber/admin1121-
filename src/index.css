@@ -2,30 +2,34 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-display: "Montserrat", "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: "Montserrat", "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-sans: "Montserrat", "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Creative Tim Vue Paper Dashboard PRO Color System */
-  --color-paper-bg: #f4f3ef;
-  --color-paper-bg-dark: #1c1b1a;
-  --color-paper-surface-dark: #252422;
-  --color-paper-sidebar: #212120;
-  --color-paper-ink: #252422;
-  --color-paper-muted: #66615b;
-  --color-paper-subtle: #9a9a9a;
-  --color-paper-primary: #51cbce;
-  --color-paper-info: #51bcda;
-  --color-paper-success: #6bd098;
-  --color-paper-warning: #fbc658;
-  --color-paper-danger: #ef8157;
+  /* Premium Silver-Navy Paper Dashboard PRO Tokens */
+  --color-sn-canvas: #edf1f7;
+  --color-sn-canvas-dark: #050b18;
+  --color-sn-surface: #ffffff;
+  --color-sn-surface-dark: #0d182e;
+  --color-sn-navy: #081124;
+  --color-sn-ink: #0b162c;
+  --color-sn-muted: #475a78;
+  --color-sn-subtle: #6c7f9e;
+  --color-sn-silver: #cbd5e1;
+  --color-sn-platinum: #e2e8f0;
+  --color-sn-accent: #1d4ed8;
+  --color-sn-ice: #93c5fd;
 }
 
 :root {
-  --paper-accent: #51cbce;
-  --paper-accent-hover: #34b5b8;
-  --paper-accent-fg: #ffffff;
-  --paper-accent-soft: rgba(81, 203, 206, 0.14);
+  --paper-accent: #1e40af;
+  --paper-accent-bright: #93c5fd;
+  --paper-accent-top: #2b5ce0;
+  --paper-accent-bottom: #16338f;
+  --paper-accent-hover-top: #376cf0;
+  --paper-accent-hover-bottom: #1d41b3;
+  --paper-accent-fg: #f8fafc;
+  --paper-accent-soft: rgba(59, 130, 246, 0.14);
 }
 
 @layer base {
@@ -36,13 +40,13 @@
   }
 
   body {
-    background-color: #f4f3ef;
-    color: #252422;
+    background-color: #edf1f7;
+    color: #0b162c;
   }
 
   .dark body {
-    background-color: #1c1b1a;
-    color: #f4f3ef;
+    background-color: #050b18;
+    color: #e6edf7;
   }
 
   h1, h2, h3, h4 {
@@ -69,56 +73,132 @@
 }
 
 @layer components {
-  /* Paper Dashboard PRO Card Surface (.card / .sk-card / .argon-card) */
+  /* Premium Silver-Navy Workspace Backdrop */
+  .sn-shell-bg {
+    background-color: #edf1f7;
+    background-image:
+      radial-gradient(900px 380px at 18% 0%, rgba(148, 184, 232, 0.22), transparent 62%),
+      radial-gradient(760px 320px at 88% 4%, rgba(203, 213, 225, 0.32), transparent 58%);
+  }
+
+  .dark .sn-shell-bg {
+    background-color: #050b18;
+    background-image:
+      radial-gradient(960px 440px at 20% 0%, rgba(30, 64, 175, 0.2), transparent 60%),
+      radial-gradient(760px 380px at 86% 6%, rgba(148, 163, 184, 0.08), transparent 58%);
+  }
+
+  /* Premium Silver-Navy Paper Card Surface */
   .paper-card,
   .sk-card,
   .argon-card {
-    background-color: #ffffff;
-    border: 1px solid rgba(102, 97, 91, 0.14);
-    border-radius: 12px;
-    box-shadow: 0 6px 10px -4px rgba(0, 0, 0, 0.12);
-    transition: box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    background: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
+    border: 1px solid rgba(15, 29, 58, 0.12);
+    border-radius: 14px;
+    box-shadow:
+      0 12px 28px -14px rgba(8, 17, 36, 0.16),
+      0 2px 6px rgba(8, 17, 36, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.96);
+    transition:
+      border-color 160ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .dark .paper-card,
   .dark .sk-card,
   .dark .argon-card {
-    background-color: #252422;
-    border-color: rgba(244, 243, 239, 0.09);
-    box-shadow: 0 8px 18px -6px rgba(0, 0, 0, 0.42);
+    background: linear-gradient(168deg, rgba(16, 29, 56, 0.95) 0%, rgba(9, 18, 36, 0.98) 100%);
+    border-color: rgba(203, 213, 225, 0.16);
+    box-shadow:
+      0 18px 38px -16px rgba(0, 0, 0, 0.72),
+      inset 0 1px 0 rgba(226, 232, 240, 0.16),
+      inset 0 -1px 0 rgba(148, 163, 184, 0.06);
   }
 
-  /* Paper Dashboard PRO Stats Card (.card-stats) */
+  /* Premium Silver-Navy Stats Card (.card-stats) */
   .paper-stats-card {
-    background-color: #ffffff;
-    border: 1px solid rgba(102, 97, 91, 0.14);
-    border-radius: 12px;
-    box-shadow: 0 6px 10px -4px rgba(0, 0, 0, 0.12);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(160deg, #ffffff 0%, #f4f7fb 100%);
+    border: 1px solid rgba(15, 29, 58, 0.13);
+    border-radius: 14px;
+    box-shadow:
+      0 12px 24px -14px rgba(8, 17, 36, 0.18),
+      0 2px 5px rgba(8, 17, 36, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.98);
+    transition:
+      transform 160ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 160ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .paper-stats-card:hover {
+    transform: translateY(-1px);
+    border-color: rgba(30, 64, 175, 0.28);
+    box-shadow:
+      0 16px 32px -14px rgba(8, 17, 36, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 1);
   }
 
   .dark .paper-stats-card {
-    background-color: #252422;
-    border-color: rgba(244, 243, 239, 0.09);
-    box-shadow: 0 8px 18px -6px rgba(0, 0, 0, 0.42);
+    background: linear-gradient(160deg, rgba(19, 34, 65, 0.94) 0%, rgba(9, 18, 36, 0.98) 100%);
+    border-color: rgba(203, 213, 225, 0.18);
+    box-shadow:
+      0 18px 34px -14px rgba(0, 0, 0, 0.7),
+      inset 0 1px 0 rgba(226, 232, 240, 0.2);
   }
 
-  /* Paper Dashboard PRO Primary Accent Button */
+  .dark .paper-stats-card:hover {
+    border-color: rgba(147, 197, 253, 0.38);
+  }
+
+  /* Brushed Silver-Metallic Icon Medallion */
+  .sn-icon-well {
+    background: linear-gradient(145deg, #ffffff 0%, #e4ebf5 100%);
+    border: 1px solid rgba(15, 29, 58, 0.14);
+    box-shadow:
+      0 4px 10px -4px rgba(8, 17, 36, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  }
+
+  .dark .sn-icon-well {
+    background: linear-gradient(145deg, rgba(30, 48, 86, 0.92) 0%, rgba(12, 23, 46, 0.98) 100%);
+    border: 1px solid rgba(203, 213, 225, 0.22);
+    box-shadow:
+      0 6px 14px -4px rgba(0, 0, 0, 0.55),
+      inset 0 1px 0 rgba(226, 232, 240, 0.24);
+  }
+
+  /* Premium Metallic Silver-Navy Primary Button */
   .paper-btn-primary,
   .sk-btn-primary {
-    background-color: var(--paper-accent);
+    background: linear-gradient(180deg, var(--paper-accent-top) 0%, var(--paper-accent-bottom) 100%);
     color: var(--paper-accent-fg);
     font-weight: 600;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.16);
+    border: 1px solid rgba(226, 232, 240, 0.32);
+    border-radius: 9px;
+    box-shadow:
+      0 6px 16px -4px rgba(8, 17, 36, 0.34),
+      inset 0 1px 0 rgba(255, 255, 255, 0.38);
     transition:
-      background-color 150ms cubic-bezier(0.16, 1, 0.3, 1),
+      background 150ms cubic-bezier(0.16, 1, 0.3, 1),
       transform 140ms cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 150ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .paper-btn-primary:hover:not(:disabled),
   .sk-btn-primary:hover:not(:disabled) {
-    background-color: var(--paper-accent-hover);
+    background: linear-gradient(
+      180deg,
+      var(--paper-accent-hover-top) 0%,
+      var(--paper-accent-hover-bottom) 100%
+    );
+    border-color: rgba(241, 245, 249, 0.52);
+    box-shadow:
+      0 10px 22px -6px rgba(8, 17, 36, 0.44),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
   }
 
   .paper-btn-primary:active:not(:disabled),
@@ -126,7 +206,38 @@
     transform: translateY(0.5px);
   }
 
-  /* Paper Dashboard PRO Sidebar Scrollbar */
+  /* Brushed Silver Secondary Button */
+  .sn-btn-silver {
+    background: linear-gradient(180deg, #ffffff 0%, #eef2f8 100%);
+    color: #0b162c;
+    border: 1px solid rgba(15, 29, 58, 0.16);
+    box-shadow:
+      0 2px 6px -2px rgba(8, 17, 36, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.96);
+    transition:
+      border-color 150ms cubic-bezier(0.16, 1, 0.3, 1),
+      background 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sn-btn-silver:hover:not(:disabled) {
+    border-color: rgba(30, 64, 175, 0.4);
+    background: linear-gradient(180deg, #ffffff 0%, #e4ebf5 100%);
+  }
+
+  .dark .sn-btn-silver {
+    background: linear-gradient(180deg, rgba(24, 41, 76, 0.9) 0%, rgba(13, 24, 48, 0.96) 100%);
+    color: #e6edf7;
+    border-color: rgba(203, 213, 225, 0.22);
+    box-shadow:
+      0 4px 12px -4px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(226, 232, 240, 0.18);
+  }
+
+  .dark .sn-btn-silver:hover:not(:disabled) {
+    border-color: rgba(147, 197, 253, 0.48);
+  }
+
+  /* Brushed Silver Scrollbar */
   .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
   }
@@ -137,7 +248,7 @@
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
     border-radius: 9999px;
-    background-color: var(--paper-accent);
+    background: linear-gradient(180deg, #cbd5e1, #64748b);
   }
 
   /* PlayBeat Digital Landing / Login Screen — Sharp Liquid-Glass Optical Surface */

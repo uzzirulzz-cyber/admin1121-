@@ -155,7 +155,7 @@ export function IntegrationsPage() {
         <button
           type="button"
           onClick={loadAll}
-          className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#2c2a27] whitespace-nowrap shrink-0 self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-lg hover:bg-zinc-50 dark:hover:bg-[#132240] whitespace-nowrap shrink-0 self-start sm:self-auto"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           <span>Re-check Status</span>
@@ -163,7 +163,7 @@ export function IntegrationsPage() {
       </div>
 
       {/* Security Reminder Banner (flat 1px border, no thick left bar) */}
-      <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-5">
+      <section className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-5">
         <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
           Secret Hygiene & Token Storage
         </h2>
@@ -175,7 +175,7 @@ export function IntegrationsPage() {
       {/* 3-Column Integration Status Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Meta Card */}
-        <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 flex flex-col justify-between space-y-5">
+        <section className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 flex flex-col justify-between space-y-5">
           <div className="space-y-4">
             <div className="flex items-start justify-between gap-2">
               <div>
@@ -246,7 +246,7 @@ export function IntegrationsPage() {
                 type="button"
                 disabled={testingChannel !== null}
                 onClick={() => handleTestMeta('website_capi')}
-                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 hover:bg-zinc-50 dark:hover:bg-[#2c2a27] disabled:opacity-50 rounded-lg whitespace-nowrap"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 hover:bg-zinc-50 dark:hover:bg-[#132240] disabled:opacity-50 rounded-lg whitespace-nowrap"
               >
                 <Play className="w-3 h-3" />
                 <span>Test Web CAPI</span>
@@ -261,7 +261,7 @@ export function IntegrationsPage() {
         </section>
 
         {/* AdSense Card */}
-        <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 space-y-4">
+        <section className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 space-y-4">
           <div className="flex items-start justify-between gap-2">
             <div>
               <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
@@ -319,7 +319,7 @@ export function IntegrationsPage() {
         </section>
 
         {/* TikTok & Health Card */}
-        <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 space-y-4">
+        <section className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl p-6 space-y-4">
           <div className="flex items-start justify-between gap-2">
             <div>
               <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
@@ -376,7 +376,7 @@ export function IntegrationsPage() {
                 <select
                   value={selectedTtEvent}
                   onChange={(e) => setSelectedTtEvent(e.target.value as TikTokEventName)}
-                  className="flex-1 px-2.5 py-1.5 text-xs rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#1c1b1a] text-zinc-900 dark:text-zinc-100"
+                  className="flex-1 px-2.5 py-1.5 text-xs rounded-lg border border-zinc-200 dark:border-slate-700/70 bg-white dark:bg-[#060e20] text-zinc-900 dark:text-zinc-100"
                 >
                   <option value="ViewContent">ViewContent</option>
                   <option value="AddToWishlist">AddToWishlist</option>
@@ -409,7 +409,7 @@ export function IntegrationsPage() {
                 type="button"
                 disabled={testingChannel !== null}
                 onClick={() => handleTestTikTok('web')}
-                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 hover:bg-zinc-50 dark:hover:bg-[#2c2a27] disabled:opacity-50 rounded-lg whitespace-nowrap"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-slate-700/70 hover:bg-zinc-50 dark:hover:bg-[#132240] disabled:opacity-50 rounded-lg whitespace-nowrap"
               >
                 <Play className="w-3 h-3" />
                 <span>Test Web Events API</span>
@@ -432,7 +432,7 @@ export function IntegrationsPage() {
               <button
                 type="button"
                 onClick={handleCopyTikTokSnippet}
-                className="inline-flex items-center gap-1 text-xs text-[#2ca8ab] dark:text-[#51cbce] hover:underline"
+                className="inline-flex items-center gap-1 text-xs text-[#1e40af] dark:text-[#93c5fd] hover:underline"
               >
                 {copiedTikTokSnippet ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                 <span>{copiedTikTokSnippet ? 'Copied' : 'Copy TikTok snippet'}</span>
@@ -446,7 +446,7 @@ export function IntegrationsPage() {
               <button
                 type="button"
                 onClick={handleCopySnippet}
-                className="inline-flex items-center gap-1 text-xs text-[#2ca8ab] dark:text-[#51cbce] hover:underline"
+                className="inline-flex items-center gap-1 text-xs text-[#1e40af] dark:text-[#93c5fd] hover:underline"
               >
                 {copiedSnippet ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                 <span>{copiedSnippet ? 'Copied' : 'Copy Meta snippet'}</span>
@@ -457,7 +457,7 @@ export function IntegrationsPage() {
       </div>
 
       {/* Meta Event Dispatch Log */}
-      <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+      <section className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
         <div className="px-6 py-4 border-b border-zinc-200 dark:border-slate-700/60">
           <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
             Meta Graph API Event Dispatch Log
@@ -486,7 +486,7 @@ export function IntegrationsPage() {
                 </tr>
               ) : (
                 (meta?.recentLogs || []).map((log) => (
-                  <tr key={log.id} className="hover:bg-zinc-50 dark:hover:bg-[#2c2a27]/40">
+                  <tr key={log.id} className="hover:bg-zinc-50 dark:hover:bg-[#132240]/40">
                     <td className="py-3 px-6 font-mono tabular-nums text-zinc-500 whitespace-nowrap">
                       {new Date(log.timestamp).toLocaleTimeString()}
                     </td>
@@ -528,7 +528,7 @@ export function IntegrationsPage() {
       </section>
 
       {/* Worker Endpoints & KV Binding Reference */}
-      <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+      <section className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
         <div className="px-6 py-4 border-b border-zinc-200 dark:border-slate-700/60">
           <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
             Cloudflare Worker Route & KV Contract
@@ -549,8 +549,8 @@ export function IntegrationsPage() {
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-slate-700/50 text-xs font-mono">
               {WORKER_ROUTES.map((r) => (
-                <tr key={r.path} className="hover:bg-zinc-50 dark:hover:bg-[#2c2a27]/40">
-                  <td className="py-2.5 px-6 text-[#2ca8ab] dark:text-[#51cbce] font-semibold whitespace-nowrap">
+                <tr key={r.path} className="hover:bg-zinc-50 dark:hover:bg-[#132240]/40">
+                  <td className="py-2.5 px-6 text-[#1e40af] dark:text-[#93c5fd] font-semibold whitespace-nowrap">
                     {r.method}
                   </td>
                   <td className="py-2.5 px-4 text-zinc-900 dark:text-zinc-100 whitespace-nowrap">

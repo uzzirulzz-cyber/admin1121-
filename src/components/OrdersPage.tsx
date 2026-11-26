@@ -218,7 +218,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
           className={`flex items-center justify-between gap-4 px-4 py-3 text-xs rounded-lg border ${
             notice.type === 'error'
               ? 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-900 text-red-700 dark:text-red-300'
-              : 'bg-zinc-100 dark:bg-[#252422] border-zinc-200 dark:border-slate-700/60 text-zinc-800 dark:text-zinc-200'
+              : 'bg-zinc-100 dark:bg-[#0d182e] border-zinc-200 dark:border-slate-700/60 text-zinc-800 dark:text-zinc-200'
           }`}
         >
           <span>{notice.text}</span>
@@ -230,7 +230,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
 
       {/* Filter Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="inline-flex items-center p-1 bg-zinc-100 dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-lg self-start">
+        <div className="inline-flex items-center p-1 bg-zinc-100 dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-lg self-start">
           {(
             [
               { value: 'ALL', label: `All (${orders.length})` },
@@ -250,7 +250,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
               onClick={() => setStatusFilter(tab.value)}
               className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
                 statusFilter === tab.value
-                  ? 'bg-white dark:bg-[#1f1e1d] text-zinc-950 dark:text-zinc-50 shadow-xs'
+                  ? 'bg-white dark:bg-[#081226] text-zinc-950 dark:text-zinc-50 shadow-xs'
                   : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100'
               }`}
             >
@@ -266,13 +266,13 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search order ID, email, ref..."
-            className="w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
+            className="w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600/30"
           />
         </div>
       </div>
 
       {/* Orders Table */}
-      <section className="bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+      <section className="bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -301,7 +301,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
               ) : (
                 filtered.map((order) => (
                   <React.Fragment key={order.id}>
-                    <tr className="hover:bg-zinc-50 dark:hover:bg-[#2c2a27]/40 transition-colors align-top">
+                    <tr className="hover:bg-zinc-50 dark:hover:bg-[#132240]/40 transition-colors align-top">
                       <td className="py-3.5 px-5 whitespace-nowrap">
                         <p className="font-mono text-xs font-semibold text-zinc-950 dark:text-zinc-50">
                           {order.id}
@@ -349,7 +349,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                             onClick={() =>
                               setExpandedOrderId(expandedOrderId === order.id ? null : order.id)
                             }
-                            className="mt-1 inline-flex items-center gap-1 text-[11px] text-[#2ca8ab] dark:text-[#51cbce] hover:underline"
+                            className="mt-1 inline-flex items-center gap-1 text-[11px] text-[#1e40af] dark:text-[#93c5fd] hover:underline"
                           >
                             <KeyRound className="w-3 h-3" />
                             <span>
@@ -385,7 +385,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                             disabled={busyId === order.id}
                             onClick={() => handleDelete(order.id)}
                             aria-label={`Delete order ${order.id}`}
-                            className="p-1.5 text-zinc-500 hover:text-red-600 dark:hover:text-red-400 rounded-md hover:bg-zinc-100 dark:hover:bg-[#2c2a27]"
+                            className="p-1.5 text-zinc-500 hover:text-red-600 dark:hover:text-red-400 rounded-md hover:bg-zinc-100 dark:hover:bg-[#132240]"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -393,7 +393,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                       </td>
                     </tr>
                     {expandedOrderId === order.id && order.issuedKeys.length > 0 && (
-                      <tr className="bg-zinc-50/80 dark:bg-[#1c1b1a]/60">
+                      <tr className="bg-zinc-50/80 dark:bg-[#060e20]/60">
                         <td colSpan={6} className="px-6 py-4">
                           <p className="text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-2">
                             Issued License Keys · Meta CAPI:{' '}
@@ -405,7 +405,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                                 key={k}
                                 type="button"
                                 onClick={() => handleCopyKey(k)}
-                                className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-mono bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-md hover:border-blue-500"
+                                className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-mono bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-md hover:border-blue-500"
                               >
                                 <span>{k}</span>
                                 {copiedKey === k ? (
@@ -430,7 +430,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
       {/* Create Manual Order Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/60">
-          <div className="w-full max-w-xl bg-white dark:bg-[#252422] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
+          <div className="w-full max-w-xl bg-white dark:bg-[#0d182e] border border-zinc-200 dark:border-slate-700/60 rounded-xl overflow-hidden">
             <div className="px-6 py-4 flex items-center justify-between border-b border-zinc-200 dark:border-slate-700/60">
               <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
                 Create Manual Order
@@ -457,7 +457,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                     value={customerEmail}
                     onChange={(e) => setCustomerEmail(e.target.value)}
                     placeholder="customer@example.com"
-                    className="w-full px-3 py-2 text-sm bg-white dark:bg-[#1c1b1a] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
+                    className="w-full px-3 py-2 text-sm bg-white dark:bg-[#060e20] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   />
                 </div>
                 <div>
@@ -469,7 +469,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                     value={customerPhone}
                     onChange={(e) => setCustomerPhone(e.target.value)}
                     placeholder="923001234567"
-                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-[#1c1b1a] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-[#060e20] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   />
                 </div>
                 <div>
@@ -479,7 +479,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                   <select
                     value={channel}
                     onChange={(e) => setChannel(e.target.value as OrderRecord['channel'])}
-                    className="w-full px-3 py-2 text-sm bg-white dark:bg-[#1c1b1a] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
+                    className="w-full px-3 py-2 text-sm bg-white dark:bg-[#060e20] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   >
                     <option value="WhatsApp">WhatsApp</option>
                     <option value="JazzCash / EasyPaisa">JazzCash / EasyPaisa</option>
@@ -497,7 +497,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                     value={paymentRef}
                     onChange={(e) => setPaymentRef(e.target.value)}
                     placeholder="Transaction ID / receipt"
-                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-[#1c1b1a] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-[#060e20] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                   />
                 </div>
               </div>
@@ -514,7 +514,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                         setSelectedLines((prev) => [...prev, { sku: catalog[0].sku, qty: 1 }]);
                       }
                     }}
-                    className="text-xs font-medium text-[#2ca8ab] dark:text-[#51cbce] hover:underline"
+                    className="text-xs font-medium text-[#1e40af] dark:text-[#93c5fd] hover:underline"
                   >
                     + Add SKU
                   </button>
@@ -531,7 +531,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                           ),
                         )
                       }
-                      className="flex-1 min-w-0 px-3 py-2 text-xs bg-white dark:bg-[#1c1b1a] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
+                      className="flex-1 min-w-0 px-3 py-2 text-xs bg-white dark:bg-[#060e20] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                     >
                       {catalog.map((p) => (
                         <option key={p.sku} value={p.sku}>
@@ -551,7 +551,7 @@ export function OrdersPage({ onDataChanged, openCreateSignal }: OrdersPageProps)
                           ),
                         )
                       }
-                      className="w-16 px-2.5 py-2 text-xs font-mono text-center bg-white dark:bg-[#1c1b1a] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
+                      className="w-16 px-2.5 py-2 text-xs font-mono text-center bg-white dark:bg-[#060e20] border border-zinc-300 dark:border-slate-700/70 rounded-lg"
                     />
                     {selectedLines.length > 1 && (
                       <button

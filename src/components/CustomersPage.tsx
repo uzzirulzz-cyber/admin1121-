@@ -222,16 +222,16 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
   }
 
   const inputClass =
-    'px-3 py-2 text-sm bg-white dark:bg-[#1c1b1a] border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg text-[#252422] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#51cbce]/30 focus:border-[#51cbce]';
+    'px-3 py-2 text-sm bg-white dark:bg-[#060e20] border border-[#cbd5e1] dark:border-slate-700/70 rounded-lg text-[#0b162c] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/30 focus:border-[#2563eb] dark:border-[#93c5fd]';
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#252422] dark:text-white">
+          <h1 className="text-2xl font-bold tracking-tight text-[#0b162c] dark:text-white">
             Customer Accounts & Admin Access
           </h1>
-          <p className="mt-1 text-sm text-[#66615b] dark:text-slate-400">
+          <p className="mt-1 text-sm text-[#475a78] dark:text-slate-400">
             Storefront <span className="font-mono text-xs">/account</span> profiles, KV session indexes (<span className="font-mono text-xs">pb:auth:u:&lt;uid&gt;</span>), account CRUD, password resets, and the Firebase admin allow-list.
           </p>
         </div>
@@ -251,7 +251,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
           className={`flex items-center justify-between gap-4 px-4 py-3 text-xs font-medium rounded-xl border ${
             notice.type === 'error'
               ? 'bg-[#fff5f6] dark:bg-[#2a1220] border-[#f5365c]/40 text-[#c92a49] dark:text-[#ff7591]'
-              : 'bg-white dark:bg-[#252422] border-[#51cbce]/30 text-[#252422] dark:text-slate-100'
+              : 'bg-white dark:bg-[#0d182e] border-[#2563eb] dark:border-[#93c5fd]/30 text-[#0b162c] dark:text-slate-100'
           }`}
         >
           <span>{notice.text}</span>
@@ -264,13 +264,13 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
       {issuedCode && (
         <div className="argon-card px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="text-xs">
-            <p className="text-[#66615b] dark:text-slate-400">
+            <p className="text-[#475a78] dark:text-slate-400">
               One-time 30-min reset code for{' '}
-              <span className="font-semibold text-[#252422] dark:text-white">
+              <span className="font-semibold text-[#0b162c] dark:text-white">
                 {issuedCode.email}
               </span>
             </p>
-            <p className="mt-0.5 font-mono text-sm font-bold text-[#2ca8ab] dark:text-[#51cbce]">
+            <p className="mt-0.5 font-mono text-sm font-bold text-[#1e40af] dark:text-[#93c5fd]">
               {issuedCode.code}
             </p>
           </div>
@@ -282,7 +282,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                 setCopiedReset(true);
                 setTimeout(() => setCopiedReset(false), 1800);
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#252422] dark:text-slate-200 border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27] whitespace-nowrap"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#0b162c] dark:text-slate-200 border border-[#cbd5e1] dark:border-slate-700/70 rounded-lg hover:bg-[#edf1f7] dark:hover:bg-[#132240] whitespace-nowrap"
             >
               {copiedReset ? (
                 <Check className="w-3.5 h-3.5 text-[#2dce89]" />
@@ -295,7 +295,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
               type="button"
               onClick={() => setIssuedCode(null)}
               aria-label="Dismiss code"
-              className="p-1.5 text-[#9a9a9a] hover:text-[#252422] dark:hover:text-white"
+              className="p-1.5 text-[#6c7f9e] hover:text-[#0b162c] dark:hover:text-white"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -305,7 +305,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
 
       {showCreate && (
         <section className="argon-card p-6 space-y-4">
-          <h2 className="text-base font-bold text-[#252422] dark:text-white">
+          <h2 className="text-base font-bold text-[#0b162c] dark:text-white">
             Open New Customer Account
           </h2>
           <form
@@ -346,7 +346,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
               <button
                 type="button"
                 onClick={() => setShowCreate(false)}
-                className="px-3.5 py-2 text-xs font-semibold text-[#66615b] dark:text-slate-300 border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg"
+                className="px-3.5 py-2 text-xs font-semibold text-[#475a78] dark:text-slate-300 border border-[#cbd5e1] dark:border-slate-700/70 rounded-lg"
               >
                 Cancel
               </button>
@@ -364,18 +364,18 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
 
       {/* Customer Accounts Table */}
       <section className="argon-card overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#e8e5dc] dark:border-slate-700/60">
-          <h2 className="text-base font-bold text-[#252422] dark:text-white">
+        <div className="px-6 py-4 border-b border-[#e2e8f0] dark:border-slate-700/60">
+          <h2 className="text-base font-bold text-[#0b162c] dark:text-white">
             Storefront Customer Accounts
           </h2>
-          <p className="text-xs text-[#66615b] dark:text-slate-400">
+          <p className="text-xs text-[#475a78] dark:text-slate-400">
             Accounts attached via signup-to-checkout bridge on playbeat.digital — edit, reset password, revoke sessions, or delete.
           </p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-[#e8e5dc] dark:border-slate-700/60 bg-[#f4f3ef] dark:bg-[#1f1e1d] text-[11px] font-bold uppercase tracking-wider text-[#9a9a9a]">
+              <tr className="border-b border-[#e2e8f0] dark:border-slate-700/60 bg-[#edf1f7] dark:bg-[#081226] text-[11px] font-bold uppercase tracking-wider text-[#6c7f9e]">
                 <th className="py-3 px-6">Customer & UID</th>
                 <th className="py-3 px-4">Provider / Member Since</th>
                 <th className="py-3 px-4 text-right">Orders & Spend</th>
@@ -383,10 +383,10 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                 <th className="py-3 px-6 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#e8e5dc] dark:divide-[#1e2952] text-sm">
+            <tbody className="divide-y divide-[#e2e8f0] dark:divide-[#1e2952] text-sm">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="py-10 text-center text-xs text-[#9a9a9a]">
+                  <td colSpan={5} className="py-10 text-center text-xs text-[#6c7f9e]">
                     Loading customer accounts...
                   </td>
                 </tr>
@@ -397,7 +397,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                   return (
                     <tr
                       key={c.uid}
-                      className="hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27]/40 transition-colors"
+                      className="hover:bg-[#edf1f7] dark:hover:bg-[#132240]/40 transition-colors"
                     >
                       <td className="py-3.5 px-6">
                         {isEditing ? (
@@ -424,16 +424,16 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                           </div>
                         ) : (
                           <>
-                            <p className="font-semibold text-[#252422] dark:text-white">
+                            <p className="font-semibold text-[#0b162c] dark:text-white">
                               {c.displayName}
                             </p>
-                            <p className="mt-0.5 text-xs text-[#9a9a9a]">
+                            <p className="mt-0.5 text-xs text-[#6c7f9e]">
                               {c.email} · <span className="font-mono">{c.uid}</span>
                             </p>
                           </>
                         )}
                       </td>
-                      <td className="py-3.5 px-4 text-xs text-[#66615b] dark:text-slate-400 whitespace-nowrap">
+                      <td className="py-3.5 px-4 text-xs text-[#475a78] dark:text-slate-400 whitespace-nowrap">
                         {isEditing ? (
                           <select
                             value={editProvider}
@@ -459,7 +459,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                           className={
                             c.activeSessions > 0
                               ? 'text-[#2dce89] font-semibold'
-                              : 'text-[#9a9a9a]'
+                              : 'text-[#6c7f9e]'
                           }
                         >
                           {c.activeSessions} device{c.activeSessions === 1 ? '' : 's'}
@@ -480,7 +480,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                             <button
                               type="button"
                               onClick={() => setEditingUid(null)}
-                              className="px-2.5 py-1.5 text-xs font-semibold text-[#66615b] border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg"
+                              className="px-2.5 py-1.5 text-xs font-semibold text-[#475a78] border border-[#cbd5e1] dark:border-slate-700/70 rounded-lg"
                             >
                               Cancel
                             </button>
@@ -490,7 +490,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                             <button
                               type="button"
                               onClick={() => startEdit(c)}
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#2ca8ab] dark:text-[#51cbce] border border-[#e8e5dc] dark:border-slate-700/70 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27] whitespace-nowrap"
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#1e40af] dark:text-[#93c5fd] border border-[#e2e8f0] dark:border-slate-700/70 rounded-lg hover:bg-[#edf1f7] dark:hover:bg-[#132240] whitespace-nowrap"
                             >
                               <Edit3 className="w-3.5 h-3.5" />
                               <span>Edit</span>
@@ -498,7 +498,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                             <button
                               type="button"
                               onClick={() => handleIssueResetCode(c)}
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#252422] dark:text-slate-200 border border-[#e8e5dc] dark:border-slate-700/70 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27] whitespace-nowrap"
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#0b162c] dark:text-slate-200 border border-[#e2e8f0] dark:border-slate-700/70 rounded-lg hover:bg-[#edf1f7] dark:hover:bg-[#132240] whitespace-nowrap"
                             >
                               <KeyRound className="w-3.5 h-3.5" />
                               <span>Reset</span>
@@ -507,7 +507,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                               type="button"
                               disabled={c.activeSessions === 0}
                               onClick={() => handleRevokeSessions(c.uid)}
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#66615b] border border-[#e8e5dc] dark:border-slate-700/70 rounded-lg hover:bg-[#f4f3ef] dark:hover:bg-[#2c2a27] disabled:opacity-40 whitespace-nowrap"
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#475a78] border border-[#e2e8f0] dark:border-slate-700/70 rounded-lg hover:bg-[#edf1f7] dark:hover:bg-[#132240] disabled:opacity-40 whitespace-nowrap"
                             >
                               <ShieldOff className="w-3.5 h-3.5" />
                               <span>Revoke</span>
@@ -525,7 +525,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                                 <button
                                   type="button"
                                   onClick={() => setConfirmDeleteUid(null)}
-                                  className="px-2 py-1.5 text-xs font-semibold text-[#66615b] border border-[#ddd9ce] dark:border-slate-700/70 rounded-lg"
+                                  className="px-2 py-1.5 text-xs font-semibold text-[#475a78] border border-[#cbd5e1] dark:border-slate-700/70 rounded-lg"
                                 >
                                   Cancel
                                 </button>
@@ -556,10 +556,10 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
       {/* Firebase Admin Allow-List */}
       <section className="argon-card p-6 space-y-5">
         <div>
-          <h2 className="text-base font-bold text-[#252422] dark:text-white">
+          <h2 className="text-base font-bold text-[#0b162c] dark:text-white">
             Firebase Admin Allow-List
           </h2>
-          <p className="mt-0.5 text-xs text-[#66615b] dark:text-slate-400">
+          <p className="mt-0.5 text-xs text-[#475a78] dark:text-slate-400">
             Authorized operator emails permitted to use passwordless Google sign-in bridge into{' '}
             <span className="font-mono">admin.playbeat.digital</span>.
           </p>
@@ -594,17 +594,17 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
           </button>
         </form>
 
-        <div className="divide-y divide-[#e8e5dc] dark:divide-[#1e2952] border-t border-[#e8e5dc] dark:border-slate-700/60">
+        <div className="divide-y divide-[#e2e8f0] dark:divide-[#1e2952] border-t border-[#e2e8f0] dark:border-slate-700/60">
           {allowlist.map((entry) => (
             <div
               key={entry.email}
               className="py-3 flex items-center justify-between gap-4 text-sm"
             >
               <div>
-                <p className="font-semibold text-[#252422] dark:text-white font-mono text-xs">
+                <p className="font-semibold text-[#0b162c] dark:text-white font-mono text-xs">
                   {entry.email}
                 </p>
-                <p className="text-xs text-[#9a9a9a]">
+                <p className="text-xs text-[#6c7f9e]">
                   {entry.role} · Added {entry.addedAt.slice(0, 10)}
                 </p>
               </div>
@@ -613,7 +613,7 @@ export function CustomersPage({ onDataChanged }: CustomersPageProps) {
                 disabled={allowlist.length <= 1}
                 onClick={() => handleRemoveAllowlist(entry.email)}
                 aria-label={`Remove ${entry.email}`}
-                className="p-1.5 text-[#9a9a9a] hover:text-[#f5365c] disabled:opacity-30 rounded-lg hover:bg-[#fff5f6] dark:hover:bg-[#2a1220]"
+                className="p-1.5 text-[#6c7f9e] hover:text-[#f5365c] disabled:opacity-30 rounded-lg hover:bg-[#fff5f6] dark:hover:bg-[#2a1220]"
               >
                 <Trash2 className="w-4 h-4" />
               </button>

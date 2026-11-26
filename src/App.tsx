@@ -131,8 +131,8 @@ export default function App() {
 
   if (!authStatus) {
     return (
-      <div className="min-h-screen bg-[#f4f3ef] dark:bg-[#1c1b1a] flex items-center justify-center">
-        <p className="text-sm font-medium text-[#66615b] dark:text-[#9a9a9a]">
+      <div className="min-h-screen sn-shell-bg flex items-center justify-center">
+        <p className="text-sm font-medium text-[#475a78] dark:text-[#94a3b8]">
           Initializing PlayBeat Admin...
         </p>
       </div>
@@ -150,20 +150,20 @@ export default function App() {
     );
   }
 
-  // Self-service Paper Dashboard PRO Account Portal for Customer accounts
+  // Self-service Silver-Navy Account Portal for Customer accounts
   if (userRole === 'customer') {
     return (
-      <div className="min-h-screen bg-[#f4f3ef] dark:bg-[#1c1b1a] text-[#252422] dark:text-[#f4f3ef] flex flex-col">
-        <header className="sticky top-0 z-20 h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 bg-[#f4f3ef]/95 dark:bg-[#1c1b1a]/95 backdrop-blur-sm border-b border-[#ddd9ce] dark:border-white/10">
+      <div className="min-h-screen sn-shell-bg text-[#0b162c] dark:text-[#e6edf7] flex flex-col">
+        <header className="sticky top-0 z-20 h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 bg-[#edf1f7]/90 dark:bg-[#070f21]/88 backdrop-blur-md border-b border-[#cbd5e1]/80 dark:border-[#cbd5e1]/14">
           <div className="flex items-center gap-2.5 text-sm min-w-0">
-            <span className="w-8 h-8 rounded-full bg-[#51cbce] text-white font-bold text-xs flex items-center justify-center shrink-0">
+            <span className="w-8 h-8 rounded-full bg-gradient-to-b from-[#2b5ce0] to-[#0f2559] border border-[#e2e8f0]/40 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
               PB
             </span>
-            <span className="font-semibold tracking-tight text-[#252422] dark:text-white whitespace-nowrap">
+            <span className="font-semibold tracking-tight text-[#0b162c] dark:text-white whitespace-nowrap">
               {userProfile?.brandTitle || 'PlayBeat Account'}
             </span>
-            <span className="text-[#9a9a9a]">/</span>
-            <span className="text-[#66615b] dark:text-[#9a9a9a] truncate">
+            <span className="text-[#6c7f9e]">/</span>
+            <span className="text-[#475a78] dark:text-[#94a3b8] truncate">
               {userProfile?.email || 'User Profile'}
             </span>
           </div>
@@ -171,8 +171,8 @@ export default function App() {
             <button
               type="button"
               onClick={() => setDark((d) => !d)}
-              aria-label={dark ? 'Switch to light paper mode' : 'Switch to dark paper mode'}
-              className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white dark:bg-[#252422] text-[#66615b] dark:text-[#cfcac0] border border-[#ddd9ce] dark:border-white/10 shadow-xs hover:text-[#252422] dark:hover:text-white transition-colors cursor-pointer"
+              aria-label={dark ? 'Switch to Silver Light mode' : 'Switch to Midnight Navy mode'}
+              className="sn-btn-silver inline-flex items-center justify-center w-9 h-9 rounded-full cursor-pointer"
             >
               {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
