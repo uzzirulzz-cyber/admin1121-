@@ -3470,11 +3470,12 @@ export default {
 
       // ---- Electronic First Developer API v1 Proxy ----
       if (p === '/api/admin/electronicfirst/status' && method === 'GET') {
+        const efCfg = await readJsonKv<any>(env, 'pb:ef:config:v1', {});
         return json({
           ok: true,
-          configured: !!env.ELECTRONIC_FIRST_API_KEY,
+          configured: !!(env.ELECTRONIC_FIRST_API_KEY || efCfg?.apiKey),
           baseUrl: EF_BASE_URL,
-          affiliateRef: env.ELECTRONIC_FIRST_AFFILIATE_REF || 'ywzhmdg',
+          affiliateRef: env.ELECTRONIC_FIRST_AFFILIATE_REF || efCfg?.affiliateRef || 'ywzhmdg',
           affiliateLink: 'https://www.electronicfirst.com/?ref=ywzhmdg',
           shortLink: 'https://fas.st/t/WUFdhZbZ',
           accountEmail: 'business@playbeat.digital',
@@ -3484,12 +3485,13 @@ export default {
 
       const efEndpoints: Record<string, string> = {
         '/api/admin/electronicfirst/ping': '/ping',
-        '/api/admin/electronicfirst/balance': '/affiliate/balance',
-        '/api/admin/electronicfirst/payouts': '/affiliate/payouts',
-        '/api/admin/electronicfirst/conversions': '/affiliate/conversions',
+        '/api/admin/electronicfirst/balance': '/affiliates/stats/balance',
+        '/api/admin/electronicfirst/payouts': '/affiliates/stats/payments',
+        '/api/admin/electronicfirst/conversions': '/affiliates/stats/conversions',
       };
       if (efEndpoints[p]) {
-        const apiKey = env.ELECTRONIC_FIRST_API_KEY;
+        const efCfg = await readJsonKv<any>(env, 'pb:ef:config:v1', {});
+        const apiKey = String(env.ELECTRONIC_FIRST_API_KEY || efCfg?.apiKey || '').trim();
         if (!apiKey) {
           return json({
             ok: false,
@@ -3502,20 +3504,46 @@ export default {
         }
         const t0 = Date.now();
         try {
-          const r = await fetch(`${EF_BASE_URL}${efEndpoints[p]}`, {
+          const targetUrl = new URL(`${EF_BASE_URL}${efEndpoints[p]}`);
+          url.searchParams.forEach((v, k) => targetUrl.searchParams.set(k, v));
+          const r = await fetch(targetUrl.toString(), {
+            method: 'GET',
             headers: {
               'Api-Key': apiKey,
               Accept: 'application/json',
               'Content-Type': 'application/json',
+              'User-Agent': 'PlayBeatAdmin/1.0 (+https://admin.playbeat.digital)',
             },
           });
-          const body = await r.json().catch(() => ({}));
+          const rawText = await r.text();
+          let body: any = null;
+          try {
+            body = JSON.parse(rawText);
+          } catch {
+            body = null;
+          }
+          const isCfChallenge =
+            r.headers.get('cf-mitigated') === 'challenge' ||
+            rawText.includes('Just a moment...') ||
+            rawText.includes('cdn-cgi/challenge-platform');
+          if (!body) {
+            return json({
+              ok: false,
+              httpStatus: r.status,
+              latencyMs: Date.now() - t0,
+              errorCode: isCfChallenge ? 'cloudflare_waf_challenge' : 'invalid_json_response',
+              message: isCfChallenge
+                ? 'Electronic First Cloudflare WAF returned a browser challenge to this edge IP. Ask Electronic First support to bypass Bot Fight Mode for /api/dev/v1/* or whitelist your API key IP.'
+                : `Electronic First returned non-JSON HTTP ${r.status}.`,
+              rateLimit: { limitPerMin: 30, usedInWindow: 1, remaining: 29 },
+            });
+          }
           return json({
-            ok: r.ok,
+            ok: r.ok && body.status !== 'error',
             httpStatus: r.status,
             latencyMs: Date.now() - t0,
             data: body.data ?? body,
-            errorCode: body.error_code || body.code,
+            errorCode: body.error_code || body.code || body.error,
             message: body.message,
             rateLimit: { limitPerMin: 30, usedInWindow: 1, remaining: 29 },
           });

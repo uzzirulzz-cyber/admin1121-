@@ -1152,17 +1152,17 @@ async function startServer() {
   });
 
   app.get('/api/admin/electronicfirst/balance', requireAdmin, async (_req, res) => {
-    const result = await callElectronicFirstApi('/affiliate/balance');
+    const result = await callElectronicFirstApi('/affiliates/stats/balance');
     res.json(result);
   });
 
   app.get('/api/admin/electronicfirst/payouts', requireAdmin, async (_req, res) => {
-    const result = await callElectronicFirstApi('/affiliate/payouts');
+    const result = await callElectronicFirstApi('/affiliates/stats/payments');
     res.json(result);
   });
 
   app.get('/api/admin/electronicfirst/conversions', requireAdmin, async (_req, res) => {
-    const result = await callElectronicFirstApi('/affiliate/conversions');
+    const result = await callElectronicFirstApi('/affiliates/stats/conversions');
     res.json(result);
   });
 

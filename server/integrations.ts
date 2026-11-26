@@ -72,11 +72,15 @@ const EF_ERROR_GUIDANCE: Record<string, string> = {
 };
 
 export async function callElectronicFirstApi<T = unknown>(
-  endpointPath: '/ping' | '/affiliate/balance' | '/affiliate/payouts' | '/affiliate/conversions',
+  endpointPath:
+    | '/ping'
+    | '/affiliates/stats/balance'
+    | '/affiliates/stats/payments'
+    | '/affiliates/stats/conversions',
 ): Promise<ElectronicFirstApiResult<T>> {
   const started = Date.now();
   const rateBefore = getEfRateLimitState();
-  const apiKey = process.env.EF_API_KEY?.trim();
+  const apiKey = (process.env.ELECTRONIC_FIRST_API_KEY || process.env.EF_API_KEY || '').trim();
 
   if (!apiKey) {
     return {

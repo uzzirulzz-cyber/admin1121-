@@ -182,7 +182,7 @@ export function AffiliatePage() {
             {loadingStatus ? 'Checking...' : status?.configured ? 'Configured' : 'Secret Required'}
           </p>
           <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400 font-mono">
-            env: EF_API_KEY
+            secret: ELECTRONIC_FIRST_API_KEY
           </p>
         </div>
 
@@ -356,7 +356,7 @@ export function AffiliatePage() {
             <div className="space-y-4">
               <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
                 <span className="font-mono">
-                  GET {status?.baseUrl || 'https://www.electronicfirst.com/api/dev/v1'}/affiliate/{activeTab}
+                  GET {status?.baseUrl || 'https://www.electronicfirst.com/api/dev/v1'}/affiliates/stats/{activeTab === 'payouts' ? 'payments' : activeTab}
                 </span>
                 <span className="font-mono tabular-nums text-emerald-700 dark:text-emerald-400">
                   HTTP {tabResult.httpStatus} · {tabResult.latencyMs}ms
