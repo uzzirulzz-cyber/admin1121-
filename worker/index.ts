@@ -3469,17 +3469,64 @@ export default {
       }
 
       // ---- Electronic First Developer API v1 Proxy ----
+      const EF_RATE_LIMIT_PER_MIN = 30;
+      const EF_WINDOW_MS = 60_000;
+      const EF_ERROR_GUIDANCE: Record<string, string> = {
+        missing_api_key: 'The Api-Key header was omitted. Configure ELECTRONIC_FIRST_API_KEY as an encrypted Worker secret.',
+        invalid_api_key: 'The supplied API key was not recognized by Electronic First. Verify or regenerate it in Dashboard -> Settings -> Developer.',
+        api_key_disabled: 'The API key is currently deactivated in Electronic First Dashboard -> Settings -> Developer.',
+        ip_not_whitelisted: 'This server egress IP is not permitted by your Electronic First API key IP whitelist.',
+        forbidden: 'The specified affiliate_ref is invalid or does not belong to your Electronic First account.',
+        too_many_requests: 'Rate limit exceeded (30 requests/minute). Wait before retrying.',
+        cloudflare_waf_challenge:
+          'Electronic First Cloudflare WAF returned a browser challenge to this edge IP. Ask Electronic First support to bypass Bot Fight Mode for /api/dev/v1/* or whitelist your API key IP.',
+      };
+
+      const getEfRateState = async (consume: boolean) => {
+        const now = Date.now();
+        const stored = await readJsonKv<number[]>(env, 'pb:ef:rl:v1', []);
+        const active = (Array.isArray(stored) ? stored : []).filter(
+          (ts) => typeof ts === 'number' && now - ts < EF_WINDOW_MS,
+        );
+        if (consume) {
+          if (active.length >= EF_RATE_LIMIT_PER_MIN) {
+            return {
+              allowed: false,
+              rateLimit: {
+                limitPerMin: EF_RATE_LIMIT_PER_MIN,
+                usedInWindow: active.length,
+                remaining: 0,
+              },
+            };
+          }
+          active.push(now);
+          await writeJsonKv(env, 'pb:ef:rl:v1', active, 120);
+        }
+        return {
+          allowed: true,
+          rateLimit: {
+            limitPerMin: EF_RATE_LIMIT_PER_MIN,
+            usedInWindow: active.length,
+            remaining: Math.max(0, EF_RATE_LIMIT_PER_MIN - active.length),
+          },
+        };
+      };
+
       if (p === '/api/admin/electronicfirst/status' && method === 'GET') {
         const efCfg = await readJsonKv<any>(env, 'pb:ef:config:v1', {});
+        const affiliateRef = String(
+          env.ELECTRONIC_FIRST_AFFILIATE_REF || efCfg?.affiliateRef || 'ywzhmdg',
+        ).trim();
+        const rl = await getEfRateState(false);
         return json({
           ok: true,
           configured: !!(env.ELECTRONIC_FIRST_API_KEY || efCfg?.apiKey),
           baseUrl: EF_BASE_URL,
-          affiliateRef: env.ELECTRONIC_FIRST_AFFILIATE_REF || efCfg?.affiliateRef || 'ywzhmdg',
-          affiliateLink: 'https://www.electronicfirst.com/?ref=ywzhmdg',
+          affiliateRef,
+          affiliateLink: `https://www.electronicfirst.com/?ref=${encodeURIComponent(affiliateRef)}`,
           shortLink: 'https://fas.st/t/WUFdhZbZ',
           accountEmail: 'business@playbeat.digital',
-          rateLimit: { limitPerMin: 30, usedInWindow: 0, remaining: 30 },
+          rateLimit: rl.rateLimit,
         });
       }
 
@@ -3489,23 +3536,44 @@ export default {
         '/api/admin/electronicfirst/payouts': '/affiliates/stats/payments',
         '/api/admin/electronicfirst/conversions': '/affiliates/stats/conversions',
       };
-      if (efEndpoints[p]) {
+      if (efEndpoints[p] && (method === 'GET' || (p === '/api/admin/electronicfirst/ping' && method === 'POST'))) {
         const efCfg = await readJsonKv<any>(env, 'pb:ef:config:v1', {});
         const apiKey = String(env.ELECTRONIC_FIRST_API_KEY || efCfg?.apiKey || '').trim();
         if (!apiKey) {
+          const rl = await getEfRateState(false);
           return json({
             ok: false,
             httpStatus: 401,
             latencyMs: 0,
             errorCode: 'missing_api_key',
-            message: 'Set ELECTRONIC_FIRST_API_KEY secret via wrangler secret put ELECTRONIC_FIRST_API_KEY.',
-            rateLimit: { limitPerMin: 30, usedInWindow: 0, remaining: 30 },
+            message: EF_ERROR_GUIDANCE.missing_api_key,
+            rateLimit: rl.rateLimit,
           });
         }
+
+        const rlCheck = await getEfRateState(true);
+        if (!rlCheck.allowed) {
+          return json({
+            ok: false,
+            httpStatus: 429,
+            latencyMs: 0,
+            errorCode: 'too_many_requests',
+            message: EF_ERROR_GUIDANCE.too_many_requests,
+            rateLimit: rlCheck.rateLimit,
+          });
+        }
+
+        const affiliateRef = String(
+          env.ELECTRONIC_FIRST_AFFILIATE_REF || efCfg?.affiliateRef || 'ywzhmdg',
+        ).trim();
         const t0 = Date.now();
         try {
           const targetUrl = new URL(`${EF_BASE_URL}${efEndpoints[p]}`);
           url.searchParams.forEach((v, k) => targetUrl.searchParams.set(k, v));
+          if (efEndpoints[p] !== '/ping' && !targetUrl.searchParams.has('affiliate_ref')) {
+            targetUrl.searchParams.set('affiliate_ref', affiliateRef);
+          }
+
           const r = await fetch(targetUrl.toString(), {
             method: 'GET',
             headers: {
@@ -3533,27 +3601,47 @@ export default {
               latencyMs: Date.now() - t0,
               errorCode: isCfChallenge ? 'cloudflare_waf_challenge' : 'invalid_json_response',
               message: isCfChallenge
-                ? 'Electronic First Cloudflare WAF returned a browser challenge to this edge IP. Ask Electronic First support to bypass Bot Fight Mode for /api/dev/v1/* or whitelist your API key IP.'
+                ? EF_ERROR_GUIDANCE.cloudflare_waf_challenge
                 : `Electronic First returned non-JSON HTTP ${r.status}.`,
-              rateLimit: { limitPerMin: 30, usedInWindow: 1, remaining: 29 },
+              rateLimit: rlCheck.rateLimit,
             });
           }
+
+          const isSuccess = r.ok && body.status !== 'error';
+          const resolvedErrorCode = isSuccess
+            ? undefined
+            : body.error_code ||
+              body.code ||
+              body.error ||
+              (r.status === 401
+                ? 'invalid_api_key'
+                : r.status === 403
+                  ? 'forbidden'
+                  : r.status === 429
+                    ? 'too_many_requests'
+                    : `http_${r.status}`);
+
           return json({
-            ok: r.ok && body.status !== 'error',
+            ok: isSuccess,
             httpStatus: r.status,
             latencyMs: Date.now() - t0,
-            data: body.data ?? body,
-            errorCode: body.error_code || body.code || body.error,
-            message: body.message,
-            rateLimit: { limitPerMin: 30, usedInWindow: 1, remaining: 29 },
+            data: isSuccess ? (body.data !== undefined ? body.data : body) : undefined,
+            errorCode: resolvedErrorCode,
+            message: isSuccess
+              ? undefined
+              : body.message ||
+                (resolvedErrorCode ? EF_ERROR_GUIDANCE[resolvedErrorCode] : undefined) ||
+                `Electronic First API returned HTTP ${r.status}.`,
+            rateLimit: rlCheck.rateLimit,
           });
         } catch (err) {
           return json({
             ok: false,
             httpStatus: 502,
             latencyMs: Date.now() - t0,
+            errorCode: 'network_error',
             message: err instanceof Error ? err.message : 'Electronic First request failed',
-            rateLimit: { limitPerMin: 30, usedInWindow: 1, remaining: 29 },
+            rateLimit: rlCheck.rateLimit,
           });
         }
       }

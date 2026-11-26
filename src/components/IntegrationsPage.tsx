@@ -19,8 +19,8 @@ const WORKER_ROUTES = [
   { method: 'GET', path: '/api/admin/meta/analytics', source: 'worker.js', kv: 'pb:meta:token:v1' },
   { method: 'GET|POST', path: '/api/admin/crm/leads', source: 'crm-meta-patch.js', kv: 'pb:crm:leads:v1' },
   { method: 'PATCH|DELETE', path: '/api/admin/crm/leads/:id', source: 'crm-meta-patch.js', kv: 'pb:crm:leads:v1 + Meta WA Events' },
-  { method: 'POST', path: '/api/admin/electronicfirst/ping', source: 'EF dev/v1 proxy', kv: 'env: EF_API_KEY (30 req/min)' },
-  { method: 'GET', path: '/api/admin/electronicfirst/{balance,payouts,conversions}', source: 'EF dev/v1 proxy', kv: 'env: EF_API_KEY + EF_AFFILIATE_REF' },
+  { method: 'POST', path: '/api/admin/electronicfirst/ping', source: 'EF dev/v1 proxy', kv: 'secret: ELECTRONIC_FIRST_API_KEY (30 req/min)' },
+  { method: 'GET', path: '/api/admin/electronicfirst/{balance,payouts,conversions}', source: 'EF dev/v1 proxy', kv: 'secret: ELECTRONIC_FIRST_API_KEY + AFFILIATE_REF' },
 ];
 
 const PIXEL_SNIPPET = `<script>

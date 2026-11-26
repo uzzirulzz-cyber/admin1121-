@@ -49,10 +49,14 @@ function getEfRateLimitState() {
 }
 
 export function getElectronicFirstStatus(): ElectronicFirstStatus {
-  const affiliateRef = process.env.EF_AFFILIATE_REF?.trim() || 'ywzhmdg';
+  const affiliateRef =
+    (process.env.ELECTRONIC_FIRST_AFFILIATE_REF || process.env.EF_AFFILIATE_REF || 'ywzhmdg').trim();
+  const configured = Boolean(
+    (process.env.ELECTRONIC_FIRST_API_KEY || process.env.EF_API_KEY || '').trim(),
+  );
   return {
     ok: true,
-    configured: Boolean(process.env.EF_API_KEY?.trim()),
+    configured,
     baseUrl: EF_BASE_URL,
     affiliateRef,
     affiliateLink: `https://www.electronicfirst.com/?ref=${encodeURIComponent(affiliateRef)}`,
@@ -63,12 +67,20 @@ export function getElectronicFirstStatus(): ElectronicFirstStatus {
 }
 
 const EF_ERROR_GUIDANCE: Record<string, string> = {
-  missing_api_key: 'The Api-Key header was omitted. Set EF_API_KEY in Settings -> Secrets.',
-  invalid_api_key: 'The supplied EF_API_KEY was not recognized by Electronic First.',
-  api_key_disabled: 'This API key is currently deactivated in Electronic First Dashboard -> Settings -> Developer.',
-  ip_not_whitelisted: 'This server egress IP is not permitted by your Electronic First API key IP whitelist.',
-  forbidden: 'The specified affiliate_ref is invalid or does not belong to your Electronic First account.',
-  too_many_requests: 'Rate limit exceeded (30 requests/minute). Wait up to 60 seconds before retrying.',
+  missing_api_key:
+    'The Api-Key header was omitted. Configure ELECTRONIC_FIRST_API_KEY in server or Worker Secrets.',
+  invalid_api_key:
+    'The supplied ELECTRONIC_FIRST_API_KEY was not recognized by Electronic First.',
+  api_key_disabled:
+    'This API key is currently deactivated in Electronic First Dashboard -> Settings -> Developer.',
+  ip_not_whitelisted:
+    'This server egress IP is not permitted by your Electronic First API key IP whitelist.',
+  forbidden:
+    'The specified affiliate_ref is invalid or does not belong to your Electronic First account.',
+  too_many_requests:
+    'Rate limit exceeded (30 requests/minute). Wait up to 60 seconds before retrying.',
+  cloudflare_waf_challenge:
+    'Electronic First Cloudflare WAF returned a browser challenge to this server IP. Ask Electronic First support to bypass Bot Fight Mode for /api/dev/v1/* or whitelist your API key IP.',
 };
 
 export async function callElectronicFirstApi<T = unknown>(
@@ -105,7 +117,8 @@ export async function callElectronicFirstApi<T = unknown>(
   }
 
   efRequestTimestamps.push(Date.now());
-  const affiliateRef = process.env.EF_AFFILIATE_REF?.trim() || 'ywzhmdg';
+  const affiliateRef =
+    (process.env.ELECTRONIC_FIRST_AFFILIATE_REF || process.env.EF_AFFILIATE_REF || 'ywzhmdg').trim();
   const url = new URL(`${EF_BASE_URL}${endpointPath}`);
   if (endpointPath !== '/ping') {
     url.searchParams.set('affiliate_ref', affiliateRef);
@@ -118,20 +131,47 @@ export async function callElectronicFirstApi<T = unknown>(
         'Api-Key': apiKey,
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        'User-Agent': 'PlayBeatAdmin/1.0 (+https://admin.playbeat.digital)',
       },
     });
     const latencyMs = Date.now() - started;
-    const body = (await res.json().catch(() => ({}))) as {
+    const rawText = await res.text();
+    let body: {
       status?: string;
       data?: T;
       error?: string;
+      code?: string;
       error_code?: string;
       message?: string;
-    };
+    } | null = null;
+    try {
+      body = JSON.parse(rawText);
+    } catch {
+      body = null;
+    }
+
+    const isCfChallenge =
+      res.headers.get('cf-mitigated') === 'challenge' ||
+      rawText.includes('Just a moment...') ||
+      rawText.includes('cdn-cgi/challenge-platform');
+
+    if (!body) {
+      return {
+        ok: false,
+        httpStatus: res.status,
+        latencyMs,
+        errorCode: isCfChallenge ? 'cloudflare_waf_challenge' : 'invalid_json_response',
+        message: isCfChallenge
+          ? EF_ERROR_GUIDANCE.cloudflare_waf_challenge
+          : `Electronic First returned non-JSON HTTP ${res.status}.`,
+        rateLimit: getEfRateLimitState(),
+      };
+    }
 
     if (!res.ok || body.status === 'error') {
       const code =
         body.error_code ||
+        body.code ||
         body.error ||
         (res.status === 401
           ? 'invalid_api_key'
